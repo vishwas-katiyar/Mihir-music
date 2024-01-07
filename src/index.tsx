@@ -1,15 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { ConfigProvider } from "antd";
+import Header from "./Component/Header";
+import WhatsAppButton from "./Component/WhatsappBtn";
+// import { Header } from "antd/es/layout/layout";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider theme={{ token: { colorPrimary: "#00b96b" } }}>
+      <div className="relative min-h-screen">
+        <Header />
+
+        <main className="pt-16 overflow-y-auto">
+          <App />
+        </main>
+        <WhatsAppButton />
+      </div>
+    </ConfigProvider>
   </React.StrictMode>
 );
 
