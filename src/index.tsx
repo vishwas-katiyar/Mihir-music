@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ConfigProvider theme={{ token: { colorPrimary: "#00b96b" } }}>
-      <div className="relative min-h-screen">
+      <div className="relative min-h-screen dark">
         <Header />
 
         <main className="pt-16 overflow-y-auto">

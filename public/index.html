@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -54,7 +54,27 @@
     <!-- Title -->
     <title>Mihir Sound & Light - Sound and Light Services in Indore</title>
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Mihir Sound & Light",
+        "alternateName": "Mihir Music", // You can customize this if you have a preferred abbreviation
+        "url": "https://mihir-music.vercel.app/", // Replace with your actual website URL
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://mihir-music.vercel.app/search?q={search_term_string}" // Replace with your search URL
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
     <!-- Google tag (gtag.js) -->
+    <meta name="google-adsense-account" content="ca-pub-6446471191649823">
+
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-3RG9MZRDT7"
@@ -69,7 +89,7 @@
       gtag("config", "G-3RG9MZRDT7");
     </script>
   </head>
-  <body>
+  <body class="dark">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>

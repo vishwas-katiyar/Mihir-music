@@ -2,10 +2,10 @@ import React from "react";
 
 const Header = () => {
   return (
-    <div className="navbar bg-base-100 max-w-screen mb-3 fixed z-10">
+    <div className="navbar dark:bg-gray-900 max-w-screen mb-3 fixed z-10">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <div tabIndex={0} role="button" className="btn btn-ghost text-white btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -43,7 +43,7 @@ const Header = () => {
         </h2>
       </div>
       <div className="navbar-end">
-        <button className="btn btn-ghost btn-circle">
+        <button className="btn btn-ghost text-white btn-circle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
