@@ -13,7 +13,6 @@ function App() {
     <div className="App">
       <HomeCarousal />
       <MarketingSection />
-      {/* <DJServicesPage /> */}
       <ContactUs />
       <Footer />
     </div>

@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider } from "antd";
 import Header from "./Component/Header";
 import WhatsAppButton from "./Component/WhatsappBtn";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import PrivacyPolicy from "./Component/Privacy";
 // import { Header } from "antd/es/layout/layout";
 
 const root = ReactDOM.createRoot(
@@ -15,11 +17,18 @@ root.render(
   <React.StrictMode>
     <ConfigProvider theme={{ token: { colorPrimary: "#00b96b" } }}>
       <div className="relative min-h-screen dark">
+        {/* <Router location={""} navigator={undefined}> */}
         <Header />
-
         <main className="pt-16 overflow-y-auto">
-          <App />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<App />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            </Routes>
+          </BrowserRouter>
         </main>
+        {/* </Router> */}
+
         <WhatsAppButton />
       </div>
     </ConfigProvider>
