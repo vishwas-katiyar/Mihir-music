@@ -2,7 +2,7 @@ import React from "react";
 
 const MarketingSection = () => {
   return (
-    <section class="bg-gray-900 text-white">
+    <section class="bg-shark-950 text-white">
       <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div class="mx-auto max-w-lg text-center">
           <h2 class="text-3xl font-bold sm:text-4xl">
@@ -138,12 +138,12 @@ const MarketingSection = () => {
         </div>
 
         <div class="mt-12 text-center">
-          <div
-            // href="#"
-            class="inline-block rounded bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-pink-700 focus:outline-none focus:ring focus:ring-yellow-400"
+          <a
+            href="tel:+917400643050"
+            class="inline-block rounded bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-pink-700 focus:outline-none focus:ring focus:ring-clay-400"
           >
-            Get Started Today
-          </div>
+            For more Details Call Us Now
+          </a>
         </div>
       </div>
     </section>

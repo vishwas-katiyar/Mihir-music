@@ -1,0 +1,28 @@
+<!-- sitemap-pages.xml -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mihir-music.vercel.app/</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://mihir-music.vercel.app/privacy-policy</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://mihir-music.vercel.app/about-us</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://mihir-music.vercel.app/services</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://mihir-music.vercel.app/contact-us</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://mihir-music.vercel.app/projects</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <!-- Add more pages as needed -->
+</urlset>

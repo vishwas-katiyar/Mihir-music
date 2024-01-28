@@ -8,6 +8,14 @@ import Header from "./Component/Header";
 import WhatsAppButton from "./Component/WhatsappBtn";
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import PrivacyPolicy from "./Component/Privacy";
+import AboutPage from "./Component/AboutUs";
+import Footer from "./Component/Footer";
+import ServicesPage from "./Component/Services";
+import ContactUs from "./Component/ContactUs";
+import ProjectsPage from "./Component/Projects";
+import HelloWorld from "./Component/HelloWorld";
+import ProgrammingLanguages from "./Component/ProgrammingLanguages";
+import { ParallaxProvider } from "react-scroll-parallax";
 // import { Header } from "antd/es/layout/layout";
 
 const root = ReactDOM.createRoot(
@@ -16,21 +24,31 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ConfigProvider theme={{ token: { colorPrimary: "#00b96b" } }}>
-      <div className="relative min-h-screen dark">
-        {/* <Router location={""} navigator={undefined}> */}
-        <Header />
-        <main className="pt-16 overflow-y-auto">
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<App />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            </Routes>
-          </BrowserRouter>
-        </main>
-        {/* </Router> */}
-
-        <WhatsAppButton />
-      </div>
+      <ParallaxProvider>
+        <div className="relative min-h-screen dark">
+          {/* <Router location={""} navigator={undefined}> */}
+          <Header />
+          <main className="pt-16 overflow-y-auto">
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/about-us" element={<AboutPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/blog/hello-world" element={<HelloWorld />} />
+                <Route
+                  path="/blog/programming-languages"
+                  element={<ProgrammingLanguages />}
+                />
+              </Routes>
+            </BrowserRouter>
+            <Footer />
+          </main>
+          <WhatsAppButton />
+        </div>
+      </ParallaxProvider>
     </ConfigProvider>
   </React.StrictMode>
 );

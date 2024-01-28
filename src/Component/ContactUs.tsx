@@ -1,23 +1,34 @@
 import React from "react";
+import SeoHelmet from "./HelmetComponent";
 
 const ContactUs = () => {
   return (
-    <section className="bg-white dark:bg-gray-900">
+    <section className="bg-clay-700">
+      {window.location.href.includes("contact-us") && (
+        <SeoHelmet
+          title="Contact Mihir Sound & Light in Indore - Reach Out for Unforgettable Events"
+          description="Contact Mihir Sound & Light in Indore for unparalleled audio and visual experiences. Whether you're planning an event, wedding, or party, our professional team is here to elevate your moments with top-notch sound and lighting solutions."
+          keywords="Contact Mihir Sound & Light Indore, Event planning, Wedding sound, Party lighting, Audiovisual solutions, Event technology, Sound specialists"
+          url="https://mihir-music.vercel.app/contact-us"
+          image="https://mihir-music.vercel.app/icon.png"
+        />
+      )}
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-6">
         <div className="mx-auto mb-8 max-w-screen-sm lg:mb-16">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             Contact Person
           </h2>
           <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
-            Explore the whole collection of Different Sound System and Event Management
+            Explore the whole collection of Different Sound System and Event
+            Management
           </p>
         </div>
         <div className="grid gap-8 lg:gap-16 ">
           <div className="text-center text-gray-500 dark:text-gray-400">
             <img
               className="mx-auto mb-4 w-36 h-36 rounded-full"
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-              alt="Bonnie Avatar"
+              src="profile.jpg"
+              alt="Mihir Sound & Light"
             />
             <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               <a href="#">Mihir Chouhan</a>
@@ -72,9 +83,12 @@ const ContactUs = () => {
                       />
                     </svg>
 
-                    <p className=" text-gray-700 dark:text-blue-400 hover:underline">
+                    <a
+                      href="tel:+917000051042"
+                      className="text-gray-700 dark:text-blue-400 hover:underline"
+                    >
                       +91 7000051042
-                    </p>
+                    </a>
                   </a>
                   <a
                     className="flex items-center justify-center gap-1.5 "
@@ -95,9 +109,12 @@ const ContactUs = () => {
                       />
                     </svg>
 
-                    <p className=" text-gray-700 dark:text-blue-400 hover:underline">
+                    <a
+                      href="tel:+917400643050"
+                      className="text-gray-700 dark:text-blue-400 hover:underline"
+                    >
                       +91 7400643050
-                    </p>
+                    </a>
                   </a>
                 </li>
 
@@ -122,8 +139,17 @@ const ContactUs = () => {
                     />
                   </svg>
 
-                  <address className="-mt-0.5  not-italic text-gray-700 dark:text-gray-300">
-                    213 Lane, London, United Kingdom
+                  <address
+                    className="-mt-0.5 not-italic text-gray-700 dark:text-gray-300"
+                    onClick={() =>
+                      window.open(
+                        "https://maps.app.goo.gl/5XDh4a9AvXVAvzJn9",
+                        "_blank"
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    Bajrang Nagar 363, Indore, Madhya Pradesh 452001
                   </address>
                 </li>
               </ul>

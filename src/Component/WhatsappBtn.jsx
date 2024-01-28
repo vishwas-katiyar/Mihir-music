@@ -12,13 +12,13 @@ const getWhatsappLink = (phoneNumber, message, mobile) => {
     }`;
   } else {
     // Mobile App
-    return `intent://send?phone_number=${formattedNumber}#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end`;
+    return `intent://send?phone_number=${formattedNumber}&text=${encodedMessage}#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end`;
   }
 };
 
 const WhatsAppButton = () => {
   const phoneNumber = "+917000051042";
-  const message = "Hello Snort";
+  const message = "Hello Mihir Sound & Light";
   const [mobile, setMobile] = useState(window.innerWidth <= 500);
 
   const handleWindowSizeChange = () => {
