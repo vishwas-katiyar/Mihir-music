@@ -3,8 +3,4 @@
    <sitemap>
       <loc>https://mihir-music.vercel.app/sitemap-pages.xml</loc>
    </sitemap>
-   <sitemap>
-      <loc>https://mihir-music.vercel.app/sitemap-blog.xml</loc>
-   </sitemap>
-
 </sitemapindex>
