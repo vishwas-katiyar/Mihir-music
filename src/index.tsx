@@ -16,6 +16,7 @@ import ProjectsPage from "./Component/Projects";
 import HelloWorld from "./Component/HelloWorld";
 import ProgrammingLanguages from "./Component/ProgrammingLanguages";
 import { ParallaxProvider } from "react-scroll-parallax";
+import InvoiceGenerator from "./Component/InvoiceGenerator";
 // import { Header } from "antd/es/layout/layout";
 
 const root = ReactDOM.createRoot(
@@ -37,6 +38,7 @@ root.render(
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/contact-us" element={<ContactUs />} />
                 <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/invoice" element={<InvoiceGenerator />} />
                 <Route path="/blog/hello-world" element={<HelloWorld />} />
                 <Route
                   path="/blog/programming-languages"
