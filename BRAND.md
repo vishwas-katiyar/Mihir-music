@@ -6,4 +6,5 @@
   - Black `#050505` (night mode base)
   - Neon Gold `#FFD700` (accents / CTAs)
   - Electric Blue `#0070FF` (glow / highlights)
+  
 - **Contact:** Mihir Chouhan — Bajrang Nagar 363, Indore — `+91 70000 51042`
