@@ -1,0 +1,9 @@
+"I am setting up the Mihir Music (Sound & Light) project.  Here is our Brand Identity:
+
+Brand: Mihir Sound & Light (Indore, MP)
+
+Vibe: High-end, Modern, Event-Tech (Weddings, Concerts, Corporate).
+
+Colors: Night-mode (Black #050505), Neon Gold (#FFD700), Electric Blue (#0070FF).
+
+Action: Create a BRAND.md file in the root directory and document these details along with the contact info: Mihir Chouhan, Bajrang Nagar 363, Indore, +91 70000 51042.

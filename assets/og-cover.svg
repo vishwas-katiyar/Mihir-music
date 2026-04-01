@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#050505"/>
+  <circle cx="184" cy="146" r="98" fill="#FFD700" fill-opacity="0.16"/>
+  <circle cx="1020" cy="496" r="160" fill="#0070FF" fill-opacity="0.14"/>
+  <circle cx="916" cy="152" r="112" fill="#FFD700" fill-opacity="0.08"/>
+  <path d="M0 450C186 374 300 384 454 444C626 512 762 541 1200 410V630H0V450Z" fill="#0F0F12"/>
+  <rect x="90" y="80" width="1020" height="470" rx="40" stroke="rgba(255,255,255,0.1)"/>
+  <text x="90" y="258" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="3">MIHIR SOUND &amp; LIGHT</text>
+  <text x="92" y="324" fill="#FFD700" font-family="Chakra Petch, Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="5">EVENT SOUND • LIGHTING • PRODUCTION</text>
+  <text x="92" y="396" fill="#A0A0A0" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="400">Weddings • Concerts • Corporate • College Fests • Destination Events • Product Launches</text>
+  <rect x="92" y="438" width="238" height="6" rx="3" fill="#FFD700"/>
+  <rect x="344" y="438" width="118" height="6" rx="3" fill="#0070FF"/>
+  <rect x="476" y="438" width="190" height="6" rx="3" fill="#FFFFFF" fill-opacity="0.25"/>
+</svg>

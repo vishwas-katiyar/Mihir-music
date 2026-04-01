@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/schemas/agent-config.schema.json",
+  "mcp": {
+    "3d-web-architect": {
+      "type": "remote",
+      "url": "https://mcpmarket.com/tools/skills/3d-web-experience-architect-5",
+      "enabled": true,
+      "headers": {}
+    }
+  },
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": "ask",
+    "skill": "allow",
+    "webfetch": "allow",
+    "mcp": "allow"
+  }
+}
