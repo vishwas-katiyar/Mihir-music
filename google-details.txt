@@ -1,0 +1,52 @@
+Google-related details report
+Generated: 2026-04-02
+
+Project: mihir-music-site
+
+1) Google Analytics (GA4)
+- File: index.html
+- Script loader: line 32
+  https://www.googletagmanager.com/gtag/js?id=G-3RG9MZRDT7
+- Initialization: lines 34-35
+  window.dataLayer setup and gtag("js", new Date())
+- Config call: line 36
+  gtag("config", "G-3RG9MZRDT7")
+- Measurement ID: G-3RG9MZRDT7
+
+2) Google AdSense
+- File: index.html
+- AdSense loader: line 31
+  https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6446471191649823
+- AdSense account meta: line 12
+  <meta name="google-adsense-account" content="ca-pub-6446471191649823" />
+- Publisher ID: ca-pub-6446471191649823
+
+3) ads.txt declaration
+- File: ads.txt
+- Line 1:
+  google.com, pub-6446471191649823, DIRECT, f08c47fec0942fa0
+
+4) SEO and structured data (implemented)
+- Canonical URL: https://mihir-music.vercel.app/
+- Open Graph and Twitter metadata: configured in index.html
+- robots.txt: allows crawl and points to sitemap.xml
+- sitemap.xml: homepage URL listed
+
+5) Added schema markup in index.html
+- LocalBusiness schema
+- WebSite schema
+- Service schema
+- FAQPage schema
+
+6) On-page FAQ section
+- File: index.html
+- Section id: faq
+- Matches FAQPage schema content
+
+7) Not found (from scan)
+- Facebook Pixel snippet: not found
+- Microsoft Clarity snippet: not found
+- Hotjar snippet: not found
+
+8) Pending (requires your verification token)
+- Google Search Console verification meta tag is not added yet because token was not provided.
