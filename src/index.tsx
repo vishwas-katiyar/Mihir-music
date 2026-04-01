@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider } from "antd";
 import Header from "./Component/Header";
 import WhatsAppButton from "./Component/WhatsappBtn";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivacyPolicy from "./Component/Privacy";
 import AboutPage from "./Component/AboutUs";
 import Footer from "./Component/Footer";

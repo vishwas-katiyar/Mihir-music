@@ -55,7 +55,7 @@ const InvoiceGenerator = () => {
     updatedItems.splice(index, 1);
     setInvoiceData({ ...invoiceData, items: updatedItems });
   };
-  const { subtotal, tax, total, amountRemaining, discount } = calculateTotals();
+  const { subtotal, total, amountRemaining, discount } = calculateTotals();
   const exportPDF = async () => {
     const doc = new jsPDF("p", "mm", "a4");
 

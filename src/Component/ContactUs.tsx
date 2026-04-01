@@ -31,7 +31,7 @@ const ContactUs = () => {
               alt="Mihir Sound & Light"
             />
             <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              <a href="#">Mihir Chouhan</a>
+              <a href="/about-us">Mihir Chouhan</a>
             </h3>
             <p>CEO/Co-founder</p>
             <div className="text-center justify-center">
@@ -157,7 +157,7 @@ const ContactUs = () => {
             <ul className="flex justify-center mt-4 space-x-4">
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-[#39569c] hover:text-gray-900 dark:hover:text-white"
                 >
                   <svg
@@ -176,7 +176,7 @@ const ContactUs = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-[#00acee] hover:text-gray-900 dark:hover:text-white"
                 >
                   <svg
@@ -191,7 +191,7 @@ const ContactUs = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-gray-900 hover:text-gray-900 dark:hover:text-white dark:text-gray-300"
                 >
                   <svg
@@ -210,7 +210,7 @@ const ContactUs = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-[#ea4c89] hover:text-gray-900 dark:hover:text-white"
                 >
                   <svg

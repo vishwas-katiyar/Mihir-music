@@ -21,7 +21,7 @@ const MarketingSection = () => {
             className="block rounded-xl border border-gray-800 p-8 shadow-2xl transition hover:border-pink-500/10 hover:shadow-pink-500/10 "
             // href="/services/weddings"
           >
-            <img src="weeding.png" />
+            <img src="weeding.png" alt="Wedding event service" />
 
             <h2 className="mt-4 text-xl font-bold text-white">Weddings</h2>
 

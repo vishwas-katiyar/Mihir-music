@@ -1,24 +1,16 @@
 import React from 'react';
 import { Carousel } from 'antd';
 
-const contentStyle: React.CSSProperties = {
-  height: '160px',
-//   color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-//   background: '#364d79',
-};
-
 const HomeCarousal: React.FC = () => (
   <Carousel autoplay>
     <div>
-      <img src='banner1.jpg' />
+      <img src='banner1.jpg' alt='Event banner 1' />
     </div>
     <div>
-      <img src='banner1.jpg' />
+      <img src='banner1.jpg' alt='Event banner 2' />
     </div>
     <div>
-      <img src='banner1.jpg' />
+      <img src='banner1.jpg' alt='Event banner 3' />
     </div>
     {/* <div>
       <h3 style={contentStyle}>4</h3>
