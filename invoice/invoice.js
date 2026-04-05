@@ -213,10 +213,10 @@ async function warmQrCache(remainingAmount, invoiceNo) {
 function createRow(defaults = {}) {
   const row = document.createElement('tr');
   row.innerHTML = `
-    <td data-label="Item"><input type="text" class="item-name" placeholder="Service / Item" value="${defaults.item || ''}"></td>
-    <td data-label="Description"><input type="text" class="item-desc" placeholder="Short description" value="${defaults.description || ''}"></td>
-    <td data-label="Quantity"><input type="number" class="item-qty" min="0" step="0.01" value="${defaults.quantity || 1}"></td>
-    <td data-label="Rate (INR)"><input type="number" class="item-rate" min="0" step="0.01" value="${defaults.rate || 0}"></td>
+    <td data-label="Item"><input type="text" class="item-name" placeholder="Service / Item" value="${defaults.item ?? ''}"></td>
+    <td data-label="Description"><input type="text" class="item-desc" placeholder="Short description" value="${defaults.description ?? ''}"></td>
+    <td data-label="Quantity"><input type="number" class="item-qty" min="0" step="0.01" value="${defaults.quantity ?? ''}"></td>
+    <td data-label="Rate (INR)"><input type="number" class="item-rate" min="0" step="0.01" value="${defaults.rate ?? ''}"></td>
     <td data-label="Amount" class="amount">INR 0.00</td>
     <td data-label="Action" class="no-print"><button class="btn-remove" type="button" aria-label="Remove row">Remove</button></td>
   `;
@@ -229,11 +229,7 @@ function createRow(defaults = {}) {
   removeBtn.addEventListener('click', () => {
     if (lineItems.children.length <= 1) {
       row.querySelectorAll('input').forEach((input) => {
-        if (input.type === 'number') {
-          input.value = input.classList.contains('item-qty') ? '1' : '0';
-        } else {
-          input.value = '';
-        }
+        input.value = '';
       });
       calculateTotals();
       return;
@@ -357,13 +353,13 @@ async function downloadPdfInvoice() {
     doc.addImage(logoDataUrl, 'PNG', 45, 31, 48, 48);
   }
 
-  doc.setTextColor(212, 175, 55);
+  doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('MIHIR SOUND & LIGHT', logoDataUrl ? 110 : 40, 40);
-  doc.setTextColor(255, 255, 255);
+  doc.text('TAX INVOICE', logoDataUrl ? 110 : 40, 40);
+  doc.setTextColor(212, 175, 55);
   doc.setFontSize(24);
-  doc.text('TAX INVOICE', logoDataUrl ? 110 : 40, 72);
+  doc.text('MIHIR SOUND & LIGHT', logoDataUrl ? 110 : 40, 72);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
@@ -614,13 +610,8 @@ function seedDefaults() {
     invoiceNumberInput.value = `INV-${new Date().getFullYear()}-${stamp}`;
   }
 
-  const starterRows = [
-    { item: 'Sound Setup', description: 'PA system, microphones, stage monitors', quantity: 1, rate: 25000 },
-    { item: 'Lighting', description: 'Moving heads, wash lights, DMX programming', quantity: 1, rate: 18000 },
-  ];
-
   if (!lineItems) return;
-  starterRows.forEach((rowData) => lineItems.appendChild(createRow(rowData)));
+  lineItems.appendChild(createRow());
   calculateTotals();
 }
 
