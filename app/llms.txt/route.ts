@@ -55,7 +55,7 @@ export function GET() {
     ``,
     `## Key pages`,
     ``,
-    `- [Home](${site.url}/): overview of sound, lighting, rigging and show-execution services with packages and client reviews.`,
+    `- [Home](${site.url}/): overview of sound, lighting, rigging and show-execution services, the four show formats, owned equipment by model and quantity, packages, client reviews and answers to common questions.`,
     `- [All services](${site.url}/services): the five production systems, each with technical specifications and deliverables.`,
     `- [Instant estimator](${site.url}/estimate): pick event type, crowd size and venue to get a price estimate delivered over WhatsApp.`,
     `- [Equipment inventory](${site.url}/gear): make, model, quantity and specification of the owned inventory.`,

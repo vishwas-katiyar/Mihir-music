@@ -9,6 +9,7 @@ import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
+import { formats as showFormats } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -19,40 +20,22 @@ export const metadata: Metadata = {
 };
 
 /**
- * Show formats rather than invented client names: each card is a real production
- * template we deliver, with the rig that goes with it. Photos and reels live on
- * Instagram and YouTube, linked below.
+ * Show formats rather than invented client names (data in lib/formats.ts, shared with
+ * the home page digest). Photos and reels live on Instagram and YouTube, linked below.
  */
-const formats = [
-  {
-    title: "Wedding sangeet & reception stage",
-    accent: "amber" as const,
-    stat: "300-1,200 guests",
-    rig: ["Flown line array 6/side + 3 subs/side", "16-24 Sharpy beams, pixel bars, haze", "12 m truss, 14×6 m deck with entry ramp", "Show caller for entries, varmala, first dance"],
-    gradient: "from-amber/25 via-transparent to-pink/15",
-  },
-  {
-    title: "Open-ground concert / festival mainstage",
-    accent: "cyan" as const,
-    stat: "3,000-10,000 crowd",
-    rig: ["Flown arrays 10-12/side + 6 subs/side", "36-48 movers, strobes, blinders, lasers", "20 m front truss + back truss, 8 t flown", "FOH + monitor engineers, comms network"],
-    gradient: "from-cyan/25 via-transparent to-violet/20",
-  },
-  {
-    title: "Corporate summit & award night",
-    accent: "white" as const,
-    stat: "200-800 delegates",
-    rig: ["Compact array + delays for even speech coverage", "Key/fill/back lighting, gobo washes, 12 movers", "Modular riser stage, lectern, confidence monitors", "Cue-called AV with backup console"],
-    gradient: "from-white/15 via-transparent to-cyan/15",
-  },
-  {
-    title: "Club night & rooftop party",
-    accent: "amber" as const,
-    stat: "150-600 guests",
-    rig: ["Dance-floor PA + dual 18\" subs", "8-12 movers, strobes, haze, pixel effects", "DJ booth with monitors, MC mic", "DJ + sound + light operators"],
-    gradient: "from-pink/20 via-transparent to-amber/20",
-  },
-];
+const styling = {
+  wedding: { accent: "amber" as const, gradient: "from-amber/25 via-transparent to-pink/15" },
+  concert: { accent: "cyan" as const, gradient: "from-cyan/25 via-transparent to-violet/20" },
+  corporate: { accent: "white" as const, gradient: "from-white/15 via-transparent to-cyan/15" },
+  club: { accent: "amber" as const, gradient: "from-pink/20 via-transparent to-amber/20" },
+} satisfies Record<string, { accent: "amber" | "cyan" | "white"; gradient: string }>;
+
+const formats = showFormats.map((f) => ({
+  title: f.title,
+  stat: f.audience,
+  rig: f.rig,
+  ...styling[f.slug as keyof typeof styling],
+}));
 
 const accentText = { amber: "text-amber", cyan: "text-cyan", white: "text-ink" };
 

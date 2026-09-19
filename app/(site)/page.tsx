@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { HeroCalm } from "@/components/sections/HeroCalm";
 import { ProofBand } from "@/components/sections/ProofBand";
 import { InstagramReels } from "@/components/sections/InstagramReels";
+import { ShowFormats } from "@/components/sections/ShowFormats";
 import { ServicesList } from "@/components/sections/ServicesList";
+import { GearHighlights } from "@/components/sections/GearHighlights";
 import { EstimatorSection } from "@/components/sections/EstimatorSection";
 import { PackagesCompare } from "@/components/sections/PackagesCompare";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -33,7 +35,9 @@ export default function HomePage() {
       <HeroCalm />
       <ProofBand />
       <InstagramReels />
+      <ShowFormats />
       <ServicesList />
+      <GearHighlights />
       <EstimatorSection />
       <PackagesCompare />
       <Testimonials />

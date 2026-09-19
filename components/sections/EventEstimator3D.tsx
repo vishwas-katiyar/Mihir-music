@@ -130,9 +130,9 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
   ];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
       {/* 3D preview */}
-      <div className="relative min-h-[380px] overflow-hidden rounded-[2rem] border border-white/8 bg-stage-2 sm:min-h-[460px] lg:min-h-[620px]">
+      <div className="relative min-h-[380px] min-w-0 overflow-hidden rounded-[2rem] border border-white/8 bg-stage-2 sm:min-h-[460px] lg:min-h-[620px]">
         <EstimatorCanvas rig={result.rig} people={people} className="absolute inset-0" />
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5">
           <span className="eyebrow rounded-full border border-white/12 bg-stage/70 px-3 py-1.5 text-ink/80 backdrop-blur">
@@ -154,7 +154,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
       </div>
 
       {/* Controls + readout */}
-      <div className="glass flex flex-col gap-7 rounded-[2rem] p-6 sm:p-8">
+      <div className="glass flex min-w-0 flex-col gap-7 rounded-[2rem] p-6 sm:p-8">
         <Segmented label="Event type" value={eventType} onChange={setEventType} options={eventTypes} />
         <Segmented label="Crowd size" value={crowd} onChange={setCrowd} options={crowdSizes} />
         <Segmented label="Venue" value={venue} onChange={setVenue} options={venueTypes} />
@@ -202,9 +202,10 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
         <div className="rounded-2xl border border-white/10 bg-stage/60 p-5">
           <div className="eyebrow text-muted">Estimated production budget</div>
           {/* Prices count to the new value (state transition made visible) */}
-          <div className="mt-2 font-display text-3xl font-bold tracking-[-0.04em] text-ink sm:text-4xl">
+          {/* flex-wrap so the two figures can break onto separate lines on narrow phones */}
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-2 font-display text-3xl font-bold tracking-[-0.04em] text-ink sm:text-4xl">
             <AnimatedNumber value={result.price.low} format={formatINR} springOptions={{ stiffness: 90, damping: 22 }} />
-            <span className="mx-2 text-muted">to</span>
+            <span className="text-muted">to</span>
             <AnimatedNumber value={result.price.high} format={formatINR} springOptions={{ stiffness: 90, damping: 22 }} />
           </div>
           <ul className="mt-5 space-y-2.5 text-sm text-ink/85">
