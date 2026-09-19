@@ -17,13 +17,21 @@ export const STATUS_LABEL: Record<InvoiceStatus, string> = {
   cancelled: "Cancelled",
 };
 
+/** Same clauses as the original invoice tool. "Label: text" renders the label in bold. */
 export const DEFAULT_TERMS = [
-  "Payment is due within 30 days of the invoice date unless agreed otherwise.",
-  "Cancellations within 7 days of the event may incur up to 50% of the invoice value.",
-  "Equipment must be returned in delivered condition; damage or loss is charged at replacement cost.",
-  "The client arranges venue power, access, permissions and security for equipment on site.",
-  "Advance payments are non-refundable once crew and equipment are blocked for the date.",
+  "Payment Terms: Payment is due within 30 days from the date of the invoice.",
+  "Cancellation Policy: Cancellations within 7 days may incur up to 50% fee.",
+  "Liability: Not responsible for damages caused by misuse or accidents.",
+  "Equipment: Must be returned in delivered condition; damages are charged.",
+  "Insurance: Clients must arrange adequate insurance for rented equipment.",
+  "Confidentiality: Client information is kept confidential.",
 ];
+
+/** Splits "Label: rest" so the label can be emphasised; returns null when there is no label. */
+export function splitTerm(term: string): { label: string; text: string } | null {
+  const m = term.match(/^([A-Za-z][A-Za-z &/-]{1,40}):\s+(.+)$/);
+  return m ? { label: m[1], text: m[2] } : null;
+}
 
 /** Money helpers: rupees (number, 2 dp) <-> paise (integer). */
 export const toPaise = (rupees: number) => Math.round((Number.isFinite(rupees) ? rupees : 0) * 100);

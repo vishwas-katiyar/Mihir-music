@@ -24,6 +24,7 @@ export async function upiQrDataUrl(balancePaise: number, reference: string): Pro
     width: 320,
     margin: 1,
     errorCorrectionLevel: "M",
-    color: { dark: "#0b0c10", light: "#ffffff" },
+    // Navy modules, as on the original invoice tool
+    color: { dark: "#113163", light: "#ffffff" },
   });
 }
