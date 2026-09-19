@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Pencil } from "lucide-react";
 import type { InvoiceRow } from "@/lib/db/schema";
 import { inr, formatDateIN, STATUS_LABEL, type InvoiceStatus } from "@/lib/invoices/calc";
 import { cn } from "@/lib/utils";
+import { ClickableRow } from "./ClickableRow";
 
 export const statusBadge: Record<InvoiceStatus, string> = {
   draft: "bg-white/8 text-ink/80",
@@ -26,6 +27,7 @@ export function InvoiceTable({ rows }: { rows: InvoiceRow[] }) {
   }
   return (
     <div className="overflow-x-auto rounded-2xl border border-white/10">
+      <p className="border-b border-white/10 bg-white/[0.02] px-4 py-2 text-xs text-muted">Click any row to open and update that invoice.</p>
       <table className="w-full min-w-[820px] text-left text-sm">
         <thead className="bg-white/[0.03] text-xs uppercase tracking-[0.12em] text-muted">
           <tr>
@@ -41,11 +43,9 @@ export function InvoiceTable({ rows }: { rows: InvoiceRow[] }) {
         </thead>
         <tbody className="divide-y divide-white/8">
           {rows.map((r) => (
-            <tr key={r.id} className="hover:bg-white/[0.03]">
+            <ClickableRow key={r.id} href={`/invoice/${r.id}`} className="hover:bg-white/[0.04]">
               <td className="px-4 py-3">
-                <Link href={`/invoice/${r.id}`} className="font-mono text-sm text-ink hover:text-gold">
-                  {r.invoiceNumber}
-                </Link>
+                <span className="font-mono text-sm text-ink">{r.invoiceNumber}</span>
                 <div className="text-xs text-muted">{formatDateIN(r.issueDate)}</div>
               </td>
               <td className="px-4 py-3">
@@ -66,12 +66,17 @@ export function InvoiceTable({ rows }: { rows: InvoiceRow[] }) {
                 )}
               </td>
               <td className="px-4 py-3 text-xs text-muted">{r.updatedAt.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}</td>
-              <td className="px-4 py-3 text-right">
-                <a href={`/i/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-muted hover:text-ink" title="Open client link">
-                  Share <ExternalLink className="h-3 w-3" />
-                </a>
+              <td className="px-4 py-3 text-right whitespace-nowrap">
+                <Link href={`/invoice/${r.id}`} className="inline-flex items-center gap-1.5 rounded-full border border-white/12 px-3 py-1.5 text-xs text-ink/85 transition hover:border-gold/60 hover:text-gold" title="Open and update">
+                  <Pencil className="h-3 w-3" /> Edit
+                </Link>
+                {!r.deletedAt && (
+                  <a href={`/i/${r.token}`} target="_blank" rel="noreferrer" className="ml-2 inline-flex items-center gap-1 text-xs text-muted hover:text-ink" title="Open client link">
+                    Share <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
               </td>
-            </tr>
+            </ClickableRow>
           ))}
         </tbody>
       </table>
