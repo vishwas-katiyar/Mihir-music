@@ -10,7 +10,7 @@ import { Truss } from "./Truss";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
-import { StageLights, StageFloor } from "./SceneCommon";
+import { StageLights, StageFloor, TouchScrollFriendly, useCoarsePointer } from "./SceneCommon";
 
 type Rig = EstimateResult["rig"];
 
@@ -202,6 +202,7 @@ export interface EstimatorSceneProps {
 
 export function EstimatorScene({ rig, people, quality, active }: EstimatorSceneProps) {
   const camZ = 14 + rig.trussWidth * 0.45;
+  const coarse = useCoarsePointer();
   return (
     <Canvas
       className="absolute inset-0"
@@ -215,6 +216,7 @@ export function EstimatorScene({ rig, people, quality, active }: EstimatorSceneP
         target={[0, rig.trussHeight * 0.45, 0]}
         enablePan={false}
         enableZoom={false}
+        enableRotate={!coarse}
         enableDamping
         dampingFactor={0.08}
         minPolarAngle={0.95}
@@ -224,6 +226,7 @@ export function EstimatorScene({ rig, people, quality, active }: EstimatorSceneP
         autoRotate
         autoRotateSpeed={0.35}
       />
+      {coarse && <TouchScrollFriendly />}
       <Scene rig={rig} quality={quality} people={people} />
       <Crowd people={people} stageDepth={rig.stageDepth} quality={quality} />
     </Canvas>

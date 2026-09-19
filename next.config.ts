@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // PDF renderer has native-ish internals that must not be bundled; logo must ship with the PDF function.
   serverExternalPackages: ["@react-pdf/renderer"],
-  outputFileTracingIncludes: { "/api/i/[token]/pdf": ["./public/logo.png"] },
+  outputFileTracingIncludes: { "/api/i/[token]/pdf": ["./public/logo.png", "./public/fonts/*.ttf"] },
   images: { formats: ["image/avif", "image/webp"] },
   async headers() {
     return [

@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/invoices/auth";
-import { InvoiceInputSchema, INVOICE_STATUSES } from "@/lib/invoices/calc";
-import { deleteInvoice, getInvoiceById, rotateToken, setStatus, updateInvoice } from "@/lib/invoices/repo";
+import { InvoiceInputSchema, INVOICE_STATUSES, PaymentInputSchema } from "@/lib/invoices/calc";
+import { addPayment, deleteInvoice, getInvoiceById, removePayment, restoreInvoice, rotateToken, setStatus, updateInvoice } from "@/lib/invoices/repo";
 import { rowToJson } from "@/lib/invoices/serialize";
 
 export const runtime = "nodejs";
@@ -39,16 +39,31 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   return row ? NextResponse.json({ ok: true, invoice: rowToJson(row) }) : notFound();
 }
 
-const PatchSchema = z.union([z.object({ status: z.enum(INVOICE_STATUSES) }), z.object({ rotateToken: z.literal(true) })]);
+const PatchSchema = z.union([
+  z.object({ status: z.enum(INVOICE_STATUSES) }),
+  z.object({ rotateToken: z.literal(true) }),
+  z.object({ addPayment: PaymentInputSchema }),
+  z.object({ removePayment: z.string().min(1).max(40) }),
+  z.object({ restore: z.literal(true) }),
+]);
 
-/** PATCH: { status } or { rotateToken: true } */
+/** PATCH: { status } | { rotateToken: true } | { addPayment: {...} } | { removePayment: id } | { restore: true } */
 export async function PATCH(req: NextRequest, { params }: Ctx) {
   if (!(await isAdmin())) return unauthorised();
   const id = parseId((await params).id);
   if (!id) return notFound();
   const parsed = PatchSchema.safeParse(await req.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ ok: false, error: "Invalid patch" }, { status: 400 });
-  const row = "status" in parsed.data ? await setStatus(id, parsed.data.status) : await rotateToken(id);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    return NextResponse.json({ ok: false, error: issue?.message ?? "Invalid patch" }, { status: 400 });
+  }
+  const d = parsed.data;
+  const row =
+    "status" in d ? await setStatus(id, d.status)
+    : "rotateToken" in d ? await rotateToken(id)
+    : "addPayment" in d ? await addPayment(id, d.addPayment)
+    : "restore" in d ? await restoreInvoice(id)
+    : await removePayment(id, d.removePayment);
   return row ? NextResponse.json({ ok: true, invoice: rowToJson(row) }) : notFound();
 }
 

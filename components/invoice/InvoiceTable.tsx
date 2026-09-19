@@ -59,7 +59,11 @@ export function InvoiceTable({ rows }: { rows: InvoiceRow[] }) {
               <td className="px-4 py-3 text-right tabular-nums text-ink">{inr(r.grandTotalPaise)}</td>
               <td className={cn("px-4 py-3 text-right tabular-nums", r.balanceDuePaise > 0 ? "text-amber-soft" : "text-emerald-200")}>{inr(r.balanceDuePaise)}</td>
               <td className="px-4 py-3">
-                <span className={cn("rounded-full px-2.5 py-1 text-xs", statusBadge[r.status as InvoiceStatus])}>{STATUS_LABEL[r.status as InvoiceStatus]}</span>
+                {r.deletedAt ? (
+                  <span className="rounded-full bg-rose-400/15 px-2.5 py-1 text-xs text-rose-200">Deleted</span>
+                ) : (
+                  <span className={cn("rounded-full px-2.5 py-1 text-xs", statusBadge[r.status as InvoiceStatus])}>{STATUS_LABEL[r.status as InvoiceStatus]}</span>
+                )}
               </td>
               <td className="px-4 py-3 text-xs text-muted">{r.updatedAt.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}</td>
               <td className="px-4 py-3 text-right">

@@ -17,7 +17,6 @@ export function rowToInput(r: InvoiceRow): InvoiceInput {
     items: r.items,
     discountPaise: r.discountPaise,
     gstRateBp: r.gstRateBp,
-    advancePaidPaise: r.advancePaidPaise,
     notes: r.notes ?? "",
     terms: r.terms,
     status: r.status as InvoiceInput["status"],
@@ -31,6 +30,7 @@ export function rowToJson(r: InvoiceRow) {
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
     paidAt: r.paidAt ? r.paidAt.toISOString() : null,
+    deletedAt: r.deletedAt ? r.deletedAt.toISOString() : null,
   };
 }
 export type InvoiceJson = ReturnType<typeof rowToJson>;

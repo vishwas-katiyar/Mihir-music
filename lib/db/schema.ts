@@ -46,9 +46,20 @@ export interface InvoiceLine {
   ratePaise: number;
 }
 
+/** A payment received against an invoice. Money in paise. */
+export interface InvoicePayment {
+  id: string;
+  date: string; // YYYY-MM-DD
+  amountPaise: number;
+  method: "upi" | "cash" | "bank" | "card" | "other";
+  reference: string;
+  note: string;
+}
+
 /**
  * Invoices — created and edited by the admin at /invoice, shared with clients at /i/<token>.
  * All money columns are integer paise to avoid floating-point drift.
+ * `advance_paid_paise` holds the running total of `payments`; balance is derived.
  */
 export const invoices = pgTable(
   "invoices",
@@ -77,9 +88,12 @@ export const invoices = pgTable(
     balanceDuePaise: integer("balance_due_paise").notNull(),
     notes: text("notes"),
     terms: jsonb("terms").$type<string[]>().notNull(),
+    payments: jsonb("payments").$type<InvoicePayment[]>().notNull().default([]),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     paidAt: timestamp("paid_at", { withTimezone: true }),
+    /** Soft delete: hidden from lists and the client link, restorable from the Deleted filter. */
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
     uniqueIndex("invoices_number_uq").on(t.invoiceNumber),

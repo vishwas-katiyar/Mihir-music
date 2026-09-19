@@ -1,12 +1,13 @@
 import { randomBytes } from "node:crypto";
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, desc, eq, ilike, isNotNull, isNull, or, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
-import type { InvoiceRow } from "@/lib/db/schema";
-import { computeTotals, pruneLines, type InvoiceInput, type InvoiceStatus } from "./calc";
+import type { InvoicePayment, InvoiceRow } from "@/lib/db/schema";
+import { computeTotals, pruneLines, sumPayments, type InvoiceInput, type InvoiceStatus, type PaymentInput } from "./calc";
 
 const { invoices } = schema;
 
 const newToken = () => randomBytes(16).toString("base64url");
+const newId = () => randomBytes(6).toString("base64url");
 const blank = (v?: string | null) => (v && v.trim() ? v.trim() : null);
 
 /** MSL-YYYY-NNNN, sequential within the invoice year. Retries on a rare race. */
@@ -21,9 +22,23 @@ async function nextInvoiceNumber(issueDate: string): Promise<string> {
   return `${prefix}${String((Number.isFinite(last) ? last : 0) + 1).padStart(4, "0")}`;
 }
 
-function toColumns(input: InvoiceInput) {
+/**
+ * Status follows the money unless the admin cancelled the invoice:
+ * nothing paid → keep draft/sent, some paid → partially_paid, all paid → paid.
+ */
+function deriveStatus(requested: InvoiceStatus, grandTotalPaise: number, paidPaise: number): InvoiceStatus {
+  if (requested === "cancelled") return "cancelled";
+  if (grandTotalPaise > 0 && paidPaise >= grandTotalPaise) return "paid";
+  if (paidPaise > 0) return "partially_paid";
+  return requested === "paid" || requested === "partially_paid" ? "sent" : requested;
+}
+
+/** Editable fields → columns, with totals recomputed against the given payment list. */
+function toColumns(input: InvoiceInput, payments: InvoicePayment[]) {
   const items = pruneLines(input.items);
-  const t = computeTotals(items, input.discountPaise, input.gstRateBp, input.advancePaidPaise);
+  const paid = sumPayments(payments);
+  const t = computeTotals(items, input.discountPaise, input.gstRateBp, paid);
+  const status = deriveStatus(input.status, t.grandTotalPaise, paid);
   return {
     issueDate: input.issueDate,
     dueDate: blank(input.dueDate),
@@ -38,20 +53,24 @@ function toColumns(input: InvoiceInput) {
     items,
     discountPaise: t.discountPaise,
     gstRateBp: input.gstRateBp,
-    advancePaidPaise: t.advancePaidPaise,
+    advancePaidPaise: paid,
     subtotalPaise: t.subtotalPaise,
     gstPaise: t.gstPaise,
     grandTotalPaise: t.grandTotalPaise,
     balanceDuePaise: t.balanceDuePaise,
     notes: blank(input.notes),
     terms: input.terms.filter((s) => s.trim()),
-    status: input.status,
-    paidAt: input.status === "paid" ? new Date() : null,
+    payments,
+    status,
+    paidAt: status === "paid" ? new Date() : null,
   };
 }
 
+const toPayment = (p: PaymentInput): InvoicePayment => ({ id: newId(), date: p.date, amountPaise: Math.round(p.amountPaise), method: p.method, reference: p.reference, note: p.note });
+
 export async function createInvoice(input: InvoiceInput): Promise<InvoiceRow> {
-  const cols = toColumns(input);
+  const payments = input.initialPayment ? [toPayment(input.initialPayment)] : [];
+  const cols = toColumns(input, payments);
   for (let attempt = 0; attempt < 3; attempt++) {
     const invoiceNumber = await nextInvoiceNumber(input.issueDate);
     try {
@@ -67,8 +86,11 @@ export async function createInvoice(input: InvoiceInput): Promise<InvoiceRow> {
   throw new Error("Could not allocate an invoice number");
 }
 
+/** Full edit of the invoice body. Payments are untouched; totals and status re-derive. */
 export async function updateInvoice(id: number, input: InvoiceInput): Promise<InvoiceRow | null> {
-  const cols = toColumns(input);
+  const current = await getInvoiceById(id);
+  if (!current) return null;
+  const cols = toColumns(input, current.payments);
   const [row] = await db
     .update(invoices)
     .set({ ...cols, updatedAt: new Date() })
@@ -77,13 +99,42 @@ export async function updateInvoice(id: number, input: InvoiceInput): Promise<In
   return row ?? null;
 }
 
-export async function setStatus(id: number, status: InvoiceStatus): Promise<InvoiceRow | null> {
-  const [row] = await db
+/** Re-derive money and status after the payment list changes. */
+async function savePayments(row: InvoiceRow, payments: InvoicePayment[]): Promise<InvoiceRow | null> {
+  const paid = sumPayments(payments);
+  const balance = Math.max(row.grandTotalPaise - paid, 0);
+  const status = deriveStatus(row.status as InvoiceStatus, row.grandTotalPaise, paid);
+  const [updated] = await db
     .update(invoices)
-    .set({ status, paidAt: status === "paid" ? new Date() : null, updatedAt: new Date() })
+    .set({ payments, advancePaidPaise: paid, balanceDuePaise: balance, status, paidAt: status === "paid" ? (row.paidAt ?? new Date()) : null, updatedAt: new Date() })
+    .where(eq(invoices.id, row.id))
+    .returning();
+  return updated ?? null;
+}
+
+export async function addPayment(id: number, payment: PaymentInput): Promise<InvoiceRow | null> {
+  const row = await getInvoiceById(id);
+  if (!row) return null;
+  return savePayments(row, [...row.payments, toPayment(payment)]);
+}
+
+export async function removePayment(id: number, paymentId: string): Promise<InvoiceRow | null> {
+  const row = await getInvoiceById(id);
+  if (!row) return null;
+  return savePayments(row, row.payments.filter((p) => p.id !== paymentId));
+}
+
+/** Manual status override (mainly for "sent" and "cancelled"); money-derived states win. */
+export async function setStatus(id: number, status: InvoiceStatus): Promise<InvoiceRow | null> {
+  const row = await getInvoiceById(id);
+  if (!row) return null;
+  const derived = deriveStatus(status, row.grandTotalPaise, row.advancePaidPaise);
+  const [updated] = await db
+    .update(invoices)
+    .set({ status: derived, paidAt: derived === "paid" ? (row.paidAt ?? new Date()) : null, updatedAt: new Date() })
     .where(eq(invoices.id, id))
     .returning();
-  return row ?? null;
+  return updated ?? null;
 }
 
 /** New share token: the old link stops working. */
@@ -92,29 +143,37 @@ export async function rotateToken(id: number): Promise<InvoiceRow | null> {
   return row ?? null;
 }
 
+/** Soft delete: the invoice disappears from lists and its client link stops resolving, but nothing is lost. */
 export async function deleteInvoice(id: number): Promise<boolean> {
-  const rows = await db.delete(invoices).where(eq(invoices.id, id)).returning({ id: invoices.id });
+  const rows = await db.update(invoices).set({ deletedAt: new Date(), updatedAt: new Date() }).where(eq(invoices.id, id)).returning({ id: invoices.id });
   return rows.length > 0;
 }
 
+export async function restoreInvoice(id: number): Promise<InvoiceRow | null> {
+  const [row] = await db.update(invoices).set({ deletedAt: null, updatedAt: new Date() }).where(eq(invoices.id, id)).returning();
+  return row ?? null;
+}
+
 export const getInvoiceById = async (id: number) => (await db.select().from(invoices).where(eq(invoices.id, id)))[0] ?? null;
-export const getInvoiceByToken = async (token: string) => (await db.select().from(invoices).where(eq(invoices.token, token)))[0] ?? null;
+/** Client-facing lookup: deleted invoices are invisible. */
+export const getInvoiceByToken = async (token: string) => (await db.select().from(invoices).where(and(eq(invoices.token, token), isNull(invoices.deletedAt))))[0] ?? null;
+
+export type ListStatus = InvoiceStatus | "all" | "deleted";
 
 export interface ListOptions {
   q?: string;
-  status?: InvoiceStatus | "all";
+  status?: ListStatus;
   limit?: number;
 }
 
 export async function listInvoices({ q, status = "all", limit = 200 }: ListOptions = {}): Promise<InvoiceRow[]> {
-  const filters = [];
+  const filters = [status === "deleted" ? isNotNull(invoices.deletedAt) : isNull(invoices.deletedAt)];
   if (q && q.trim()) {
     const like = `%${q.trim()}%`;
-    filters.push(or(ilike(invoices.clientName, like), ilike(invoices.invoiceNumber, like), ilike(invoices.eventTitle, like), ilike(invoices.clientPhone, like)));
+    filters.push(or(ilike(invoices.clientName, like), ilike(invoices.invoiceNumber, like), ilike(invoices.eventTitle, like), ilike(invoices.clientPhone, like))!);
   }
-  if (status !== "all") filters.push(eq(invoices.status, status));
-  const where = filters.length ? and(...filters) : undefined;
-  return db.select().from(invoices).where(where).orderBy(desc(invoices.createdAt)).limit(limit);
+  if (status !== "all" && status !== "deleted") filters.push(eq(invoices.status, status));
+  return db.select().from(invoices).where(and(...filters)).orderBy(desc(invoices.createdAt)).limit(limit);
 }
 
 export async function summary() {
@@ -123,7 +182,9 @@ export async function summary() {
       count: sql<number>`count(*)::int`,
       billed: sql<number>`coalesce(sum(${invoices.grandTotalPaise}) filter (where ${invoices.status} <> 'cancelled'), 0)::bigint`,
       due: sql<number>`coalesce(sum(${invoices.balanceDuePaise}) filter (where ${invoices.status} in ('sent','partially_paid')), 0)::bigint`,
+      collected: sql<number>`coalesce(sum(${invoices.advancePaidPaise}) filter (where ${invoices.status} <> 'cancelled'), 0)::bigint`,
     })
-    .from(invoices);
-  return { count: Number(row?.count ?? 0), billedPaise: Number(row?.billed ?? 0), duePaise: Number(row?.due ?? 0) };
+    .from(invoices)
+    .where(isNull(invoices.deletedAt));
+  return { count: Number(row?.count ?? 0), billedPaise: Number(row?.billed ?? 0), duePaise: Number(row?.due ?? 0), collectedPaise: Number(row?.collected ?? 0) };
 }

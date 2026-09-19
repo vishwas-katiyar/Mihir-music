@@ -9,7 +9,7 @@ import { Truss } from "./Truss";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
-import { StageLights, StageFloor, StageDeck } from "./SceneCommon";
+import { StageLights, StageFloor, StageDeck, TouchScrollFriendly, useCoarsePointer } from "./SceneCommon";
 
 const GOLD = "#ffb800";
 const WHITE = "#eef0ff";
@@ -81,6 +81,7 @@ function Rig({ quality }: { quality: Exclude<Quality, "off"> }) {
  * around, beams track the pointer. Deliberately quiet: six fixtures, one accent colour.
  */
 export function RigShowcaseScene({ quality, active }: { quality: Exclude<Quality, "off">; active: boolean }) {
+  const coarse = useCoarsePointer();
   return (
     <Canvas
       className="absolute inset-0"
@@ -94,6 +95,7 @@ export function RigShowcaseScene({ quality, active }: { quality: Exclude<Quality
         target={[0, 2.8, 0]}
         enablePan={false}
         enableZoom={false}
+        enableRotate={!coarse}
         enableDamping
         dampingFactor={0.08}
         minPolarAngle={1.05}
@@ -101,6 +103,7 @@ export function RigShowcaseScene({ quality, active }: { quality: Exclude<Quality
         autoRotate
         autoRotateSpeed={0.45}
       />
+      {coarse && <TouchScrollFriendly />}
       <Rig quality={quality} />
     </Canvas>
   );

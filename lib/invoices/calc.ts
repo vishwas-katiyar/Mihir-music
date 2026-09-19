@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { InvoiceLine } from "@/lib/db/schema";
+import type { InvoiceLine, InvoicePayment } from "@/lib/db/schema";
 
 /**
  * Shared invoice math and validation. Used by the editor (live totals), the API
@@ -45,6 +45,20 @@ export interface Totals {
 
 export const lineAmountPaise = (l: InvoiceLine) => Math.round(l.quantity * l.ratePaise);
 
+export const PAYMENT_METHODS = ["upi", "cash", "bank", "card", "other"] as const;
+export const METHOD_LABEL: Record<InvoicePayment["method"], string> = { upi: "UPI", cash: "Cash", bank: "Bank transfer", card: "Card", other: "Other" };
+
+export const PaymentInputSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD"),
+  amountPaise: z.number().int().min(1, "Amount must be more than zero"),
+  method: z.enum(PAYMENT_METHODS).default("upi"),
+  reference: z.string().trim().max(80).default(""),
+  note: z.string().trim().max(200).default(""),
+});
+export type PaymentInput = z.infer<typeof PaymentInputSchema>;
+
+export const sumPayments = (payments: InvoicePayment[]) => payments.reduce((s, p) => s + Math.max(0, Math.round(p.amountPaise)), 0);
+
 export function computeTotals(items: InvoiceLine[], discountPaise: number, gstRateBp: number, advancePaidPaise: number): Totals {
   const subtotalPaise = items.reduce((s, l) => s + lineAmountPaise(l), 0);
   const discount = Math.min(Math.max(0, Math.round(discountPaise)), subtotalPaise);
@@ -87,7 +101,8 @@ export const InvoiceInputSchema = z.object({
   items: z.array(LineSchema).min(1, "Add at least one line").max(60),
   discountPaise: z.number().int().min(0).default(0),
   gstRateBp: z.number().int().min(0).max(2800).default(0),
-  advancePaidPaise: z.number().int().min(0).default(0),
+  /** Only honoured on create: an advance already in hand becomes the first payment. */
+  initialPayment: PaymentInputSchema.optional(),
   notes: z.string().trim().max(2000).optional().or(z.literal("")),
   terms: z.array(z.string().trim().max(400)).max(20).default(DEFAULT_TERMS),
   status: z.enum(INVOICE_STATUSES).default("draft"),

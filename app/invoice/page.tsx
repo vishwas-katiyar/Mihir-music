@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { Search } from "lucide-react";
 import { isAdmin } from "@/lib/invoices/auth";
-import { listInvoices, summary } from "@/lib/invoices/repo";
-import { INVOICE_STATUSES, STATUS_LABEL, inr, type InvoiceStatus } from "@/lib/invoices/calc";
+import { listInvoices, summary, type ListStatus } from "@/lib/invoices/repo";
+import { INVOICE_STATUSES, STATUS_LABEL, inr } from "@/lib/invoices/calc";
 import { InvoiceTable } from "@/components/invoice/InvoiceTable";
 import { isDbConfigured } from "@/lib/db";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,7 @@ export default async function InvoiceListPage({ searchParams }: Props) {
     return <p className="text-sm text-rose-300">Database is not configured. Set POSTGRES_URL and run the migrations.</p>;
   }
   const { q = "", status: statusParam = "all" } = await searchParams;
-  const status = (INVOICE_STATUSES as readonly string[]).includes(statusParam) ? (statusParam as InvoiceStatus) : "all";
+  const status: ListStatus = statusParam === "deleted" || (INVOICE_STATUSES as readonly string[]).includes(statusParam) ? (statusParam as ListStatus) : "all";
   const [rows, stats] = await Promise.all([listInvoices({ q, status }), summary()]);
 
   return (
@@ -28,7 +28,8 @@ export default async function InvoiceListPage({ searchParams }: Props) {
         <div>
           <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">Invoices</h1>
           <p className="mt-1 text-sm text-muted">
-            {stats.count} total · {inr(stats.billedPaise)} billed · <span className="text-amber-soft">{inr(stats.duePaise)} outstanding</span>
+            {stats.count} invoices · {inr(stats.billedPaise)} billed · <span className="text-emerald-200">{inr(stats.collectedPaise)} collected</span> ·{" "}
+            <span className="text-amber-soft">{inr(stats.duePaise)} outstanding</span>
           </p>
         </div>
         <form className="flex flex-wrap items-center gap-2" action="/invoice" method="get">
@@ -48,6 +49,7 @@ export default async function InvoiceListPage({ searchParams }: Props) {
                 {STATUS_LABEL[s]}
               </option>
             ))}
+            <option value="deleted">Deleted (restorable)</option>
           </select>
           <button type="submit" className={cn("rounded-full border border-white/15 px-4 py-2 text-sm text-ink/85 transition hover:border-gold/60")}>
             Filter

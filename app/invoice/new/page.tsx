@@ -21,7 +21,6 @@ export default async function NewInvoicePage() {
     items: [emptyLine()],
     discountPaise: 0,
     gstRateBp: 0,
-    advancePaidPaise: 0,
     notes: "",
     terms: DEFAULT_TERMS,
     status: "draft",

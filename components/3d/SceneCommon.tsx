@@ -1,10 +1,47 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
 import type { PointerTarget } from "./usePointerTarget";
+
+/** True on phones/tablets (coarse pointer). Decided on the client after mount. */
+export function useCoarsePointer() {
+  const [coarse, setCoarse] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const update = () => setCoarse(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return coarse;
+}
+
+/**
+ * OrbitControls sets `touch-action: none` on the canvas, which hijacks page scrolling on
+ * phones. Mount this after the controls to hand vertical swipes back to the page.
+ */
+export function TouchScrollFriendly() {
+  const { gl } = useThree();
+  useEffect(() => {
+    const el = gl.domElement;
+    const apply = () => {
+      if (el.style.touchAction !== "pan-y") el.style.touchAction = "pan-y";
+    };
+    apply();
+    // OrbitControls writes `touch-action: none` when it connects; undo it whenever that happens.
+    const mo = new MutationObserver(apply);
+    mo.observe(el, { attributes: true, attributeFilter: ["style"] });
+    const t = window.setTimeout(apply, 300);
+    return () => {
+      mo.disconnect();
+      window.clearTimeout(t);
+    };
+  }, [gl]);
+  return null;
+}
 
 export function StageLights({ accent = "#ff9f1c", secondary = "#4de5ff" }: { accent?: string; secondary?: string }) {
   return (

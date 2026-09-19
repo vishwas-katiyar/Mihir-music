@@ -68,7 +68,8 @@ export function HeroCalm() {
               <RigShowcase className="absolute inset-0" />
             </div>
             <figcaption className="mt-3 flex items-baseline justify-between gap-4 text-sm text-muted">
-              <span>Our standard wedding rig, live. Drag to orbit; the beams follow your cursor.</span>
+              <span className="hidden sm:inline">Our standard wedding rig, live. Drag to orbit; the beams follow your cursor.</span>
+              <span className="sm:hidden">Our standard wedding rig, live.</span>
             </figcaption>
           </motion.figure>
         </div>

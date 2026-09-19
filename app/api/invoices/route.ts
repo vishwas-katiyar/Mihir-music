@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdmin } from "@/lib/invoices/auth";
-import { InvoiceInputSchema, INVOICE_STATUSES, type InvoiceStatus } from "@/lib/invoices/calc";
-import { createInvoice, listInvoices, summary } from "@/lib/invoices/repo";
+import { InvoiceInputSchema, INVOICE_STATUSES } from "@/lib/invoices/calc";
+import { createInvoice, listInvoices, summary, type ListStatus } from "@/lib/invoices/repo";
 import { rowToJson } from "@/lib/invoices/serialize";
 import { isDbConfigured } from "@/lib/db";
 
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   if (!isDbConfigured) return noDb();
   const q = req.nextUrl.searchParams.get("q") ?? undefined;
   const statusParam = req.nextUrl.searchParams.get("status") ?? "all";
-  const status = (INVOICE_STATUSES as readonly string[]).includes(statusParam) ? (statusParam as InvoiceStatus) : "all";
+  const status: ListStatus = statusParam === "deleted" || (INVOICE_STATUSES as readonly string[]).includes(statusParam) ? (statusParam as ListStatus) : "all";
   const [rows, stats] = await Promise.all([listInvoices({ q, status }), summary()]);
   return NextResponse.json({ ok: true, invoices: rows.map(rowToJson), summary: stats });
 }

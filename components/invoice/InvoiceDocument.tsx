@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { InvoiceRow } from "@/lib/db/schema";
-import { inr, lineAmountPaise, formatDateIN, STATUS_LABEL, type InvoiceStatus } from "@/lib/invoices/calc";
+import { inr, lineAmountPaise, formatDateIN, METHOD_LABEL, STATUS_LABEL, type InvoiceStatus } from "@/lib/invoices/calc";
 import { UPI } from "@/lib/invoices/upi";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -13,151 +13,217 @@ const statusTone: Record<InvoiceStatus, string> = {
   cancelled: "bg-rose-50 text-rose-800",
 };
 
+const Label = ({ children }: { children: React.ReactNode }) => <div className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-slate-500">{children}</div>;
+
 /**
- * The invoice as a white A4-like sheet. Server component; used on the public share
- * page and as the print layout. Mirrors the PDF so both surfaces match.
+ * The invoice as a printable sheet. Mirrors the PDF: brand bar, meta strip, parties,
+ * items, payments received, totals with a balance call-out, UPI, notes, terms.
  */
 export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; qrSrc?: string }) {
   const status = inv.status as InvoiceStatus;
+  const isPaid = inv.grandTotalPaise > 0 && inv.balanceDuePaise === 0 && status !== "cancelled";
   const eventRange =
     inv.eventStart && inv.eventEnd && inv.eventStart !== inv.eventEnd ? `${formatDateIN(inv.eventStart)} to ${formatDateIN(inv.eventEnd)}` : formatDateIN(inv.eventStart || inv.eventEnd);
 
   return (
-    <article className="mx-auto w-full max-w-[860px] bg-white text-[#0f172a] shadow-[0_30px_80px_rgb(0_0_0/0.5)] print:max-w-none print:shadow-none">
-      <div className="p-7 sm:p-10">
-        <header className="flex flex-col gap-6 border-b-2 border-[#c99700] pb-6 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Image src="/logo.png" alt="" width={56} height={56} className="h-14 w-14 rounded-full" />
-            <div>
-              <div className="font-display text-xl font-bold tracking-[-0.03em]">{site.name}</div>
-              <div className="mt-1 text-xs text-slate-500">
-                {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
-              </div>
-              <div className="text-xs text-slate-500">
-                {site.phoneDisplay} · {site.email}
-              </div>
-            </div>
+    <article className="relative mx-auto w-full max-w-[860px] overflow-hidden bg-white text-[#0f172a] shadow-[0_30px_80px_rgb(0_0_0/0.5)] print:max-w-none print:shadow-none">
+      {isPaid && (
+        <div aria-hidden className="pointer-events-none absolute right-8 top-40 rotate-[-14deg] select-none rounded-lg border-4 border-emerald-500/70 px-5 py-2 font-display text-4xl font-bold uppercase tracking-[0.2em] text-emerald-600/70">
+          Paid
+        </div>
+      )}
+      {status === "cancelled" && (
+        <div aria-hidden className="pointer-events-none absolute right-8 top-40 rotate-[-14deg] select-none rounded-lg border-4 border-rose-500/60 px-5 py-2 font-display text-4xl font-bold uppercase tracking-[0.2em] text-rose-600/60">
+          Cancelled
+        </div>
+      )}
+
+      {/* Brand bar */}
+      <header className="flex flex-col gap-6 bg-[#0b0c10] px-7 py-7 text-white sm:flex-row sm:items-start sm:justify-between sm:px-10">
+        <div className="flex items-center gap-4">
+          <Image src="/logo.png" alt="" width={52} height={52} className="h-13 w-13 rounded-full ring-2 ring-[#ffb800]/70" />
+          <div>
+            <div className="font-display text-lg font-bold tracking-[-0.03em]">{site.name}</div>
+            <div className="mt-0.5 text-xs text-white/60">Live event production, Indore</div>
+          </div>
+        </div>
+        <div className="sm:text-right">
+          <div className="font-display text-3xl font-bold tracking-[-0.04em]">Invoice</div>
+          <div className="mt-1 font-mono text-sm text-[#ffb800]">{inv.invoiceNumber}</div>
+        </div>
+      </header>
+      <div className="h-1 bg-[#ffb800]" />
+
+      <div className="px-7 py-8 sm:px-10">
+        {/* Meta strip */}
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-b border-slate-200 pb-6 sm:grid-cols-4">
+          <div>
+            <Label>Issued</Label>
+            <dd className="mt-1 text-sm font-medium">{formatDateIN(inv.issueDate)}</dd>
+          </div>
+          <div>
+            <Label>Due</Label>
+            <dd className="mt-1 text-sm font-medium">{inv.dueDate ? formatDateIN(inv.dueDate) : "On receipt"}</dd>
+          </div>
+          <div>
+            <Label>Event</Label>
+            <dd className="mt-1 text-sm font-medium">{eventRange || "As agreed"}</dd>
+          </div>
+          <div>
+            <Label>Status</Label>
+            <dd className="mt-1">
+              <span className={cn("inline-block rounded px-2 py-0.5 text-xs font-semibold", statusTone[status])}>{STATUS_LABEL[status]}</span>
+            </dd>
+          </div>
+        </dl>
+
+        {/* Parties */}
+        <div className="mt-8 grid gap-8 sm:grid-cols-2">
+          <div>
+            <Label>Billed to</Label>
+            <div className="mt-2 text-lg font-semibold">{inv.clientName}</div>
+            {inv.clientAddress && <p className="mt-1 whitespace-pre-line text-sm text-slate-600">{inv.clientAddress}</p>}
+            {(inv.clientPhone || inv.clientEmail) && <p className="mt-1 text-sm text-slate-600">{[inv.clientPhone, inv.clientEmail].filter(Boolean).join(" · ")}</p>}
+            {(inv.eventTitle || inv.venue) && (
+              <p className="mt-3 text-sm text-slate-700">
+                <span className="font-medium">{inv.eventTitle || "Live event production"}</span>
+                {inv.venue && <span className="text-slate-500"> · {inv.venue}</span>}
+              </p>
+            )}
           </div>
           <div className="sm:text-right">
-            <div className="font-display text-3xl font-bold tracking-[-0.04em]">Invoice</div>
-            <div className="mt-1 text-sm text-slate-600">{inv.invoiceNumber}</div>
-            <div className="text-sm text-slate-600">
-              Issued {formatDateIN(inv.issueDate)}
-              {inv.dueDate ? `, due ${formatDateIN(inv.dueDate)}` : ""}
-            </div>
-            <span className={cn("mt-3 inline-block rounded px-2.5 py-1 text-xs font-semibold", statusTone[status])}>{STATUS_LABEL[status]}</span>
-          </div>
-        </header>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-slate-50 p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Billed to</div>
-            <div className="mt-2 text-base font-semibold">{inv.clientName}</div>
-            {inv.clientAddress && <p className="mt-1 whitespace-pre-line text-sm text-slate-700">{inv.clientAddress}</p>}
-            {inv.clientPhone && <p className="text-sm text-slate-700">{inv.clientPhone}</p>}
-            {inv.clientEmail && <p className="text-sm text-slate-700">{inv.clientEmail}</p>}
-          </div>
-          <div className="rounded-lg bg-slate-50 p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Event</div>
-            <div className="mt-2 text-base font-semibold">{inv.eventTitle || "Live event production"}</div>
-            {eventRange && <p className="mt-1 text-sm text-slate-700">{eventRange}</p>}
-            {inv.venue && <p className="text-sm text-slate-700">{inv.venue}</p>}
+            <Label>From</Label>
+            <div className="mt-2 text-lg font-semibold">{site.name}</div>
+            <p className="mt-1 text-sm text-slate-600">
+              {site.address.street}, {site.address.locality}
+              <br />
+              {site.address.region} {site.address.postalCode}
+            </p>
+            <p className="mt-1 text-sm text-slate-600">
+              {site.phoneDisplay}
+              <br />
+              {site.email}
+            </p>
           </div>
         </div>
 
-        <div className="mt-8 overflow-x-auto rounded-lg border border-slate-200">
+        {/* Items */}
+        <div className="mt-10 overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
-            <thead className="bg-[#0b0c10] text-left text-xs text-white">
-              <tr>
-                <th className="px-4 py-3 font-semibold">#</th>
-                <th className="px-4 py-3 font-semibold">Item</th>
-                <th className="px-4 py-3 text-right font-semibold">Qty</th>
-                <th className="px-4 py-3 text-right font-semibold">Rate</th>
-                <th className="px-4 py-3 text-right font-semibold">Amount</th>
+            <thead>
+              <tr className="border-b-2 border-[#0b0c10] text-left text-[10.5px] uppercase tracking-[0.14em] text-slate-500">
+                <th className="py-2 pr-4 font-medium">Item</th>
+                <th className="py-2 pr-4 text-right font-medium">Qty</th>
+                <th className="py-2 pr-4 text-right font-medium">Rate</th>
+                <th className="py-2 text-right font-medium">Amount</th>
               </tr>
             </thead>
             <tbody>
               {inv.items.map((l, i) => (
-                <tr key={i} className={cn("border-t border-slate-200 align-top", i % 2 === 1 && "bg-slate-50")}>
-                  <td className="px-4 py-3 text-slate-500">{i + 1}</td>
-                  <td className="px-4 py-3">
+                <tr key={i} className="border-b border-slate-100 align-top">
+                  <td className="py-3.5 pr-4">
                     <div className="font-medium">{l.title || "Item"}</div>
                     {l.description && <div className="mt-0.5 text-xs text-slate-500">{l.description}</div>}
                   </td>
-                  <td className="px-4 py-3 text-right tabular-nums">{l.quantity}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{inr(l.ratePaise)}</td>
-                  <td className="px-4 py-3 text-right font-medium tabular-nums">{inr(lineAmountPaise(l))}</td>
+                  <td className="py-3.5 pr-4 text-right tabular-nums text-slate-700">{l.quantity}</td>
+                  <td className="py-3.5 pr-4 text-right tabular-nums text-slate-700">{inr(l.ratePaise)}</td>
+                  <td className="py-3.5 text-right font-medium tabular-nums">{inr(lineAmountPaise(l))}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-slate-50 p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Pay by UPI</div>
-            {inv.balanceDuePaise > 0 ? (
-              <div className="mt-3 flex items-start gap-4">
-                {qrSrc && (
-                  // eslint-disable-next-line @next/next/no-img-element -- data URL generated server-side
-                  <img src={qrSrc} alt={`UPI QR for ${inr(inv.balanceDuePaise)}`} className="h-28 w-28 rounded-md border border-slate-200 bg-white p-1" />
-                )}
-                <div className="text-sm text-slate-700">
-                  <div className="text-lg font-semibold text-[#0f172a]">{inr(inv.balanceDuePaise)}</div>
-                  <div className="mt-1">UPI ID: {UPI.id}</div>
-                  <div>Reference: {inv.invoiceNumber}</div>
-                  <p className="mt-2 text-xs text-slate-500">Scan with any UPI app, then share the screenshot on WhatsApp.</p>
-                </div>
+        {/* Payments + totals */}
+        <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_300px]">
+          <div>
+            {inv.payments.length > 0 && (
+              <>
+                <Label>Payments received</Label>
+                <table className="mt-2 w-full text-sm">
+                  <tbody>
+                    {inv.payments.map((p) => (
+                      <tr key={p.id} className="border-b border-slate-100">
+                        <td className="py-2 pr-3 text-slate-700">{formatDateIN(p.date)}</td>
+                        <td className="py-2 pr-3 text-slate-500">
+                          {METHOD_LABEL[p.method]}
+                          {p.reference ? ` · ${p.reference}` : ""}
+                        </td>
+                        <td className="py-2 text-right tabular-nums text-emerald-700">{inr(p.amountPaise)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+            {inv.notes && (
+              <div className={cn(inv.payments.length > 0 && "mt-6")}>
+                <Label>Notes</Label>
+                <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{inv.notes}</p>
               </div>
-            ) : (
-              <p className="mt-3 text-sm font-semibold text-emerald-700">Paid in full. Thank you.</p>
             )}
           </div>
-          <dl className="rounded-lg bg-slate-50 p-5 text-sm">
-            <div className="flex justify-between py-1">
-              <dt className="text-slate-600">Subtotal</dt>
+
+          <dl className="text-sm">
+            <div className="flex justify-between py-1.5">
+              <dt className="text-slate-500">Subtotal</dt>
               <dd className="tabular-nums">{inr(inv.subtotalPaise)}</dd>
             </div>
             {inv.discountPaise > 0 && (
-              <div className="flex justify-between py-1">
-                <dt className="text-slate-600">Discount</dt>
+              <div className="flex justify-between py-1.5">
+                <dt className="text-slate-500">Discount</dt>
                 <dd className="tabular-nums">- {inr(inv.discountPaise)}</dd>
               </div>
             )}
             {inv.gstRateBp > 0 && (
-              <div className="flex justify-between py-1">
-                <dt className="text-slate-600">GST {inv.gstRateBp / 100}%</dt>
+              <div className="flex justify-between py-1.5">
+                <dt className="text-slate-500">GST {inv.gstRateBp / 100}%</dt>
                 <dd className="tabular-nums">{inr(inv.gstPaise)}</dd>
               </div>
             )}
-            <div className="mt-2 flex justify-between border-t border-slate-200 pt-3 text-base font-semibold">
-              <dt>Grand total</dt>
+            <div className="flex justify-between border-t border-slate-200 py-2 font-semibold">
+              <dt>Total</dt>
               <dd className="tabular-nums">{inr(inv.grandTotalPaise)}</dd>
             </div>
-            <div className="flex justify-between py-1">
-              <dt className="text-slate-600">Advance received</dt>
-              <dd className="tabular-nums">{inr(inv.advancePaidPaise)}</dd>
-            </div>
-            <div className={cn("flex justify-between py-1 text-base font-semibold", inv.balanceDuePaise > 0 ? "text-rose-700" : "text-emerald-700")}>
-              <dt>Balance due</dt>
-              <dd className="tabular-nums">{inr(inv.balanceDuePaise)}</dd>
+            {inv.advancePaidPaise > 0 && (
+              <div className="flex justify-between py-1.5">
+                <dt className="text-slate-500">Received</dt>
+                <dd className="tabular-nums text-emerald-700">- {inr(inv.advancePaidPaise)}</dd>
+              </div>
+            )}
+            <div className={cn("mt-2 flex items-baseline justify-between rounded-lg px-4 py-3", isPaid ? "bg-emerald-50 text-emerald-800" : "bg-[#0b0c10] text-white")}>
+              <dt className="text-xs font-medium uppercase tracking-[0.14em]">{isPaid ? "Paid in full" : "Balance due"}</dt>
+              <dd className="font-display text-2xl font-bold tabular-nums tracking-[-0.03em]">{inr(inv.balanceDuePaise)}</dd>
             </div>
           </dl>
         </div>
 
-        {inv.notes && (
-          <section className="mt-8">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Notes</div>
-            <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{inv.notes}</p>
-          </section>
+        {/* UPI */}
+        {inv.balanceDuePaise > 0 && status !== "cancelled" && (
+          <div className="mt-8 flex flex-col gap-5 rounded-xl border border-slate-200 p-5 sm:flex-row sm:items-center">
+            {qrSrc && (
+              // eslint-disable-next-line @next/next/no-img-element -- data URL generated server-side
+              <img src={qrSrc} alt={`UPI QR code for ${inr(inv.balanceDuePaise)}`} className="h-32 w-32 shrink-0 rounded-md" />
+            )}
+            <div className="text-sm">
+              <Label>Pay the balance by UPI</Label>
+              <p className="mt-2 text-slate-700">
+                Scan with any UPI app to pay <span className="font-semibold text-[#0f172a]">{inr(inv.balanceDuePaise)}</span> to <span className="font-mono">{UPI.id}</span> ({UPI.payeeName}).
+              </p>
+              <p className="mt-1 text-slate-500">Use {inv.invoiceNumber} as the reference and share the screenshot on WhatsApp so we can mark it received.</p>
+            </div>
+          </div>
         )}
 
         {inv.terms.length > 0 && (
-          <section className="mt-8">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">Terms</div>
-            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs leading-relaxed text-slate-600">
+          <section className="mt-10">
+            <Label>Terms</Label>
+            <ol className="mt-2 grid gap-1 text-xs leading-relaxed text-slate-500 sm:grid-cols-2 sm:gap-x-8">
               {inv.terms.map((t, i) => (
-                <li key={i}>{t}</li>
+                <li key={i} className="flex gap-2">
+                  <span className="text-slate-400">{i + 1}.</span>
+                  <span>{t}</span>
+                </li>
               ))}
             </ol>
           </section>

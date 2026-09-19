@@ -29,7 +29,14 @@ Required environment variables (Project → Settings → Environment Variables):
   `MSL-YYYY-NNNN`. Each invoice has an unguessable share token.
 - Clients open `/i/<token>` (never indexed) to view, pay the balance by UPI QR, and
   download the PDF from `/api/i/<token>/pdf` (rendered server-side with @react-pdf).
-- Admin can edit, change status, duplicate, rotate the share link, or delete.
+- Payments are a history on the invoice (date, amount, method, reference). "Received" and
+  "Balance due" derive from it, and status becomes Partially paid / Paid automatically.
+  Record the second payment on the same invoice; the same client link and PDF update.
+- Admin can edit, change status, duplicate, rotate the share link, or delete. Delete is a
+  soft delete: the invoice moves to the "Deleted" filter and can be restored.
+- The PDF uses Space Grotesk from `public/fonts` (fetch with `node scripts/fetch-fonts.mjs`).
+  Add `?inline=1` to the PDF URL to view it in the browser instead of downloading.
+- The local dev server and production share the same database. Do not bulk-delete rows.
 
 ## Where things live
 
