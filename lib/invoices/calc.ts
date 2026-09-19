@@ -124,6 +124,35 @@ export function todayIST(): string {
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
+const ONES = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+const TENS = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+const words99 = (n: number) => (n < 20 ? ONES[n] : `${TENS[Math.floor(n / 10)]}${n % 10 ? ` ${ONES[n % 10]}` : ""}`);
+const words999 = (n: number) => (n < 100 ? words99(n) : `${ONES[Math.floor(n / 100)]} Hundred${n % 100 ? ` ${words99(n % 100)}` : ""}`);
+
+/** Indian numbering: crore, lakh, thousand, hundred. */
+function wordsIndian(n: number): string {
+  if (n === 0) return "Zero";
+  const parts: string[] = [];
+  const crore = Math.floor(n / 1e7);
+  const lakh = Math.floor((n % 1e7) / 1e5);
+  const thousand = Math.floor((n % 1e5) / 1e3);
+  const rest = n % 1e3;
+  if (crore) parts.push(`${wordsIndian(crore)} Crore`);
+  if (lakh) parts.push(`${words99(lakh)} Lakh`);
+  if (thousand) parts.push(`${words99(thousand)} Thousand`);
+  if (rest) parts.push(words999(rest));
+  return parts.join(" ");
+}
+
+/** "Rupees Twenty Thousand Only", or with paise: "Rupees Twenty Thousand and Fifty Paise Only". */
+export function amountInWords(paise: number): string {
+  const abs = Math.abs(Math.round(paise));
+  const rupees = Math.floor(abs / 100);
+  const p = abs % 100;
+  return `Rupees ${wordsIndian(rupees)}${p ? ` and ${words99(p)} Paise` : ""} Only`;
+}
+
 export function formatDateIN(iso?: string | null) {
   if (!iso) return "";
   const d = new Date(`${iso}T00:00:00`);

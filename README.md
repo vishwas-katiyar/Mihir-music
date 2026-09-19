@@ -34,8 +34,11 @@ Required environment variables (Project → Settings → Environment Variables):
   Record the second payment on the same invoice; the same client link and PDF update.
 - Admin can edit, change status, duplicate, rotate the share link, or delete. Delete is a
   soft delete: the invoice moves to the "Deleted" filter and can be restored.
-- The PDF uses Space Grotesk from `public/fonts` (fetch with `node scripts/fetch-fonts.mjs`).
-  Add `?inline=1` to the PDF URL to view it in the browser instead of downloading.
+- The PDF (`components/invoice/InvoicePdf.tsx`) is a classic structured invoice: reference
+  block, bill-to and event panels, items table, amount in words, payments received, UPI QR,
+  totals with balance due, terms and signature. It embeds Inter and Space Grotesk from
+  `public/fonts` (fetch with `node scripts/fetch-fonts.mjs`). Add `?inline=1` to the PDF URL
+  to view it in the browser instead of downloading. The share page mirrors the same layout.
 - The local dev server and production share the same database. Do not bulk-delete rows.
 
 ## Where things live
