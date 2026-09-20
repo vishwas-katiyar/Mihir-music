@@ -1,14 +1,40 @@
-"use client";
-
 import { Star } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNavigation, CarouselIndicator } from "@/components/motion-primitives/carousel";
 import { Container } from "@/components/ui/Container";
+import { Marquee } from "@/components/ui/Marquee";
 import { Reveal } from "@/components/ui/Reveal";
-import { reviews } from "@/lib/reviews";
+import { reviews, type Review } from "@/lib/reviews";
 import { site } from "@/lib/site";
 
-/** One quote at a time in large type (motion-primitives Carousel, drag or arrows). */
+/**
+ * Reviews as two counter-scrolling rows of cards with faded edges. Layout pattern
+ * from 21st.dev "Testimonials Marquee" (shadcnspace/marquee-01), restyled to the site:
+ * no avatars, no handles, gold stars, panel cards on the charcoal ground. Hovering a
+ * row pauses it so a quote can be read in full.
+ */
+function ReviewCard({ r }: { r: Review }) {
+  return (
+    <figure className="flex h-full w-[19rem] shrink-0 flex-col justify-between rounded-2xl border border-white/10 bg-panel/40 p-5 sm:w-[22rem]">
+      <blockquote className="text-[15px] leading-relaxed text-ink/90">“{r.text}”</blockquote>
+      <figcaption className="mt-5 flex items-center justify-between gap-3 text-sm">
+        <span>
+          <span className="block font-medium text-ink">{r.name}</span>
+          <span className="block text-xs text-muted">{r.role}</span>
+        </span>
+        <span className="flex text-gold" aria-label={`${r.rating} out of 5 stars`}>
+          {Array.from({ length: r.rating }).map((_, i) => (
+            <Star key={i} className="h-3.5 w-3.5 fill-current" strokeWidth={0} aria-hidden />
+          ))}
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
 export function Testimonials() {
+  const half = Math.ceil(reviews.length / 2);
+  const firstRow = reviews.slice(0, half);
+  const secondRow = reviews.length > 1 ? [...reviews.slice(half), ...reviews.slice(0, half)].filter((r, i, a) => a.indexOf(r) === i) : reviews;
+
   return (
     <section id="reviews" className="border-y border-white/10 py-24 sm:py-32">
       <Container>
@@ -25,26 +51,22 @@ export function Testimonials() {
             </a>
           </div>
         </Reveal>
-
-        <Reveal delay={0.1} className="mt-12">
-          <Carousel className="pb-12">
-            <CarouselContent>
-              {reviews.map((r) => (
-                <CarouselItem key={r.name} className="px-1">
-                  <figure className="max-w-4xl">
-                    <blockquote className="font-display text-2xl leading-snug tracking-[-0.02em] text-ink sm:text-3xl lg:text-4xl">“{r.text}”</blockquote>
-                    <figcaption className="mt-6 text-sm text-muted">
-                      <span className="text-ink">{r.name}</span>, {r.role.toLowerCase()}
-                    </figcaption>
-                  </figure>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselNavigation alwaysShow className="left-auto right-0 top-auto -bottom-1 w-auto translate-y-0 gap-2 px-0" classNameButton="bg-white/5 ring-1 ring-white/12 hover:bg-white/10 [&_svg]:stroke-ink" />
-            <CarouselIndicator className="justify-start" classNameButton="bg-white/25 data-[active]:bg-gold" />
-          </Carousel>
-        </Reveal>
       </Container>
+
+      <Reveal delay={0.1} className="relative mt-12">
+        <Marquee pauseOnHover className="py-2 [--duration:55s] [--gap:1rem]">
+          {firstRow.map((r) => (
+            <ReviewCard key={r.name} r={r} />
+          ))}
+        </Marquee>
+        <Marquee reverse pauseOnHover className="py-2 [--duration:65s] [--gap:1rem]">
+          {secondRow.map((r) => (
+            <ReviewCard key={r.name} r={r} />
+          ))}
+        </Marquee>
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-charcoal to-transparent" />
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-charcoal to-transparent" />
+      </Reveal>
     </section>
   );
 }

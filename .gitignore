@@ -47,3 +47,6 @@ next-env.d.ts
 .agents/
 .claude/skills/
 skills-lock.json
+
+# Local MCP server config (holds the 21st.dev API key)
+.mcp.json

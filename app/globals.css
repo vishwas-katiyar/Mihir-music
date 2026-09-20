@@ -47,6 +47,12 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  /* Seamless track for components/ui/Marquee: shift by exactly one copy plus its gap */
+  --animate-marquee-track: marquee-track var(--duration, 40s) linear infinite;
+  @keyframes marquee-track {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap, 1rem))); }
+  }
   --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 0 0 rgb(255 184 0 / 0.0), inset 0 1px 0 rgb(255 255 255 / 0.08); }
@@ -173,6 +179,6 @@ body {
 
 /* Reduced motion: kill perpetual loops */
 @media (prefers-reduced-motion: reduce) {
-  .led, .animate-marquee { animation: none !important; }
+  .led, .animate-marquee, .animate-marquee-track { animation: none !important; }
   html { scroll-behavior: auto; }
 }
