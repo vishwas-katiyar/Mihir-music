@@ -235,9 +235,9 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
         {/* Seal + signature */}
         <div className="mt-5 flex items-end justify-between gap-6">
           <div className="text-xs text-slate-500">{settled ? "Received with thanks." : "Thank you for your business."}</div>
-          <div className="flex w-[200px] flex-col items-end">
-            <Image src="/logo.png" alt="" width={60} height={60} className="h-[60px] w-[60px] opacity-90" />
-            <div className="mt-1.5 w-full border-t border-[#1e293b] pt-1.5 text-right">
+          <div className="flex items-end gap-2.5">
+            <Image src="/logo.png" alt="" width={54} height={54} className="h-[54px] w-[54px] opacity-90" />
+            <div className="w-[170px] border-t border-[#1e293b] pt-1.5 text-right">
               <div className="font-bold text-[#1e293b]">For {site.name}</div>
               <div className="text-xs text-slate-500">Authorised Signatory</div>
             </div>
