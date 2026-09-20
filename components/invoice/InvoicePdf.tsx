@@ -301,7 +301,10 @@ const statusColor: Record<InvoiceStatus, string> = {
 
 export interface InvoicePdfProps {
   invoice: InvoiceRow;
+  /** Black monogram for the white header tile. */
   logoSrc?: string | Buffer;
+  /** Gold monogram used as the seal beside the signature (falls back to logoSrc). */
+  sealSrc?: string | Buffer;
   qrSrc?: string;
   shareUrl: string;
 }
@@ -309,9 +312,11 @@ export interface InvoicePdfProps {
 export function InvoicePdf({
   invoice: inv,
   logoSrc,
+  sealSrc,
   qrSrc,
   shareUrl,
 }: InvoicePdfProps) {
+  const seal = sealSrc ?? logoSrc;
   const status = inv.status as InvoiceStatus;
   const cancelled = status === "cancelled";
   const pending = inv.balanceDuePaise > 0 && !cancelled;
@@ -652,7 +657,7 @@ export function InvoicePdf({
               </Text>
               <View style={s.signBlock}>
                 {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop */}
-                {logoSrc ? <Image src={logoSrc} style={s.seal} /> : null}
+                {seal ? <Image src={seal} style={s.seal} /> : null}
                 <View style={s.signLine}>
                   <Text
                     style={[W(700), { color: c.ink, fontSize: 9.5 }]}

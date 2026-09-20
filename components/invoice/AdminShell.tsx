@@ -23,7 +23,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Link href="/invoice" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full border border-gold/50" />
+            <Image src="/logo-mark.png" alt="" width={36} height={36} className="h-9 w-9 object-contain" />
             <span className="leading-tight">
               <span className="block font-display text-base font-bold tracking-[-0.03em]">{site.name}</span>
               <span className="block text-xs text-muted">Invoices</span>

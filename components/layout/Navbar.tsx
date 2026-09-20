@@ -43,18 +43,8 @@ export function Navbar() {
         )}
       >
         <Link href="/" className="flex items-center gap-3 pl-1" aria-label={`${site.name} home`}>
-          <Image
-            src="/logo.png"
-            alt=""
-            width={40}
-            height={40}
-            priority
-            className="h-10 w-10 rounded-full border border-amber/50 object-cover"
-          />
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="eyebrow text-amber-soft">Indore · Since {site.foundingYear}</span>
-            <span className="font-display text-lg font-bold tracking-[-0.05em] text-ink">{site.name}</span>
-          </span>
+          <Image src="/logo-mark.png" alt="" width={44} height={44} priority className="h-11 w-11 object-contain" />
+          <Image src="/wordmark.svg" alt="" width={120} height={40} priority className="hidden h-7 w-auto sm:block" />
         </Link>
 
         <ul className="hidden items-center gap-1 lg:flex">

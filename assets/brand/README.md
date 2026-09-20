@@ -101,6 +101,14 @@ Tokens are in `13-brand-colours-typography/colours.json` and `colours.css`
 All fonts are Google Fonts under the SIL Open Font License 1.1 - see
 `13-brand-colours-typography/fonts/` (TTFs, `fonts-README.md`, `OFL-LICENSE.txt`).
 
+## Site export
+
+`npm run brand:site` (or `node scripts/brand/export-site.mjs`) regenerates the files the website uses
+from the kit masters: `public/logo.png`, `logo-mark.png`, `logo-mark-black.png`, `wordmark.svg`,
+`logo-horizontal.svg/.png`, `logo-primary.png`, `favicon.svg`, `apple-touch-icon.png`, `icon-192/512.png`,
+`app/favicon.ico` and the static share cards `app/opengraph-image.png` / `app/twitter-image.png`.
+Run it after every `brand:build`.
+
 ## Source artwork and tracing
 
 `_source/` holds the original reference images supplied by MIHIR. The monogram and wordmark are

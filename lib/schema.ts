@@ -95,7 +95,7 @@ export function localBusinessSchema() {
       "Live event production company in Indore, Madhya Pradesh, renting and operating line-array sound systems, intelligent DMX stage lighting and certified aluminium truss rigging since 2012.",
     url: site.url,
     logo: { "@type": "ImageObject", "@id": ID.logo, url: abs("/logo.png"), contentUrl: abs("/logo.png") },
-    image: [abs("/logo.png"), abs("/opengraph-image")],
+    image: [abs("/logo.png"), abs("/opengraph-image.png")],
     telephone: site.phone,
     email: site.email,
     foundingDate: String(site.foundingYear),

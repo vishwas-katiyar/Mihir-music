@@ -10,13 +10,13 @@ import { site } from "@/lib/site";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Logo bytes for the PDF header: local file first (traced into the function), site fetch as fallback. */
-async function logoBytes(): Promise<Buffer | undefined> {
+/** Brand image bytes for the PDF: local public file first (traced into the function), site fetch as fallback. */
+async function brandBytes(file: "logo-mark-black.png" | "logo-mark.png"): Promise<Buffer | undefined> {
   try {
-    return await readFile(path.join(process.cwd(), "public", "logo.png"));
+    return await readFile(path.join(process.cwd(), "public", file));
   } catch {
     try {
-      const res = await fetch(`${site.url}/logo.png`, { cache: "force-cache" });
+      const res = await fetch(`${site.url}/${file}`, { cache: "force-cache" });
       if (res.ok) return Buffer.from(await res.arrayBuffer());
     } catch {
       /* no logo */
@@ -34,12 +34,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ token: s
   if (!invoice) return new NextResponse("Not found", { status: 404 });
 
   const shareUrl = `${site.url}/i/${invoice.token}`;
-  const [logo, qr] = await Promise.all([
-    logoBytes(),
+  const [logo, seal, qr] = await Promise.all([
+    brandBytes("logo-mark-black.png"),
+    brandBytes("logo-mark.png"),
     invoice.balanceDuePaise > 0 ? upiQrDataUrl(invoice.balanceDuePaise, invoice.invoiceNumber) : Promise.resolve(undefined),
   ]);
 
-  const pdf = await renderToBuffer(<InvoicePdf invoice={invoice} logoSrc={logo} qrSrc={qr} shareUrl={shareUrl} />);
+  const pdf = await renderToBuffer(<InvoicePdf invoice={invoice} logoSrc={logo} sealSrc={seal} qrSrc={qr} shareUrl={shareUrl} />);
   const filename = `${invoice.invoiceNumber}-${invoice.clientName.replace(/[^A-Za-z0-9]+/g, "-").slice(0, 40)}.pdf`;
 
   return new NextResponse(new Uint8Array(pdf), {

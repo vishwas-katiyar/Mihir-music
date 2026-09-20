@@ -12,9 +12,8 @@ export function Footer() {
       <Container className="py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="" width={44} height={44} className="h-11 w-11 rounded-full border border-amber/50 object-cover" />
-              <span className="font-display text-xl font-bold tracking-[-0.05em]">{site.name}</span>
+            <Link href="/" className="inline-flex" aria-label={`${site.name} home`}>
+              <Image src="/logo-horizontal.svg" alt={site.name} width={300} height={130} className="h-auto w-[280px] max-w-full" />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
               Live event production from Indore, Madhya Pradesh: line-array sound, intelligent DMX lighting, certified truss

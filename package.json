@@ -12,7 +12,8 @@
     "db:studio": "drizzle-kit studio",
     "db:migrate": "node --env-file=.env.local scripts/migrate.ts",
     "db:seed": "node --env-file=.env.local scripts/seed.ts",
-    "brand:build": "node scripts/brand/build-all.mjs"
+    "brand:build": "node scripts/brand/build-all.mjs",
+    "brand:site": "node scripts/brand/export-site.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.3.5",

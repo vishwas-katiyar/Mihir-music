@@ -65,8 +65,12 @@ export const metadata: Metadata = {
   },
   verification: { google: site.analytics.googleSiteVerification },
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/logo.png", type: "image/png" }],
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   category: "Event production",
   other: {

@@ -31,7 +31,7 @@ const d = (iso: string) => {
 };
 
 /** Brand imagery for image search; add /media photos here once they exist. */
-const brandImages = [`${site.url}/logo.png`, `${site.url}/opengraph-image`];
+const brandImages = [`${site.url}/logo.png`, `${site.url}/opengraph-image.png`];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

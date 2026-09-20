@@ -28,7 +28,7 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-3">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-white">
-              <Image src="/logo.png" alt="" width={48} height={48} className="h-12 w-12" />
+              <Image src="/logo-mark-black.png" alt="" width={48} height={48} className="h-12 w-12 object-contain" />
             </div>
             <div>
               <div className="text-[11px] font-bold uppercase tracking-[0.1em]">Tax invoice</div>
@@ -236,7 +236,7 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
         <div className="mt-5 flex items-end justify-between gap-6">
           <div className="text-xs text-slate-500">{settled ? "Received with thanks." : "Thank you for your business."}</div>
           <div className="flex items-end gap-2.5">
-            <Image src="/logo.png" alt="" width={54} height={54} className="h-[54px] w-[54px] opacity-90" />
+            <Image src="/logo-mark.png" alt="" width={54} height={54} className="h-[54px] w-[54px] object-contain opacity-90" />
             <div className="w-[170px] border-t border-[#1e293b] pt-1.5 text-right">
               <div className="font-bold text-[#1e293b]">For {site.name}</div>
               <div className="text-xs text-slate-500">Authorised Signatory</div>

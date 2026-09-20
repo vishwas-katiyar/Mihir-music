@@ -13,12 +13,12 @@
   --color-panel-soft: #171f2d;
   --color-panel-strong: #1e293b;
   /* One accent: gold. `amber` is kept as an alias so older components stay on-palette. */
-  --color-amber: #ffb800;
-  --color-amber-soft: #ffd166;
+  --color-amber: #d4af37; /* brand gold */
+  --color-amber-soft: #f6e27a; /* brand gold light */
   --color-cyan: #4de5ff;
   --color-violet: #8b5cf6;
   --color-electric: #7b2cbf;
-  --color-gold: #ffb800;
+  --color-gold: #d4af37;
   --color-charcoal: #0b0c10;
   --color-pink: #ff4ecd;
   --color-ink: #f8fafc;
@@ -144,7 +144,7 @@ body {
 }
 @utility text-gold-glow {
   color: var(--color-gold);
-  text-shadow: 0 0 36px rgb(255 184 0 / 0.45), 0 0 2px rgb(255 184 0 / 0.6);
+  text-shadow: 0 0 36px rgb(212 175 55 / 0.45), 0 0 2px rgb(212 175 55 / 0.6);
 }
 @utility eyebrow {
   font-family: var(--font-mono);

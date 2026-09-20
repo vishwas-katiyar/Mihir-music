@@ -318,7 +318,6 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
 
   // Foreground content
   const motif = ganeshaMotif({ paint });
-  const wordFill = paint;
   const lineFill = paint;
   const bookFill = COLORS.goldLight;
 
