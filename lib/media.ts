@@ -34,10 +34,50 @@ export interface Photo {
   src: string; // e.g. "/media/wedding-stage-01.jpg"
   alt: string;
   category: "concert" | "wedding" | "corporate" | "club";
-  /** Shown under the card on the home page. Name the venue only if it is public knowledge. */
+  /**
+   * "own" is the business's photography of its shows. "stock" is a licensed reference photo
+   * of someone else's event, credited on the card so it is never mistaken for our work.
+   */
+  kind: "own" | "stock";
+  /** Shown under the card on the home page for own photos. Name the venue only if it is public knowledge. */
   venue?: string;
   city?: string;
+  /** Required for stock: photographer and the photo's source page. */
+  credit?: { name: string; url: string };
 }
 
-/** Your own photography. Empty until files are added to /public/media. */
-export const photos: Photo[] = [];
+/**
+ * Card photos, first match per category wins, so put own photos ABOVE the stock ones and the
+ * stock photo drops out of the card automatically. Stock photos are from Unsplash under the
+ * Unsplash License (free for commercial use, no attribution required, credited anyway).
+ */
+export const photos: Photo[] = [
+  {
+    src: "/media/show-wedding-stage.jpg",
+    alt: "Wedding reception stage with draped ceiling, floral backdrop and warm stage lighting",
+    category: "wedding",
+    kind: "stock",
+    credit: { name: "Prottoy Hasan", url: "https://unsplash.com/photos/t417pRhcBbU" },
+  },
+  {
+    src: "/media/show-concert-ground.jpg",
+    alt: "Open-air concert crowd facing a stage lit by amber beams and haze",
+    category: "concert",
+    kind: "stock",
+    credit: { name: "Yvette de Wit", url: "https://unsplash.com/photos/NYrVisodQ2M" },
+  },
+  {
+    src: "/media/show-corporate-hall.jpg",
+    alt: "Corporate conference hall with truss-mounted moving heads, LED screens and a seated audience",
+    category: "corporate",
+    kind: "stock",
+    credit: { name: "Tyler Witkin", url: "https://unsplash.com/photos/ojiceL6CWRQ" },
+  },
+  {
+    src: "/media/show-club-night.jpg",
+    alt: "Club night crowd with hands up under truss-mounted red LED fixtures",
+    category: "club",
+    kind: "stock",
+    credit: { name: "Long Truong", url: "https://unsplash.com/photos/Y5PXVs1LpY4" },
+  },
+];

@@ -193,40 +193,76 @@ function Scene({ rig, quality }: { rig: Rig; quality: Exclude<Quality, "off">; p
   );
 }
 
+/** Fixed camera for still renders: spherical position around the rig's look-at point, set once. */
+function StillCamera({ rig, azimuth, polar, zoom }: { rig: Rig; azimuth: number; polar: number; zoom: number }) {
+  const { camera } = useThree();
+  useLayoutEffect(() => {
+    const target = new THREE.Vector3(0, rig.trussHeight * 0.45, 0);
+    const distance = (14 + rig.trussWidth * 0.45) * zoom;
+    camera.position.set(
+      target.x + distance * Math.sin(polar) * Math.sin(azimuth),
+      target.y + distance * Math.cos(polar),
+      target.z + distance * Math.sin(polar) * Math.cos(azimuth),
+    );
+    camera.lookAt(target);
+    camera.updateProjectionMatrix();
+  }, [camera, rig.trussHeight, rig.trussWidth, azimuth, polar, zoom]);
+  return null;
+}
+
+/** Marks the document once enough frames have run for beams, haze and deck easing to settle. */
+function ReadyFlag({ frames }: { frames: number }) {
+  const count = useRef(0);
+  useFrame(() => {
+    count.current += 1;
+    if (count.current === frames) document.documentElement.dataset.rigReady = "1";
+  });
+  return null;
+}
+
 export interface EstimatorSceneProps {
   rig: Rig;
   people: number;
   quality: Exclude<Quality, "off">;
   active: boolean;
+  /** Still-render mode (scripts/render-rig-stills.mjs): fixed camera, no controls, ready flag after settling. */
+  still?: { azimuth: number; polar: number; zoom: number };
 }
 
-export function EstimatorScene({ rig, people, quality, active }: EstimatorSceneProps) {
+export function EstimatorScene({ rig, people, quality, active, still }: EstimatorSceneProps) {
   const camZ = 14 + rig.trussWidth * 0.45;
   const coarse = useCoarsePointer();
   return (
     <Canvas
       className="absolute inset-0"
-      dpr={quality === "high" ? [1, 1.5] : 1}
+      dpr={still ? 1 : quality === "high" ? [1, 1.5] : 1}
       frameloop={active ? "always" : "never"}
       camera={{ fov: 40, position: [0, 5.5, camZ], near: 0.1, far: 140 }}
-      gl={{ antialias: quality === "high", alpha: true, powerPreference: "high-performance", stencil: false }}
+      gl={{ antialias: quality === "high", alpha: true, powerPreference: "high-performance", stencil: false, preserveDrawingBuffer: !!still }}
       onCreated={({ gl }) => gl.setClearColor("#07090d", 0)}
     >
-      <OrbitControls
-        target={[0, rig.trussHeight * 0.45, 0]}
-        enablePan={false}
-        enableZoom={false}
-        enableRotate={!coarse}
-        enableDamping
-        dampingFactor={0.08}
-        minPolarAngle={0.95}
-        maxPolarAngle={1.5}
-        minAzimuthAngle={-0.85}
-        maxAzimuthAngle={0.85}
-        autoRotate
-        autoRotateSpeed={0.35}
-      />
-      {coarse && <TouchScrollFriendly />}
+      {still ? (
+        <>
+          <StillCamera rig={rig} azimuth={still.azimuth} polar={still.polar} zoom={still.zoom} />
+          <ReadyFlag frames={150} />
+        </>
+      ) : (
+        <OrbitControls
+          target={[0, rig.trussHeight * 0.45, 0]}
+          enablePan={false}
+          enableZoom={false}
+          enableRotate={!coarse}
+          enableDamping
+          dampingFactor={0.08}
+          minPolarAngle={0.95}
+          maxPolarAngle={1.5}
+          minAzimuthAngle={-0.85}
+          maxAzimuthAngle={0.85}
+          autoRotate
+          autoRotateSpeed={0.35}
+        />
+      )}
+      {coarse && !still && <TouchScrollFriendly />}
       <Scene rig={rig} quality={quality} people={people} />
       <Crowd people={people} stageDepth={rig.stageDepth} quality={quality} />
     </Canvas>

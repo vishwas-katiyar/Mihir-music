@@ -10,13 +10,13 @@ import { instagramHandle, instagramUrl, photos, type Photo } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
 /**
- * Work strip: one card per show format, photo-first. Until real photos are added
- * to lib/media.ts each card falls back to the CSS stage poster with the format named on
- * it, so nothing on the page pretends to be a photograph. The moment a photo with a
- * matching `category` exists it takes over the card, with venue and city in the caption.
+ * Work strip: one card per show format, photo-first. Cards read lib/media.ts: an own photo
+ * shows venue and city; a licensed stock photo shows a photographer credit so it is never
+ * mistaken for our show; with no photo at all the CSS stage poster names the format.
  */
 function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Photo; featured?: boolean }) {
-  const caption = photo ? [photo.venue, photo.city].filter(Boolean).join(", ") : format.audience;
+  const stock = photo?.kind === "stock";
+  const caption = photo && !stock ? [photo.venue, photo.city].filter(Boolean).join(", ") : format.audience;
 
   return (
     <article className="group relative flex h-full flex-col">
@@ -51,8 +51,16 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
       </div>
       <div className="mt-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="font-display text-lg font-semibold tracking-[-0.02em] text-ink">{photo ? photo.alt : format.title}</h3>
+          <h3 className="font-display text-lg font-semibold tracking-[-0.02em] text-ink">{photo && !stock ? photo.alt : format.title}</h3>
           <p className="mt-1 truncate text-sm text-muted">{caption}</p>
+          {stock && photo.credit && (
+            <p className="mt-1 text-xs text-muted/80">
+              Reference photo by{" "}
+              <a href={photo.credit.url} target="_blank" rel="noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-ink">
+                {photo.credit.name}
+              </a>
+            </p>
+          )}
         </div>
         <Link
           href="/portfolio"
