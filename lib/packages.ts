@@ -10,16 +10,6 @@ export interface Package {
   cta: string;
 }
 
-/** Side-by-side comparison rows; values are in the same order as `packages`. */
-export const tierRows: { label: string; values: [string, string, string] }[] = [
-  { label: "Starting price", values: ["₹85,000", "₹1,60,000", "₹3,20,000"] },
-  { label: "Sound", values: ["Compact line array, dual subs, stage wedges", "Premium line array with cardioid subs", "High-SPL flown arrays and festival subs"] },
-  { label: "Lighting", values: ["8-12 moving lights with haze", "Full DMX pixel scene design, designer cues", "Lasers, strobes, blinders and haze"] },
-  { label: "Structure", values: ["Deck setup", "Stage build", "Front and back truss, flown systems"] },
-  { label: "Crew", values: ["Setup crew", "Show caller and live audio engineer", "Show calling, comms, logistics, strike crew"] },
-  { label: "Best for", values: ["Club nights, house parties", "Sangeet, reception, varmala", "Concerts, fests, large corporate shows"] },
-];
-
 export const packages: Package[] = [
   {
     id: "club",
@@ -68,3 +58,15 @@ export const packages: Package[] = [
     cta: "Request Fest Package",
   },
 ];
+
+/**
+ * The package whose starting price is nearest to an estimate, on a log scale so the
+ * comparison is proportional (1.4 lakh is closer to 1.6 lakh than to 85,000). Used by
+ * the estimator readout, which is where the packages are presented since the
+ * comparison table was retired.
+ */
+export function closestPackage(priceMid: number): Package {
+  return packages.reduce((best, p) =>
+    Math.abs(Math.log(p.priceValue / priceMid)) < Math.abs(Math.log(best.priceValue / priceMid)) ? p : best,
+  );
+}

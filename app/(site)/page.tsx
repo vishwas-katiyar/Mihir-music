@@ -6,7 +6,6 @@ import { ServicesList } from "@/components/sections/ServicesList";
 import { GearHighlights } from "@/components/sections/GearHighlights";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { EstimatorSection } from "@/components/sections/EstimatorSection";
-import { PackagesCompare } from "@/components/sections/PackagesCompare";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
@@ -37,7 +36,6 @@ export default function HomePage() {
       <RecentWork />
       <ServicesList />
       <EstimatorSection />
-      <PackagesCompare />
       <GearHighlights />
       <HowItWorks />
       <Testimonials />

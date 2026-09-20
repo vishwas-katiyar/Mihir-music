@@ -1,4 +1,5 @@
 import { site } from "./site";
+import type { Package } from "./packages";
 
 /**
  * Deterministic estimator model.
@@ -103,7 +104,7 @@ export function estimate(input: EstimateInput): EstimateResult {
   };
 }
 
-export function buildWhatsappPayload(r: EstimateResult, contact?: { name?: string; date?: string; city?: string }) {
+export function buildWhatsappPayload(r: EstimateResult, contact?: { name?: string; date?: string; city?: string }, pkg?: Package) {
   const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
   const lines = [
     `Hi Mihir! I built an estimate on your website and would like to book.`,
@@ -122,6 +123,7 @@ export function buildWhatsappPayload(r: EstimateResult, contact?: { name?: strin
     `• Crew of ${r.crew}, setup ${r.setupHours}`,
     ``,
     `Estimate: ${inr(r.price.low)} to ${inr(r.price.high)}`,
+    pkg ? `Closest package: ${pkg.name} (from ${inr(pkg.priceValue)})` : "",
     ``,
     `Please confirm availability and a final quote.`,
   ].filter((l) => l !== "");

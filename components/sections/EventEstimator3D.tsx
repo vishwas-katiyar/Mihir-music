@@ -14,6 +14,7 @@ import {
   type VenueId,
 } from "@/lib/estimator";
 import { EstimatorCanvas } from "@/components/3d/EstimatorCanvas";
+import { packages, closestPackage } from "@/lib/packages";
 import { AnimatedNumber } from "@/components/motion-primitives/animated-number";
 import { cn, formatINR } from "@/lib/utils";
 
@@ -60,7 +61,7 @@ function Segmented<T extends string>({
               className={cn(
                 "rounded-full border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-all duration-300 active:scale-[0.97]",
                 active
-                  ? "border-amber bg-amber text-black shadow-glow-amber"
+                  ? "border-amber bg-amber text-black"
                   : "border-white/12 bg-white/5 text-ink/80 hover:border-white/30 hover:text-ink",
               )}
             >
@@ -87,6 +88,11 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
   const [date, setDate] = useState("");
   const [city, setCity] = useState("");
   const [availability, setAvailability] = useState<Availability | null>(null);
+  /** Package the visitor tapped; null means "follow the estimate". Cleared whenever the estimate changes. */
+  const [pickedPackage, setPickedPackage] = useState<string | null>(null);
+
+  // A tapped package overrides "nearest to this estimate"; a new estimate clears the override.
+  useEffect(() => setPickedPackage(null), [eventType, crowd, venue]);
 
   // KV-backed date demand lookup while the visitor picks a date
   useEffect(() => {
@@ -119,7 +125,9 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
 
   const result = useMemo(() => estimate({ eventType, crowd, venue }), [eventType, crowd, venue]);
   const people = crowdSizes.find((c) => c.id === crowd)?.people ?? 350;
-  const href = useMemo(() => buildWhatsappPayload(result, { name, date, city }), [result, name, date, city]);
+  const nearest = useMemo(() => closestPackage(result.price.mid), [result.price.mid]);
+  const pkg = packages.find((p) => p.id === pickedPackage) ?? nearest;
+  const href = useMemo(() => buildWhatsappPayload(result, { name, date, city }, pkg), [result, name, date, city, pkg]);
 
   const rigLines = [
     { Icon: Lightbulb, text: `${result.rig.beams} moving-head beams · ${result.rig.pixelBars} pixel bars` },
@@ -217,9 +225,49 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
             ))}
           </ul>
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            Indicative range for {result.labels.eventType.toLowerCase()} · {result.labels.crowd} guests · {result.labels.venue.toLowerCase()}.
+            Indicative range for {result.labels.eventType.toLowerCase()}, {result.labels.crowd} guests, {result.labels.venue.toLowerCase()}.
             Final quote depends on date, travel and show duration.
           </p>
+
+          {/* Packages live here now (the comparison table was retired): three starting prices,
+              the one nearest the estimate preselected, tap another to read what it includes. */}
+          <div className="mt-6 border-t border-white/10 pt-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <span className="eyebrow text-muted">Closest starting point</span>
+              <span className="text-xs text-muted">Starting prices in rupees</span>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Production package">
+              {packages.map((p) => {
+                const active = p.id === pkg.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => setPickedPackage(p.id === nearest.id ? null : p.id)}
+                    className={cn(
+                      "rounded-xl border px-3 py-3 text-left transition-colors duration-300 active:scale-[0.98]",
+                      active ? "border-amber bg-amber/10" : "border-white/12 bg-white/5 hover:border-white/30",
+                    )}
+                  >
+                    <span className={cn("block text-xs font-medium leading-tight", active ? "text-ink" : "text-ink/80")}>{p.name}</span>
+                    <span className={cn("mt-1 block font-display text-base font-semibold tracking-[-0.03em]", active ? "text-amber" : "text-ink")}>
+                      {formatINR(p.priceValue)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <ul className="mt-4 grid gap-2 text-sm text-ink/85 sm:grid-cols-2">
+              {pkg.features.map((f) => (
+                <li key={f} className="flex gap-3">
+                  <span className="mt-2.5 h-px w-3 shrink-0 bg-amber" aria-hidden />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <a
@@ -227,7 +275,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
           target="_blank"
           rel="noreferrer"
           onClick={persistQuote}
-          className="group inline-flex items-center justify-center gap-3 rounded-full bg-amber px-6 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-black shadow-glow-amber transition hover:bg-amber-soft active:scale-[0.98]"
+          className="group inline-flex items-center justify-center gap-3 rounded-full bg-amber px-6 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-black transition hover:bg-amber-soft active:scale-[0.98]"
         >
           <MessageCircle className="h-4 w-4" />
           Send this estimate on WhatsApp

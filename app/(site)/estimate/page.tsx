@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { EventEstimator3D } from "@/components/sections/EventEstimator3D";
-import { PackagesCompare } from "@/components/sections/PackagesCompare";
 import { FAQ } from "@/components/sections/FAQ";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -35,7 +34,6 @@ export default function EstimatePage() {
           <EventEstimator3D expanded />
         </Container>
       </section>
-      <PackagesCompare />
       <FAQ items={pricingFaqs} title="How pricing works." />
     </>
   );
