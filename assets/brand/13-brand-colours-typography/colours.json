@@ -1,0 +1,110 @@
+{
+  "brand": "MIHIR",
+  "tagline": "SOUND & LIGHT | EVENT | PRODUCTION",
+  "palette": [
+    {
+      "key": "gold",
+      "name": "Gold",
+      "hex": "#D4AF37",
+      "role": "Primary brand colour - logo, accents, rules",
+      "tier": "primary"
+    },
+    {
+      "key": "black",
+      "name": "Black",
+      "hex": "#000000",
+      "role": "Primary background",
+      "tier": "primary"
+    },
+    {
+      "key": "charcoal",
+      "name": "Charcoal",
+      "hex": "#1A1A1A",
+      "role": "Secondary dark surface, cards, panels",
+      "tier": "primary"
+    },
+    {
+      "key": "white",
+      "name": "White",
+      "hex": "#F5F5F5",
+      "role": "Light background, inverse logo",
+      "tier": "primary"
+    },
+    {
+      "key": "goldLight",
+      "name": "Gold Light",
+      "hex": "#F6E27A",
+      "role": "Highlights, calls to action on dark",
+      "tier": "secondary"
+    },
+    {
+      "key": "goldDeep",
+      "name": "Gold Deep",
+      "hex": "#8E6A14",
+      "role": "Shadow tone of the gradient, gold on light",
+      "tier": "secondary"
+    },
+    {
+      "key": "navy",
+      "name": "Navy",
+      "hex": "#0B1A3A",
+      "role": "Alternative dark background (colour variations)",
+      "tier": "support"
+    },
+    {
+      "key": "grey",
+      "name": "Grey",
+      "hex": "#3A3A3A",
+      "role": "Neutral background for white logo",
+      "tier": "support"
+    }
+  ],
+  "goldGradient": {
+    "direction": "vertical (top to bottom)",
+    "css": "linear-gradient(180deg, #F9E9A0 0%, #E4C160 22%, #F3D77B 48%, #C9A23A 70%, #8E6A14 100%)",
+    "stops": [
+      {
+        "offset": 0,
+        "hex": "#F9E9A0"
+      },
+      {
+        "offset": 0.22,
+        "hex": "#E4C160"
+      },
+      {
+        "offset": 0.48,
+        "hex": "#F3D77B"
+      },
+      {
+        "offset": 0.7,
+        "hex": "#C9A23A"
+      },
+      {
+        "offset": 1,
+        "hex": "#8E6A14"
+      }
+    ]
+  },
+  "typography": [
+    {
+      "family": "Custom calligraphic lettering",
+      "weight": "Traced vector",
+      "use": "Wordmark & Monogram (never retype)"
+    },
+    {
+      "family": "Montserrat",
+      "weight": "SemiBold (600)",
+      "use": "Tagline & Labels"
+    },
+    {
+      "family": "Cinzel",
+      "weight": "Regular (400)",
+      "use": "Headings & Guide Labels"
+    },
+    {
+      "family": "Playfair Display",
+      "weight": "Regular (400)",
+      "use": "Editorial / Body Display"
+    }
+  ]
+}

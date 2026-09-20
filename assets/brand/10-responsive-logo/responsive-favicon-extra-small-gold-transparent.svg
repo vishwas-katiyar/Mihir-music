@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1519" height="1519" viewBox="0 0 1519 1519">
+<title>MIHIR - Sound &amp; Light | Event | Production</title>
+<defs>
+<linearGradient id="mihirGold" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#F9E9A0"/>
+  <stop offset="0.22" stop-color="#E4C160"/>
+  <stop offset="0.48" stop-color="#F3D77B"/>
+  <stop offset="0.7" stop-color="#C9A23A"/>
+  <stop offset="1" stop-color="#8E6A14"/>
+</linearGradient>
+
+</defs>
+
+
+<g transform="translate(105.00 261.50)">
+<path fill="url(#mihirGold)" transform="translate(115.00 784.00)" d="M-112-736L-115-746Q-44-784 24.500-784Q93-784 150-755L150-755Q264-696 345-562L345-562L524-271L821-714L830-714L943-129Q977 51 1044 121L1044 121Q1097 176 1179 176L1179 176Q1186 176 1194 176L1194 176L1194 186Q1132 212 1065 212L1065 212Q932 212 834 108L834 108Q752 22 719-135L719-135L673-346L502-92Q485-68 472-34Q459 0 460 24L460 24L451 24L208-392L158-56L158-52Q158-36 169.500-22.500Q181-9 197-9L197-9L212-9L212 0L-7 0L-7-10L9-10Q36-10 56.500-26.500Q77-43 82-71L82-71L151-500Q100-589 38-658L38-658Q-33-736-104-736L-104-736Q-108-736-112-736L-112-736Z"/>
+</g>
+
+</svg>
