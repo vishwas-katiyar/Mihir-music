@@ -34,6 +34,9 @@ export interface Photo {
   src: string; // e.g. "/media/wedding-stage-01.jpg"
   alt: string;
   category: "concert" | "wedding" | "corporate" | "club";
+  /** Shown under the card on the home page. Name the venue only if it is public knowledge. */
+  venue?: string;
+  city?: string;
 }
 
 /** Your own photography. Empty until files are added to /public/media. */

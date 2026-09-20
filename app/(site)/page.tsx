@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { HeroCalm } from "@/components/sections/HeroCalm";
+import { HeroStage } from "@/components/sections/HeroStage";
 import { ProofBand } from "@/components/sections/ProofBand";
-import { InstagramReels } from "@/components/sections/InstagramReels";
+import { RecentWork } from "@/components/sections/RecentWork";
 import { ShowFormats } from "@/components/sections/ShowFormats";
 import { ServicesList } from "@/components/sections/ServicesList";
 import { GearHighlights } from "@/components/sections/GearHighlights";
+import { BrandMarquee } from "@/components/sections/BrandMarquee";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { EstimatorSection } from "@/components/sections/EstimatorSection";
 import { PackagesCompare } from "@/components/sections/PackagesCompare";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -27,19 +29,21 @@ export default function HomePage() {
             name: `${site.name}: line-array sound, DMX stage lighting and truss rigging in Indore`,
             description: site.description,
             path: "/",
-            dateModified: "2026-09-19",
+            dateModified: "2026-09-20",
           }),
           faqSchema(),
         ]}
       />
-      <HeroCalm />
+      <HeroStage />
       <ProofBand />
-      <InstagramReels />
+      <RecentWork />
       <ShowFormats />
       <ServicesList />
-      <GearHighlights />
       <EstimatorSection />
       <PackagesCompare />
+      <GearHighlights />
+      <BrandMarquee />
+      <HowItWorks />
       <Testimonials />
       <FAQ />
       <ClosingCTA />

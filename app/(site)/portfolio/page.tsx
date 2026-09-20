@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { Reveal } from "@/components/ui/Reveal";
+import { InstagramReels } from "@/components/sections/InstagramReels";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -92,6 +93,7 @@ export default function PortfolioPage() {
         </Container>
       </section>
 
+      <InstagramReels />
       <Testimonials />
       <ClosingCTA />
     </>

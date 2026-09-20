@@ -49,3 +49,21 @@ export const gear: GearGroup[] = [
     ],
   },
 ];
+
+/**
+ * Manufacturers named in the models above, for the brand marquee. Keep in step with the
+ * table: a name here must appear in at least one `model` string, so the marquee never
+ * claims gear the inventory does not list.
+ */
+export const gearBrands: { name: string; role: string }[] = [
+  { name: "JBL", role: "Line array" },
+  { name: "RCF", role: "Line array" },
+  { name: "Clay Paky", role: "Moving heads" },
+  { name: "Avolites", role: "Lighting console" },
+  { name: "Soundcraft", role: "Mixing console" },
+  { name: "Yamaha", role: "Mixing console" },
+  { name: "Tomcat", role: "Truss" },
+  { name: "Prolyte", role: "Truss" },
+  { name: "Elation", role: "LED pixels" },
+  { name: "Chauvet", role: "LED pixels" },
+];
