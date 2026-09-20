@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { HeroStage } from "@/components/sections/HeroStage";
 import { ProofBand } from "@/components/sections/ProofBand";
 import { RecentWork } from "@/components/sections/RecentWork";
-import { ShowFormats } from "@/components/sections/ShowFormats";
 import { ServicesList } from "@/components/sections/ServicesList";
 import { GearHighlights } from "@/components/sections/GearHighlights";
-import { BrandMarquee } from "@/components/sections/BrandMarquee";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { EstimatorSection } from "@/components/sections/EstimatorSection";
 import { PackagesCompare } from "@/components/sections/PackagesCompare";
@@ -37,12 +35,10 @@ export default function HomePage() {
       <HeroStage />
       <ProofBand />
       <RecentWork />
-      <ShowFormats />
       <ServicesList />
       <EstimatorSection />
       <PackagesCompare />
       <GearHighlights />
-      <BrandMarquee />
       <HowItWorks />
       <Testimonials />
       <FAQ />

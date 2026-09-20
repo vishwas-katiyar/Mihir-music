@@ -10,21 +10,13 @@ import { instagramHandle, instagramUrl, photos, type Photo } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
 /**
- * Recent work strip: one card per show format, photo-first. Until real photos are added
+ * Work strip: one card per show format, photo-first. Until real photos are added
  * to lib/media.ts each card falls back to the CSS stage poster with the format named on
  * it, so nothing on the page pretends to be a photograph. The moment a photo with a
  * matching `category` exists it takes over the card, with venue and city in the caption.
  */
-const accents: Record<ShowFormat["slug"], "amber" | "cyan"> = {
-  wedding: "amber",
-  concert: "cyan",
-  corporate: "amber",
-  club: "cyan",
-};
-
 function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Photo; featured?: boolean }) {
-  const accent = accents[format.slug] ?? "amber";
-  const caption = photo ? [photo.venue, photo.city].filter(Boolean).join(", ") : format.rig[0];
+  const caption = photo ? [photo.venue, photo.city].filter(Boolean).join(", ") : format.audience;
 
   return (
     <article className="group relative flex h-full flex-col">
@@ -44,7 +36,7 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
           />
         ) : (
           <>
-            <StagePoster accent={accent} />
+            <StagePoster accent="amber" />
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#07090d] to-transparent" />
             <p
               className={cn(
@@ -56,9 +48,6 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
             </p>
           </>
         )}
-        <span className="eyebrow absolute right-4 top-4 rounded-full border border-white/12 bg-black/40 px-3 py-1.5 text-ink/85 backdrop-blur">
-          {format.audience}
-        </span>
       </div>
       <div className="mt-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -88,9 +77,9 @@ export function RecentWork() {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <h2 className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Shows we have built</h2>
+              <h2 className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Four shows, one crew</h2>
               <p className="mt-4 max-w-[52ch] text-base text-muted">
-                Four formats, one crew. Each card is a rig we run every season, from a 300-guest sangeet to a 10,000-crowd ground.
+                The rigs we run every season, from a 300-guest sangeet to a 10,000-crowd ground.
               </p>
             </div>
             <a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-ink/80 transition hover:text-gold">

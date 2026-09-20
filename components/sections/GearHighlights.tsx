@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { gear } from "@/lib/gear";
+import { gear, gearBrands } from "@/lib/gear";
 
 /**
  * Inventory digest for the home page: every group from lib/gear.ts, model names and
@@ -42,6 +42,17 @@ export function GearHighlights() {
               ))}
             </dl>
           </div>
+        </Reveal>
+
+        {/* Manufacturers named in the table above, as a plain wordmark row. Static: the page already has one marquee (reviews). */}
+        <Reveal delay={0.1} className="mt-16 border-t border-white/10 pt-8">
+          <ul aria-label="Equipment brands we own" className="flex flex-wrap gap-x-10 gap-y-4">
+            {gearBrands.map((b) => (
+              <li key={b.name} className="font-display text-lg font-semibold tracking-[-0.02em] text-ink/70 sm:text-xl">
+                {b.name}
+              </li>
+            ))}
+          </ul>
         </Reveal>
       </Container>
     </section>
