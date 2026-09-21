@@ -97,6 +97,11 @@ body {
 
 /* Controls: fire click on touch-up without the double-tap wait; a long-press must not select a label. */
 button, a, [role="button"] { touch-action: manipulation; }
+/* Keyboard focus is a lit gold ring; fields keep their own focus bloom instead. */
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="radio"]:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
 button, [role="button"] {
   user-select: none;
   -webkit-user-select: none;

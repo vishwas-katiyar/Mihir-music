@@ -79,7 +79,7 @@ export default async function ServicePage({ params }: Params) {
 
             <div className="mt-10 flex flex-wrap gap-4">
               <Button href="/estimate">Estimate with this system</Button>
-              <Button href={whatsappUrl(`Hi Mihir, I'd like a quote for ${s.name}. Please share availability and pricing.`)} external variant="ghost">
+              <Button href={whatsappUrl(`Hi Mihir, I'd like a quote for ${s.name}. Please share availability and pricing.`)} external variant="glass">
                 Ask on WhatsApp
               </Button>
             </div>

@@ -1,52 +1,39 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "ghost" | "cyan" | "outline";
+type Variant = "primary" | "glass";
 
 const styles: Record<Variant, string> = {
-  primary:
-    "bg-amber text-black hover:bg-amber-soft shadow-glow-amber",
-  cyan: "bg-cyan text-black hover:brightness-110 shadow-glow-cyan",
-  ghost: "border border-white/12 bg-white/5 text-ink hover:border-amber/60 hover:text-amber",
-  outline: "border border-amber/50 text-amber hover:bg-amber/10",
+  primary: "bg-gold text-charcoal shadow-glow-amber hover:brightness-105",
+  glass: "glass text-ink hover:border-white/25",
 };
 
 interface ButtonProps {
   href: string;
   children: React.ReactNode;
   variant?: Variant;
-  icon?: boolean;
   external?: boolean;
   className?: string;
-  size?: "sm" | "md" | "lg";
 }
 
 /**
- * Island button: pill with an optional nested icon disc (button-in-button).
- * Always rendered as a link — every CTA on this site navigates or opens WhatsApp.
+ * Pill CTA in the site's one button voice (sentence case, Space Grotesk 600), matching the
+ * hero actions. Always a link: every CTA on this site navigates or opens WhatsApp. Internal
+ * links point right, external ones point out.
  */
-export function Button({ href, children, variant = "primary", icon = true, external, className, size = "md" }: ButtonProps) {
-  const sizing = size === "lg" ? "px-7 py-3.5 text-sm" : size === "sm" ? "px-4 py-2 text-[11px]" : "px-5 py-3 text-xs";
+export function Button({ href, children, variant = "primary", external, className }: ButtonProps) {
   const cls = cn(
-    "group inline-flex items-center gap-3 rounded-full font-mono font-semibold uppercase tracking-[0.16em] transition-all duration-500 ease-stage active:scale-[0.98]",
-    sizing,
+    "group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-semibold",
+    "transition-[transform,filter,border-color] duration-200 ease-out-strong hover:-translate-y-0.5 active:scale-[0.97]",
     styles[variant],
     className,
   );
+  const Icon = external ? ArrowUpRight : ArrowRight;
   const content = (
     <>
-      <span>{children}</span>
-      {icon && (
-        <span
-          className={cn(
-            "flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-500 ease-stage group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105",
-            variant === "primary" || variant === "cyan" ? "bg-black/10" : "bg-white/8",
-          )}
-        >
-          <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
-        </span>
-      )}
+      {children}
+      <Icon className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:translate-x-0.5" aria-hidden />
     </>
   );
   if (external) {

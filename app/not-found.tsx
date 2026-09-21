@@ -10,7 +10,7 @@ export default function NotFound() {
         <p className="mt-6 max-w-xl text-muted">The page moved or never existed. Head back to the stage or jump straight to the estimator.</p>
         <div className="mt-10 flex flex-wrap gap-4">
           <Button href="/">Back to home</Button>
-          <Button href="/estimate" variant="ghost">
+          <Button href="/estimate" variant="glass">
             Build an estimate
           </Button>
         </div>

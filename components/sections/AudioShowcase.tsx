@@ -48,9 +48,7 @@ export function AudioShowcase() {
                 </table>
               </div>
               <div className="mt-8">
-                <Button href="/services/arena-audio" variant="cyan">
-                  Arena audio details
-                </Button>
+                <Button href="/services/arena-audio">Arena audio details</Button>
               </div>
             </Reveal>
           </div>
