@@ -72,9 +72,9 @@ export function Navbar() {
             href={whatsappUrl(defaultWhatsappMessage)}
             target="_blank"
             rel="noreferrer"
-            className="hidden items-center gap-2 rounded-full bg-amber px-4 py-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-black transition hover:bg-amber-soft sm:inline-flex"
+            className="hidden min-h-10 items-center gap-2 rounded-full bg-gold px-4 text-sm font-semibold text-charcoal transition-[transform,filter] duration-200 ease-out-strong hover:brightness-105 active:scale-[0.97] sm:inline-flex"
           >
-            <MessageCircle className="h-3.5 w-3.5" />
+            <MessageCircle className="h-4 w-4" aria-hidden />
             WhatsApp
           </a>
 
@@ -110,7 +110,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-[-1] flex flex-col justify-end bg-stage/92 px-6 pb-12 pt-28 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 z-[-1] flex flex-col justify-end bg-stage/92 px-6 pb-[calc(3rem+env(safe-area-inset-bottom,0px))] pt-28 backdrop-blur-2xl lg:hidden"
           >
             <ul className="flex flex-col gap-2">
               {nav.map((item, i) => (
@@ -136,9 +136,9 @@ export function Navbar() {
                 href={whatsappUrl(defaultWhatsappMessage)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-amber px-5 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-black"
+                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-amber transition-transform duration-200 ease-out-strong active:scale-[0.97]"
               >
-                <MessageCircle className="h-4 w-4" /> WhatsApp Mihir
+                <MessageCircle className="h-4 w-4" aria-hidden /> WhatsApp Mihir
               </a>
               <a href={`tel:${site.phone}`} className="eyebrow text-center text-muted">
                 {site.phoneDisplay}
