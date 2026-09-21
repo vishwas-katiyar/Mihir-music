@@ -25,6 +25,7 @@ Tagline (always this exact text): **SOUND & LIGHT | EVENT | PRODUCTION**
 | `12-colour-variations/` | Logo on every approved background: gold on black, black on white, white on black, black on gold, gold on navy, white on grey |
 | `13-brand-colours-typography/` | Colour and type specimen card, `colours.json`, `colours.css`, and the `fonts/` bundle with licence |
 | `14-social-media-templates/` | Ready-to-post templates: `feed-square/` (1080x1080), `feed-portrait/` (1080x1350), `story/` (1080x1920), `covers/` (Facebook, LinkedIn, YouTube, link post), transparent `-overlay.png` frames for your own photos, and a contact sheet. See its own README |
+| `15-print-collateral/` | Business card (front/back, 3mm bleed), A4 letterhead, A5 rate card (front/back, real package pricing), roll-up standee and step-and-repeat backdrop, plus a contact sheet. SVG masters + print-resolution PNGs, `-guides` proofs show bleed/trim/safe. See its own README |
 | `board/` | The complete brand board (`mihir-brand-board.svg/.png/.jpg`, 4096 x 2731) with all 13 panels |
 
 ### File naming

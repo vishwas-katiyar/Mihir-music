@@ -14,6 +14,11 @@ const steps = [
   "build-social-feed.mjs", // 14 social templates: feed square + portrait (+ photo overlays)
   "build-social-story.mjs", // 14 social templates: stories + covers
   "build-social-sheet.mjs", // 14 contact sheet of every social template
+  "build-print-card.mjs", // 15 business card front + back
+  "build-print-letterhead.mjs", // 15 A4 letterhead
+  "build-print-ratecard.mjs", // 15 A5 rate card front + back
+  "build-print-standee.mjs", // 15 roll-up standee + step-and-repeat backdrop
+  "build-print-sheet.mjs", // 15 contact sheet of every print piece
   "export-site.mjs", // public/ + app/ files used by the website
 ];
 
