@@ -11,7 +11,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Brand image bytes for the PDF: local public file first (traced into the function), site fetch as fallback. */
-async function brandBytes(file: "logo-mark-black.png" | "logo-mark.png"): Promise<Buffer | undefined> {
+async function brandBytes(file: "logo-horizontal.png" | "logo-mark.png"): Promise<Buffer | undefined> {
   try {
     return await readFile(path.join(process.cwd(), "public", file));
   } catch {
@@ -35,7 +35,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ token: s
 
   const shareUrl = `${site.url}/i/${invoice.token}`;
   const [logo, seal, qr] = await Promise.all([
-    brandBytes("logo-mark-black.png"),
+    brandBytes("logo-horizontal.png"),
     brandBytes("logo-mark.png"),
     invoice.balanceDuePaise > 0 ? upiQrDataUrl(invoice.balanceDuePaise, invoice.invoiceNumber) : Promise.resolve(undefined),
   ]);

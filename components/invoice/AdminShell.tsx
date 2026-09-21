@@ -22,12 +22,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-dvh bg-charcoal text-ink">
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <Link href="/invoice" className="flex items-center gap-3">
+          <Link href="/invoice" className="flex items-center gap-3" aria-label={`${site.name} invoices`}>
             <Image src="/logo-mark.png" alt="" width={36} height={36} className="h-9 w-9 object-contain" />
-            <span className="leading-tight">
-              <span className="block font-display text-base font-bold tracking-[-0.03em]">{site.name}</span>
-              <span className="block text-xs text-muted">Invoices</span>
-            </span>
+            <Image src="/wordmark.svg" alt="" width={96} height={42} className="h-6 w-auto" />
+            <span className="hidden border-l border-white/15 pl-3 text-xs uppercase tracking-[0.18em] text-muted sm:block">Invoices</span>
           </Link>
           {!onLogin && (
             <div className="flex items-center gap-2">

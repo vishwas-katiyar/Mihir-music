@@ -24,19 +24,18 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
   return (
     <article className="mx-auto w-full max-w-[860px] overflow-hidden bg-white font-sans text-[13px] leading-snug text-[#334155] shadow-[0_30px_80px_rgb(0_0_0/0.5)] print:max-w-none print:shadow-none">
       {/* Header band */}
-      <header className="bg-[#09142b] px-6 py-6 text-white sm:px-10">
+      <header className="bg-[#0b0b0b] px-6 py-6 text-white sm:px-10">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-white">
-              <Image src="/logo-mark-black.png" alt="" width={48} height={48} className="h-12 w-12 object-contain" />
-            </div>
+          <div className="flex items-start gap-4">
+            <Image src="/logo-horizontal.png" alt={site.name} width={800} height={346} className="h-[66px] w-auto shrink-0" />
+            <div className="hidden h-[62px] w-px shrink-0 bg-[#d4af37]/45 sm:block" />
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-[0.1em]">Tax invoice</div>
-              <div className="font-display mt-1 text-[22px] font-bold uppercase leading-tight tracking-[0.02em] text-[#d4af37]">{site.name}</div>
-              <div className="mt-1 text-xs text-[#d6e0f5]">
+              <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d4af37]">Tax invoice</div>
+              <div className="mt-1 text-[13px] font-semibold">{site.name}</div>
+              <div className="mt-1 text-xs text-[#c9c2ae]">
                 {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
               </div>
-              <div className="text-xs text-[#d6e0f5]">
+              <div className="text-xs text-[#c9c2ae]">
                 {site.phoneDisplay} <span className="mx-1.5 opacity-60">|</span> {site.email}
               </div>
             </div>
@@ -101,7 +100,7 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
         <div className="mt-5 overflow-x-auto">
           <table className="w-full min-w-[600px] border-collapse">
             <thead>
-              <tr className="bg-[#113163] text-left text-white">
+              <tr className="bg-[#1a1a1a] text-left text-white">
                 <th className="w-9 px-2 py-2 text-center font-bold">#</th>
                 <th className="w-32 px-2 py-2 font-bold">Item</th>
                 <th className="px-2 py-2 font-bold">Description</th>

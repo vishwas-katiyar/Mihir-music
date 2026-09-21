@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Download, MessageCircle, Smartphone } from "lucide-react";
 import { getInvoiceByToken } from "@/lib/invoices/repo";
@@ -39,8 +40,8 @@ export default async function SharedInvoicePage({ params }: Props) {
     <div className="min-h-dvh bg-charcoal py-6 text-ink sm:py-10 print:bg-white print:py-0">
       <div className="mx-auto max-w-[860px] px-4 sm:px-6 print:hidden">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <Link href="/" className="text-sm text-muted hover:text-ink">
-            {site.name}
+          <Link href="/" aria-label={`${site.name} home`} className="inline-flex">
+            <Image src="/logo-horizontal.svg" alt={site.name} width={160} height={69} className="h-10 w-auto" />
           </Link>
           <div className="flex flex-wrap gap-2">
             <a href={`/api/i/${inv.token}/pdf`} className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2.5 text-sm font-semibold text-charcoal transition hover:brightness-105">
