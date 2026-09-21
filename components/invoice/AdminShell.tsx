@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Plus } from "lucide-react";
+import { LogOut, Plus, FolderDown } from "lucide-react";
 import { site } from "@/lib/site";
 
 /** Minimal admin chrome for /invoice: brand, new-invoice shortcut, logout. Hidden on the login page. */
@@ -29,6 +29,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </Link>
           {!onLogin && (
             <div className="flex items-center gap-2">
+              <Link href="/invoice/assets" aria-label="Brand assets" className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-ink/80 transition hover:border-gold/60 hover:text-ink sm:px-4">
+                <FolderDown className="h-4 w-4" /> <span className="hidden sm:inline">Brand assets</span>
+              </Link>
               <Link href="/invoice/new" aria-label="New invoice" className="inline-flex items-center gap-2 rounded-full bg-gold px-3 py-2 text-sm font-semibold text-charcoal transition hover:brightness-105 sm:px-4">
                 <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New invoice</span>
               </Link>
