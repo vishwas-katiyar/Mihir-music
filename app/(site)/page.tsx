@@ -5,6 +5,7 @@ import { RecentWork } from "@/components/sections/RecentWork";
 import { ServicesList } from "@/components/sections/ServicesList";
 import { GearHighlights } from "@/components/sections/GearHighlights";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { AboutCrew } from "@/components/sections/AboutCrew";
 import { EstimatorSection } from "@/components/sections/EstimatorSection";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
@@ -38,6 +39,7 @@ export default function HomePage() {
       <EstimatorSection />
       <GearHighlights />
       <HowItWorks />
+      <AboutCrew />
       <Testimonials />
       <FAQ />
       <ClosingCTA />

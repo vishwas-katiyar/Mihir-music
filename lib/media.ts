@@ -81,3 +81,11 @@ export const photos: Photo[] = [
     credit: { name: "Long Truong", url: "https://unsplash.com/photos/Y5PXVs1LpY4" },
   },
 ];
+
+/**
+ * Crew photo for the About section on the home page. Null until the business supplies one
+ * (the section renders text-only rather than a placeholder box). Drop the JPG into
+ * /public/media and fill this in: a landscape or 4:5 frame of the crew rigging or at
+ * soundcheck reads best.
+ */
+export const crewPhoto: { src: string; alt: string; caption?: string } | null = null;
