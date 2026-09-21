@@ -11,6 +11,10 @@ const steps = [
   "build-festival.mjs", // 11 festival / event variation
   "build-guide.mjs", // 13 brand colours & typography (+ fonts, colours.json / .css)
   "build-board.mjs", // board/ full corrected brand board
+  "build-social-feed.mjs", // 14 social templates: feed square + portrait (+ photo overlays)
+  "build-social-story.mjs", // 14 social templates: stories + covers
+  "build-social-sheet.mjs", // 14 contact sheet of every social template
+  "export-site.mjs", // public/ + app/ files used by the website
 ];
 
 let failed = false;

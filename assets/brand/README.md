@@ -24,6 +24,7 @@ Tagline (always this exact text): **SOUND & LIGHT | EVENT | PRODUCTION**
 | `11-festival-variation/` | Ganpati campaign creatives (16:9 banner, 1:1 post, 9:16 story) with the gold Ganesha motif |
 | `12-colour-variations/` | Logo on every approved background: gold on black, black on white, white on black, black on gold, gold on navy, white on grey |
 | `13-brand-colours-typography/` | Colour and type specimen card, `colours.json`, `colours.css`, and the `fonts/` bundle with licence |
+| `14-social-media-templates/` | Ready-to-post templates: `feed-square/` (1080x1080), `feed-portrait/` (1080x1350), `story/` (1080x1920), `covers/` (Facebook, LinkedIn, YouTube, link post), transparent `-overlay.png` frames for your own photos, and a contact sheet. See its own README |
 | `board/` | The complete brand board (`mihir-brand-board.svg/.png/.jpg`, 4096 x 2731) with all 13 panels |
 
 ### File naming

@@ -48,6 +48,8 @@ const fontFiles = {
   playfairBlack: "Playfair-900.ttf",
   playfairBoldItalic: "Playfair-700i.ttf",
   playfairBlackItalic: "Playfair-900i.ttf",
+  montserrat: "Montserrat-400.ttf",
+  montserratMedium: "Montserrat-500.ttf",
   montserratSemi: "Montserrat-600.ttf",
   montserratBold: "Montserrat-700.ttf",
 };
