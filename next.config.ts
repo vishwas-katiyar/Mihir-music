@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/i/[token]/pdf": ["./public/logo.png", "./public/fonts/*.ttf"],
     "/api/assets/download": ["./assets/brand/**"],
+    "/api/assets/file": ["./assets/brand/**"],
   },
   images: { formats: ["image/avif", "image/webp"] },
   async headers() {

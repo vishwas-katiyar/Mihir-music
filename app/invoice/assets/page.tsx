@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Download, Package } from "lucide-react";
 import { isAdmin } from "@/lib/invoices/auth";
@@ -22,7 +23,7 @@ export default async function BrandAssetsPage() {
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">Brand assets</h1>
-          <p className="mt-1 text-sm text-muted">Logos, social templates and print collateral, generated from the MIHIR brand kit. Admin only.</p>
+          <p className="mt-1 text-sm text-muted">Logos, social templates and print collateral, generated from the MIHIR brand kit. Admin only. Click a folder to preview its files.</p>
         </div>
         <a
           href="/api/assets/download"
@@ -34,8 +35,8 @@ export default async function BrandAssetsPage() {
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {folders.map((f) => (
-          <div key={f.slug} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-            <div className="flex items-center gap-3 overflow-hidden">
+          <div key={f.slug} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 transition hover:border-gold/40">
+            <Link href={`/invoice/assets/${f.slug}`} className="flex min-w-0 items-center gap-3 overflow-hidden">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gold">
                 <Package className="h-4 w-4" />
               </span>
@@ -45,7 +46,7 @@ export default async function BrandAssetsPage() {
                   {formatBytes(f.sizeBytes)} &middot; {f.fileCount} {f.fileCount === 1 ? "file" : "files"}
                 </div>
               </div>
-            </div>
+            </Link>
             <a
               href={`/api/assets/download?folder=${encodeURIComponent(f.slug)}`}
               aria-label={`Download ${f.label}`}
