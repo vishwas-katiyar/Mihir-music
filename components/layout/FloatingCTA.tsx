@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Phone } from "lucide-react";
 import { site, whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -8,17 +13,63 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-/** Single floating WhatsApp action on small screens; the nav carries it on desktop. */
+/**
+ * Floating actions on small screens: WhatsApp on the glass surface, then the call, gold
+ * and closest to the thumb, mirroring the hero's pair. The nav carries WhatsApp on desktop.
+ * They stay away until the first viewport has scrolled past, because every page opens with
+ * its own pair of buttons and the discs would sit on top of them.
+ */
 export function FloatingCTA() {
+  const reduce = useReducedMotion();
+  const [past, setPast] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPast(window.scrollY > window.innerHeight * 0.85);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const actions = [
+    {
+      key: "whatsapp",
+      href: whatsappUrl(defaultWhatsappMessage),
+      external: true,
+      label: `WhatsApp ${site.name}`,
+      surface: "glass text-ink",
+      icon: <WhatsAppIcon className="h-6 w-6" />,
+    },
+    {
+      key: "call",
+      href: `tel:${site.phone}`,
+      external: false,
+      label: `Call ${site.name} on ${site.phoneDisplay}`,
+      surface: "bg-gold text-charcoal shadow-[0_12px_40px_rgb(0_0_0/0.45)]",
+      icon: <Phone className="h-5 w-5" aria-hidden />,
+    },
+  ];
+
   return (
-    <a
-      href={whatsappUrl(defaultWhatsappMessage)}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={`WhatsApp ${site.name}`}
-      className="fixed right-5 bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gold text-charcoal shadow-[0_12px_40px_rgb(0_0_0/0.45)] transition hover:brightness-105 active:scale-95 lg:hidden"
-    >
-      <WhatsAppIcon className="h-6 w-6" />
-    </a>
+    <div className="fixed right-5 bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] z-40 flex flex-col gap-3 lg:hidden">
+      <AnimatePresence>
+        {past &&
+          actions.map((a, i) => (
+            <motion.a
+              key={a.key}
+              href={a.href}
+              {...(a.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              aria-label={a.label}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
+              animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 22, delay: reduce ? 0 : i * 0.04 }}
+              whileTap={reduce ? undefined : { scale: 0.95 }}
+              className={`flex h-13 w-13 items-center justify-center rounded-full transition-[filter] hover:brightness-105 ${a.surface}`}
+            >
+              {a.icon}
+            </motion.a>
+          ))}
+      </AnimatePresence>
+    </div>
   );
 }
