@@ -9,7 +9,6 @@ colors:
   charcoal: "#0b0c10"
   panel: "#111827"
   panel-soft: "#171f2d"
-  panel-strong: "#1e293b"
   ink: "#f8fafc"
   muted: "#a6b0c3"
   hairline: "rgb(255 255 255 / 0.10)"
@@ -42,6 +41,18 @@ typography:
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.625
+    letterSpacing: "normal"
+  ui:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "normal"
+  caption:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 400
+    lineHeight: 1.33
     letterSpacing: "normal"
   label:
     fontFamily: "JetBrains Mono, ui-monospace, monospace"
@@ -151,7 +162,7 @@ A black-glass palette with a single warm metal; everything cool in it is a statu
 - **Stage Black** (`stage-black`, #07090d): the page ground and the fill behind inputs and chips (at 60 to 70% over glass).
 - **Stage 2** (`stage-2`, #0d1118): the footer ground (at 60%) and the well behind the estimator's 3D preview.
 - **Charcoal** (`charcoal`, #0b0c10): `body` background, text on gold, the review marquee's fade.
-- **Panel / Panel Soft / Panel Strong** (`panel` #111827, `panel-soft` #171f2d, `panel-strong` #1e293b): the glass gradient stops and the tinted band behind the gear section (`panel` at 30%).
+- **Panel / Panel Soft** (`panel` #111827, `panel-soft` #171f2d): the glass gradient stops and the tinted band behind the gear section (`panel` at 30%).
 - **Ink** (`ink`, #f8fafc): headings and primary text. Body copy sits at 80 to 90% ink; secondary copy uses Muted.
 - **Muted** (`muted`, #a6b0c3): leads, captions, labels at rest, footer text, placeholders (at 60%).
 - **Hairline** (`hairline`, white at 10%; `hairline-strong`, white at 12% on controls): every divider, section border and card outline. The 15% and 30% steps appear only on hover.
@@ -175,7 +186,9 @@ A black-glass palette with a single warm metal; everything cool in it is a statu
 - **Display** (700, clamp(2.75rem, 1.5rem + 5.5vw, 5rem), 0.92, -0.05em, uppercase): the hero headline only, balanced (`text-wrap: balance`).
 - **Headline** (700, 2.25rem → 3rem → 3.75rem across sm/lg, 0.92, -0.05em, uppercase): every section heading. Constrained to 14 to 16ch so it wraps into two or three heavy lines instead of one long one.
 - **Title** (600, 1.125rem to 1.5rem, 1.3, -0.02em): row titles in the services accordion, gear group names, work-card titles, FAQ questions, step titles at 1.5rem to 1.875rem uppercase in the display face.
-- **Body** (400, 1rem to 1.125rem, 1.625): copy at 80 to 90% ink; leads at Muted. Measure capped between 40ch (step bodies) and 60ch (leads).
+- **Body** (400, 1rem to 1.125rem, 1.625): copy at 80 to 90% ink; leads at Muted. Measure capped between 40ch (step bodies) and 60ch (leads). Review quotes sit here too.
+- **UI** (600, 0.875rem): button labels, inline links, table and list values — anything inside a control or a dense row.
+- **Caption** (400, 0.75rem): photo credits, availability notes, package names, footnotes under a figure.
 - **Label** (400, 10px, 1.5, 0.22em, uppercase, JetBrains Mono): the `eyebrow` utility. Form field labels, nav items, footer column heads, the estimator's readout captions and preview chips. Mono also sets quantities in the gear list (`xs`, gold) and prices in tables.
 
 ### Named Rules
@@ -184,6 +197,8 @@ A black-glass palette with a single warm metal; everything cool in it is a statu
 **The Heading Speaks Rule.** Section headings stand alone. No kicker or eyebrow above them; the mono label is a form and chrome device, not a heading ornament. (Incumbent drift: `SectionHeading`'s `eyebrow` prop and the estimator section still carry one; retire on next touch.)
 
 **The Readout Rule.** Any number that is a fact (a quantity, a price in a table, a rating) is set in JetBrains Mono or in the display face with `tabular-nums`; prices that animate use the display face at 700, -0.04em.
+
+**The Five Steps Rule.** Type sizes come from the five roles above (10 / 12 / 14 / 16 / 18px and the two display clamps). A literal `text-[13px]` is drift: pick the nearest step, or add a step here on purpose.
 
 ## Layout
 
@@ -203,7 +218,7 @@ Depth is a hybrid of tonal layering and frosted glass, and by decision (2026-09-
 - **Panel ambient** (`box-shadow: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05)`): every glass surface. The inset hairline is the light catching the top edge.
 - **Sheet ambient** (`box-shadow: 0 30px 80px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 -1px 0 rgb(255 255 255 / 0.04)`): the estimator sheet (`glass-specular`), which also carries an 18px blur, 140% saturation and a moving 1px sheen along its top edge.
 - **Floating control** (`box-shadow: 0 12px 40px rgb(0 0 0 / 0.45)`): the fixed WhatsApp button.
-- **Gold glow** (`box-shadow: 0 0 32px rgb(255 159 28 / 0.28)`): primary CTA only, as part of the tactile treatment; never on cards or text.
+- **Gold glow** (`box-shadow: 0 0 32px rgb(212 175 55 / 0.35)`): primary CTA only, as part of the tactile treatment; never on cards or text. It is Stage Gold's own light, not a warmer orange standing in for it.
 
 ### Named Rules
 **The Glass Is a Surface Rule.** Glass is used for what the visitor touches or reads as a unit: cards, panels, the nav pill, the sheet. It is not decoration on a heading or an image. (Incumbent drift: review cards, package cards and the readout well are plain `panel/40` or `stage/60` fills with a hairline; migrate them to the glass utility on next touch.)
@@ -220,15 +235,15 @@ Controls are **tactile and confident**: a visible 0.97 press, a 2px hover lift o
 
 ### Buttons
 - **Shape:** full pill (9999px), 3rem minimum height, 1.75rem horizontal padding; gap 0.75rem to a 1rem icon.
-- **Voice (rule, chosen 2026-09-21):** sentence case, Space Grotesk 600 at 0.875rem. "Get an estimate", "WhatsApp". The mono-uppercase button voice in `Button.tsx`, the nav, the contact form and the estimator is incumbent drift; migrate to sentence case on next touch and keep mono for labels.
-- **Primary:** Stage Gold fill, Charcoal text, gold glow. Hover: `brightness(1.05)` or Gold Soft fill, translateY(-2px) on a spring. Press: scale 0.97.
+- **Voice:** sentence case, Space Grotesk 600 at 0.875rem. "Call us now", "WhatsApp", "Estimate with this system". Mono uppercase belongs to labels and chips, never to a button.
+- **Primary:** Stage Gold fill, Charcoal text, gold glow. Hover: `brightness(1.05)`, translateY(-2px) on a spring. Press: scale 0.97. One per surface.
 - **Glass:** the glass surface as a pill (panel gradient, 1px white/9, panel ambient shadow), Ink text; hover raises the outline to white/25.
 - **Ghost / Icon:** 1px white/12 outline on white/5, Muted or Ink glyph, 2.75rem square for icon buttons (close, menu, footer socials); hover turns the outline and glyph gold.
 - **Disabled:** white/8 fill, Muted text, `cursor: not-allowed`, no glow; the label says what is missing ("Fill the required fields to send").
-- **Focus:** no `focus-visible` treatment exists yet (incumbent gap). Standard: a 2px Stage Gold ring at 2px offset on every control.
+- **Focus:** a 2px Stage Gold ring at 2px offset, set globally on buttons, links and radios in `globals.css`. Fields override it with their own bloom.
 
 ### Chips (segmented options)
-- **Style:** mono label in a pill, 1px white/12 outline on Stage Black at 70% with backdrop blur, Ink at 80%.
+- **Style:** mono label (0.75rem, 0.14em) in a 2.75rem-tall pill, 1px white/12 outline on Stage Black at 70% with backdrop blur, Ink at 80%.
 - **Selected:** Stage Gold fill (or the show format's accent in the estimator), Charcoal text, no outline. Selection changes on a spring; an `AnimatePresence` swap slides the label 6px.
 
 ### Cards / Containers
@@ -248,7 +263,7 @@ Controls are **tactile and confident**: a visible 0.97 press, a 2px hover lift o
 - **Style:** a detached island pill, full width to `max-w-7xl`, 0.5rem × 0.75rem padding, transparent at the top of the page and becoming the glass surface after 24px of scroll (500 ms, stage ease). Logo mark 2.75rem at left, wordmark from 640px.
 - **Items:** mono label, Ink at 75%, hover Ink, active `bg-white/8` and Stage Gold text in a small pill.
 - **Mobile:** a 2.75rem hamburger disc (white/5 on white/12) whose two hairlines rotate into an X; the menu is a full-screen sheet on `stage/92` with a 2xl blur, items in the display face at 3rem uppercase, entering with a 60 ms stagger.
-- **Floating action:** a 3.25rem Stage Gold disc with the WhatsApp glyph, fixed bottom-right above the safe-area inset, phones and tablets only.
+- **Floating actions:** a column of two 3.25rem discs, fixed bottom-right above the safe-area inset, phones and tablets only — WhatsApp on the glass surface, then the call in Stage Gold closest to the thumb, mirroring the hero pair. They spring in (0.9 → 1, 40ms apart) only once the first viewport has scrolled past, so they never cover the surface's own buttons.
 
 ### Estimator Sheet (signature)
 A bottom sheet (`glass-specular`, top corners 2.25rem, `max-height: 94dvh`) that slides up on a spring (stiffness 190, damping 26) over a `charcoal/70` blurred scrim, with a 3.5rem × 0.375rem drag handle at white/20. Drag past 140px or flick faster than 800px/s to dismiss; Escape closes. Inside, the 3D rig preview (2rem well on Stage 2) sits beside a glass control panel of segmented chips, an animated price range in the display face, mono captions and the primary WhatsApp button.
@@ -256,8 +271,11 @@ A bottom sheet (`glass-specular`, top corners 2.25rem, `max-height: 94dvh`) that
 ### Live 3D (signature)
 Two React Three Fiber scenes, the hero rig and the estimator rig, on a `#0b0d12` clear colour with a Stage Gold key light and a cyan secondary. On mice: slow auto-orbit with drag-to-look. On touch: no controls and `pointer-events: none`; a turntable camera orbits on its own so the canvas is a moving picture the page scrolls past. Devices without WebGL, with data-saver or reduced motion get the CSS `StagePoster` (angled gold and cyan beam gradients over a faint 36px grid).
 
+### Disclosure (services list)
+Rows expand by collapsing a grid row (`grid-template-rows: 0fr → 1fr`, 300ms stage ease) rather than animating height, so the browser never animates a layout property and an interrupted toggle retargets instead of restarting. The panel's copy stays in the HTML at all times — every specification is crawlable — and `inert` keeps the collapsed rows out of the tab order and the accessibility tree.
+
 ### Motion vocabulary
-- **Stage ease** `cubic-bezier(0.32, 0.72, 0, 1)`: hover colour, nav transforms, image scale, scroll reveals (850 ms with a 6px blur that resolves).
+- **Stage ease** `cubic-bezier(0.32, 0.72, 0, 1)`: hover colour, nav transforms, image scale, disclosure, scroll reveals (700ms fade and 28px rise; transform and opacity only, no filter).
 - **Strong ease-out** `cubic-bezier(0.23, 1, 0.32, 1)`: the hero entrance (`animate-enter`, 700 ms, 16px rise, 100 ms stagger between headline, sentence and actions), pure CSS so it runs before hydration.
 - **Springs:** controls 400/22, sheet 190/26, tilt cards 160/18, animated numbers 60 to 90 stiffness. Marquees are linear (40 to 65 s), pause on hover.
 - **Reduced motion:** posters instead of canvases, fades instead of rises, no loops, static cards.
@@ -275,10 +293,10 @@ Two React Three Fiber scenes, the hero rig and the estimator rig, on a `#0b0d12`
 - **Do** pad fixed chrome and bottom-anchored copy by `env(safe-area-inset-*)`, keep inputs at 16px on phones, and use `100svh` for the hero.
 
 ### Don't:
-- **Don't** use a second accent. Cyan and pink report status only; violet, electric and the legacy `amber` alias are not for new work.
+- **Don't** use a second accent. Cyan and pink report status only; the `amber`, `violet` and `electric` tokens have been removed and must not come back.
 - **Don't** wash gold over an area: no gold backgrounds above 10% opacity, no gradient text, no gold glow except under the primary button.
 - **Don't** put a kicker or mono eyebrow above a heading, or a "big number, small label" metric block as a section's structure.
-- **Don't** animate a headline per word or per character, or reveal anything with more than a 6px blur; one authored entrance per surface.
+- **Don't** animate a headline per word or per character, and don't animate a filter or a layout property (`height`, `width`, `top`) to reveal something; one authored entrance per surface, on transform and opacity.
 - **Don't** mount OrbitControls or any pointer handler on a canvas that the page scrolls past on a phone.
 - **Don't** use same-size icon-heading-text cards as a page structure, or nest cards inside cards.
 - **Don't** present stock photography as the company's own work; credit it on the card or use the poster.

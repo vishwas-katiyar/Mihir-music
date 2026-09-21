@@ -15,7 +15,7 @@ const icons: Record<Service["slug"], React.ComponentType<{ className?: string; s
   "show-execution": Radio,
 };
 
-const accentText = { amber: "text-amber", cyan: "text-cyan", white: "text-ink" };
+const accentText = { gold: "text-gold", cyan: "text-cyan", white: "text-ink" };
 
 export function Capabilities({ compact = false }: { compact?: boolean }) {
   return (
@@ -53,7 +53,7 @@ export function Capabilities({ compact = false }: { compact?: boolean }) {
                         ))}
                       </dl>
 
-                      <div className="mt-auto flex items-center gap-2 pt-6 eyebrow text-ink/70 transition-colors group-hover:text-amber">
+                      <div className="mt-auto flex items-center gap-2 pt-6 eyebrow text-ink/70 transition-colors group-hover:text-gold">
                         Explore {s.shortName.toLowerCase()}
                         <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </div>

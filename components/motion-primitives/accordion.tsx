@@ -1,19 +1,10 @@
 'use client';
-import {
-  motion,
-  AnimatePresence,
-  Transition,
-  Variants,
-  Variant,
-  MotionConfig,
-} from 'motion/react';
 import { cn } from '@/lib/utils';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export type AccordionContextType = {
   expandedValue: React.Key | null;
   toggleItem: (value: React.Key) => void;
-  variants?: { expanded: Variant; collapsed: Variant };
 };
 
 const AccordionContext = createContext<AccordionContextType | undefined>(
@@ -30,14 +21,12 @@ function useAccordion() {
 
 export type AccordionProviderProps = {
   children: ReactNode;
-  variants?: { expanded: Variant; collapsed: Variant };
   expandedValue?: React.Key | null;
   onValueChange?: (value: React.Key | null) => void;
 };
 
 function AccordionProvider({
   children,
-  variants,
   expandedValue: externalExpandedValue,
   onValueChange,
 }: AccordionProviderProps) {
@@ -59,7 +48,7 @@ function AccordionProvider({
   };
 
   return (
-    <AccordionContext.Provider value={{ expandedValue, toggleItem, variants }}>
+    <AccordionContext.Provider value={{ expandedValue, toggleItem }}>
       {children}
     </AccordionContext.Provider>
   );
@@ -68,8 +57,6 @@ function AccordionProvider({
 export type AccordionProps = {
   children: ReactNode;
   className?: string;
-  transition?: Transition;
-  variants?: { expanded: Variant; collapsed: Variant };
   expandedValue?: React.Key | null;
   onValueChange?: (value: React.Key | null) => void;
 };
@@ -77,23 +64,18 @@ export type AccordionProps = {
 function Accordion({
   children,
   className,
-  transition,
-  variants,
   expandedValue,
   onValueChange,
 }: AccordionProps) {
   return (
-    <MotionConfig transition={transition}>
-      <div className={cn('relative', className)} aria-orientation='vertical'>
-        <AccordionProvider
-          variants={variants}
-          expandedValue={expandedValue}
-          onValueChange={onValueChange}
-        >
-          {children}
-        </AccordionProvider>
-      </div>
-    </MotionConfig>
+    <div className={cn('relative', className)} aria-orientation='vertical'>
+      <AccordionProvider
+        expandedValue={expandedValue}
+        onValueChange={onValueChange}
+      >
+        {children}
+      </AccordionProvider>
+    </div>
   );
 }
 
@@ -159,39 +141,30 @@ export type AccordionContentProps = {
   className?: string;
 };
 
+/**
+ * Owner edit: the upstream version animates `height: 0 → auto` through Motion, which
+ * animates a layout property and unmounts the collapsed panel. This one collapses a
+ * grid row instead — off layout, interruptible, and the copy stays in the HTML so
+ * search engines and AI answers can read every specification. `inert` keeps collapsed
+ * content out of the tab order and the accessibility tree.
+ */
 function AccordionContent({
   children,
   className,
   ...props
 }: AccordionContentProps) {
-  const { expandedValue, variants } = useAccordion();
+  const { expandedValue } = useAccordion();
   const value = (props as { value?: React.Key }).value;
   const isExpanded = value === expandedValue;
 
-  const BASE_VARIANTS: Variants = {
-    expanded: { height: 'auto', opacity: 1 },
-    collapsed: { height: 0, opacity: 0 },
-  };
-
-  const combinedVariants = {
-    expanded: { ...BASE_VARIANTS.expanded, ...variants?.expanded },
-    collapsed: { ...BASE_VARIANTS.collapsed, ...variants?.collapsed },
-  };
-
   return (
-    <AnimatePresence initial={false}>
-      {isExpanded && (
-        <motion.div
-          initial='collapsed'
-          animate='expanded'
-          exit='collapsed'
-          variants={combinedVariants}
-          className={className}
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div
+      className='grid transition-[grid-template-rows,opacity] duration-300 ease-stage'
+      style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr', opacity: isExpanded ? 1 : 0 }}
+      inert={!isExpanded}
+    >
+      <div className={cn('min-h-0 overflow-hidden', className)}>{children}</div>
+    </div>
   );
 }
 

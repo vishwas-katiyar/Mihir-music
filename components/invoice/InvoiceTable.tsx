@@ -7,7 +7,7 @@ import { ClickableRow } from "./ClickableRow";
 
 export const statusBadge: Record<InvoiceStatus, string> = {
   draft: "bg-white/8 text-ink/80",
-  sent: "bg-gold/15 text-amber-soft",
+  sent: "bg-gold/15 text-gold-soft",
   partially_paid: "bg-sky-400/15 text-sky-200",
   paid: "bg-emerald-400/15 text-emerald-200",
   cancelled: "bg-rose-400/15 text-rose-200",
@@ -57,7 +57,7 @@ export function InvoiceTable({ rows }: { rows: InvoiceRow[] }) {
                 <div className="text-xs text-muted">{formatDateIN(r.eventStart) || ""}</div>
               </td>
               <td className="px-4 py-3 text-right tabular-nums text-ink">{inr(r.grandTotalPaise)}</td>
-              <td className={cn("px-4 py-3 text-right tabular-nums", r.balanceDuePaise > 0 ? "text-amber-soft" : "text-emerald-200")}>{inr(r.balanceDuePaise)}</td>
+              <td className={cn("px-4 py-3 text-right tabular-nums", r.balanceDuePaise > 0 ? "text-gold-soft" : "text-emerald-200")}>{inr(r.balanceDuePaise)}</td>
               <td className="px-4 py-3">
                 {r.deletedAt ? (
                   <span className="rounded-full bg-rose-400/15 px-2.5 py-1 text-xs text-rose-200">Deleted</span>

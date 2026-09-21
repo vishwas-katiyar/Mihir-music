@@ -29,7 +29,7 @@ export default async function InvoiceListPage({ searchParams }: Props) {
           <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">Invoices</h1>
           <p className="mt-1 text-sm text-muted">
             {stats.count} invoices · {inr(stats.billedPaise)} billed · <span className="text-emerald-200">{inr(stats.collectedPaise)} collected</span> ·{" "}
-            <span className="text-amber-soft">{inr(stats.duePaise)} outstanding</span>
+            <span className="text-gold-soft">{inr(stats.duePaise)} outstanding</span>
           </p>
         </div>
         <form className="flex flex-wrap items-center gap-2" action="/invoice" method="get">

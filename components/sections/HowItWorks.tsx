@@ -30,10 +30,10 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 sm:py-32">
+    <section id="how-it-works" aria-labelledby="how-it-works-title" className="py-24 sm:py-32">
       <Container>
         <Reveal>
-          <h2 className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Four steps to show night</h2>
+          <h2 id="how-it-works-title" className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Four steps to show night</h2>
           <p className="mt-5 max-w-[52ch] text-base text-muted">
             First show with us? This is the whole process, from the first message to load-out. Prefer to talk it through? Call{" "}
             <a href={`tel:${site.phone}`} className="text-ink underline decoration-white/30 underline-offset-4 transition hover:decoration-gold">

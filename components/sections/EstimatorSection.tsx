@@ -5,10 +5,11 @@ import { EventEstimator3D } from "./EventEstimator3D";
 
 export function EstimatorSection() {
   return (
-    <section id="estimate" className="py-28 sm:py-36">
+    <section id="estimate" aria-labelledby="estimate-title" className="py-28 sm:py-36">
       <Container>
         <Reveal>
           <SectionHeading
+            titleId="estimate-title"
             title="Build your stage. Watch the rig respond. Send it in one tap."
             lead="Pick the event, the crowd and the venue. The rig, the budget and the nearest package update live, and the exact rig goes to WhatsApp as your quote."
           />

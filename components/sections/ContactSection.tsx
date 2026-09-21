@@ -19,17 +19,17 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
           <div className="space-y-6">
             <Reveal>
               <GlassCard>
-                <div className="eyebrow text-amber">Direct line</div>
+                <div className="eyebrow text-gold">Direct line</div>
                 <h3 className="display-tight mt-4 text-3xl uppercase text-ink">{site.legalOwner}</h3>
                 <address className="mt-3 flex items-start gap-2 text-sm not-italic text-muted">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-amber" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
                 </address>
                 <div className="mt-6 flex flex-col gap-3">
-                  <a href={`tel:${site.phone}`} className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-amber/60 hover:text-amber">
+                  <a href={`tel:${site.phone}`} className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
                     <Phone className="h-4 w-4" /> {site.phoneDisplay}
                   </a>
-                  <a href={whatsappUrl(defaultWhatsappMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-amber/60 hover:text-amber">
+                  <a href={whatsappUrl(defaultWhatsappMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
                     <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
                   </a>
                 </div>
@@ -40,7 +40,7 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
                     { href: site.social.facebook, Icon: Facebook, label: "Facebook" },
                     { href: site.social.google, Icon: Globe, label: "Google" },
                   ].map(({ href, Icon, label }) => (
-                    <a key={label} href={href} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-ink/80 transition hover:border-amber/60 hover:text-amber">
+                    <a key={label} href={href} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-ink/80 transition hover:border-gold/60 hover:text-gold">
                       <Icon className="h-3.5 w-3.5" /> {label}
                     </a>
                   ))}
@@ -50,7 +50,7 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
 
             <Reveal delay={0.08}>
               <GlassCard>
-                <div className="eyebrow text-amber">Venue intel</div>
+                <div className="eyebrow text-gold">Venue intel</div>
                 <dl className="mt-5 divide-y divide-white/10 text-sm">
                   {[
                     ["Venue type", "Indoor / Outdoor / Open ground"],

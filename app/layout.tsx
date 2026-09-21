@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { site } from "@/lib/site";
 import { localBusinessSchema, websiteSchema } from "@/lib/schema";
@@ -99,17 +98,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={[localBusinessSchema(), websiteSchema()]} />
       </head>
       <body className="min-h-dvh bg-charcoal font-sans">
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-amber focus:px-4 focus:py-2 focus:text-black">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-gold focus:px-4 focus:py-2 focus:text-black">
           Skip to content
         </a>
         {children}
         <GoogleAnalytics gaId={site.analytics.gaId} />
-        <Script
-          id="adsense"
-          strategy="lazyOnload"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${site.analytics.adsenseClient}`}
-          crossOrigin="anonymous"
-        />
       </body>
     </html>
   );

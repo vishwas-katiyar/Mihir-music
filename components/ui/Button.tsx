@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 type Variant = "primary" | "glass";
 
 const styles: Record<Variant, string> = {
-  primary: "bg-gold text-charcoal shadow-glow-amber hover:brightness-105",
+  primary: "bg-gold text-charcoal shadow-glow-gold hover:brightness-105",
   glass: "glass text-ink hover:border-white/25",
 };
 

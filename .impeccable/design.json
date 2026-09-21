@@ -13,7 +13,6 @@
       "charcoal": { "role": "neutral", "displayName": "Charcoal", "canonical": "#0b0c10", "tonalRamp": ["oklch(13% 0.008 270)", "oklch(19% 0.01 270)", "oklch(27% 0.012 270)", "oklch(37% 0.012 270)", "oklch(49% 0.012 270)", "oklch(63% 0.012 270)", "oklch(78% 0.01 270)", "oklch(94% 0.005 270)"] },
       "panel": { "role": "neutral", "displayName": "Panel", "canonical": "#111827", "tonalRamp": ["oklch(16% 0.03 265)", "oklch(22% 0.035 265)", "oklch(30% 0.04 265)", "oklch(40% 0.045 265)", "oklch(52% 0.045 265)", "oklch(66% 0.04 265)", "oklch(80% 0.03 265)", "oklch(94% 0.01 265)"] },
       "panel-soft": { "role": "neutral", "displayName": "Panel Soft", "canonical": "#171f2d", "tonalRamp": ["oklch(18% 0.03 262)", "oklch(24% 0.035 262)", "oklch(32% 0.04 262)", "oklch(42% 0.045 262)", "oklch(54% 0.045 262)", "oklch(67% 0.04 262)", "oklch(81% 0.03 262)", "oklch(94% 0.01 262)"] },
-      "panel-strong": { "role": "neutral", "displayName": "Panel Strong", "canonical": "#1e293b", "tonalRamp": ["oklch(20% 0.035 260)", "oklch(27% 0.04 260)", "oklch(35% 0.045 260)", "oklch(45% 0.05 260)", "oklch(57% 0.05 260)", "oklch(69% 0.045 260)", "oklch(82% 0.03 260)", "oklch(95% 0.01 260)"] },
       "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#f8fafc", "tonalRamp": ["oklch(15% 0.01 250)", "oklch(28% 0.012 250)", "oklch(42% 0.014 250)", "oklch(56% 0.014 250)", "oklch(70% 0.012 250)", "oklch(82% 0.01 250)", "oklch(92% 0.006 250)", "oklch(98.5% 0.003 250)"] },
       "muted": { "role": "neutral", "displayName": "Muted", "canonical": "#a6b0c3", "tonalRamp": ["oklch(15% 0.015 255)", "oklch(27% 0.02 255)", "oklch(39% 0.025 255)", "oklch(52% 0.028 255)", "oklch(64% 0.028 255)", "oklch(75% 0.025 255)", "oklch(86% 0.018 255)", "oklch(95% 0.008 255)"] },
       "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgb(255 255 255 / 0.10)", "tonalRamp": ["rgb(255 255 255 / 0.04)", "rgb(255 255 255 / 0.06)", "rgb(255 255 255 / 0.08)", "rgb(255 255 255 / 0.10)", "rgb(255 255 255 / 0.12)", "rgb(255 255 255 / 0.15)", "rgb(255 255 255 / 0.25)", "rgb(255 255 255 / 0.30)"] },
@@ -23,17 +22,19 @@
       "display": { "displayName": "Display", "purpose": "Hero headline only; uppercase, balanced." },
       "headline": { "displayName": "Headline", "purpose": "Every section heading, capped at 14 to 16ch." },
       "title": { "displayName": "Title", "purpose": "Row titles, gear groups, work cards, FAQ questions." },
-      "body": { "displayName": "Body", "purpose": "Copy at 80 to 90% ink; leads in Muted; 40 to 60ch measure." },
+      "body": { "displayName": "Body", "purpose": "Copy at 80 to 90% ink; leads in Muted; 40 to 60ch measure. Review quotes too." },
+      "ui": { "displayName": "UI", "purpose": "Button labels, inline links, table and list values." },
+      "caption": { "displayName": "Caption", "purpose": "Photo credits, availability notes, package names, footnotes." },
       "label": { "displayName": "Label (mono)", "purpose": "Form labels, nav items, footer heads, readout captions, chips. Never above a heading." }
     },
     "shadows": [
       { "name": "panel-ambient", "value": "0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05)", "purpose": "Every glass surface; the inset line is light on the top edge." },
       { "name": "sheet-ambient", "value": "0 30px 80px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 -1px 0 rgb(255 255 255 / 0.04)", "purpose": "The estimator bottom sheet (glass-specular)." },
       { "name": "floating-control", "value": "0 12px 40px rgb(0 0 0 / 0.45)", "purpose": "Fixed WhatsApp button." },
-      { "name": "gold-glow", "value": "0 0 32px rgb(255 159 28 / 0.28)", "purpose": "Primary CTA only; the one coloured shadow." }
+      { "name": "gold-glow", "value": "0 0 32px rgb(212 175 55 / 0.35)", "purpose": "Primary CTA only; the one coloured shadow, and it is Stage Gold's own light." }
     ],
     "motion": [
-      { "name": "ease-stage", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Hover colour, nav transforms, image scale, scroll reveals (850ms)." },
+      { "name": "ease-stage", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Hover colour, nav transforms, image scale, disclosure (300ms), scroll reveals (700ms fade and rise, no filter)." },
       { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Hero entrance (700ms, 16px rise, 100ms stagger), pure CSS." },
       { "name": "spring-control", "value": "spring(stiffness 400, damping 22)", "purpose": "Button hover lift and press." },
       { "name": "spring-sheet", "value": "spring(stiffness 190, damping 26)", "purpose": "Estimator sheet enter/exit and drag release." },
@@ -53,7 +54,7 @@
       "kind": "button",
       "refersTo": "button-primary",
       "description": "The one gold action: sentence case, pill, glow, press to 0.97.",
-      "html": "<button class=\"ds-btn-primary\">Get an estimate <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384\"/></svg> Call us now</button>",
       "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 0 28px; border: 0; border-radius: 9999px; background: #d4af37; color: #0b0c10; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 0 32px rgb(255 159 28 / 0.28); cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), filter 200ms ease; } .ds-btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
     },
     {
@@ -78,7 +79,7 @@
       "refersTo": "chip",
       "description": "Mono-label option pills; the selected one lights gold.",
       "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Event type\"><button class=\"ds-chip ds-chip--on\" role=\"radio\" aria-checked=\"true\">Luxe wedding</button><button class=\"ds-chip\" role=\"radio\" aria-checked=\"false\">Concert / fest</button><button class=\"ds-chip\" role=\"radio\" aria-checked=\"false\">Corporate summit</button></div>",
-      "css": ".ds-seg { display: flex; flex-wrap: wrap; gap: 8px; } .ds-chip { padding: 6px 12px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); backdrop-filter: blur(8px); color: rgb(248 250 252 / 0.8); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-chip:hover { border-color: rgb(255 255 255 / 0.3); color: #f8fafc; } .ds-chip:active { transform: scale(0.97); } .ds-chip--on { background: #d4af37; border-color: #d4af37; color: #0b0c10; } .ds-chip:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+      "css": ".ds-seg { display: flex; flex-wrap: wrap; gap: 8px; } .ds-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); backdrop-filter: blur(8px); color: rgb(248 250 252 / 0.8); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-chip:hover { border-color: rgb(255 255 255 / 0.3); color: #f8fafc; } .ds-chip:active { transform: scale(0.97); } .ds-chip--on { background: #d4af37; border-color: #d4af37; color: #0b0c10; } .ds-chip:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
     },
     {
       "name": "Text Field",
@@ -86,7 +87,7 @@
       "refersTo": "input",
       "description": "Mono label over a dark field; focus blooms a gold ring.",
       "html": "<label class=\"ds-field\"><span class=\"ds-label\">Venue city *</span><input class=\"ds-input\" placeholder=\"Indore, Ujjain, Bhopal…\" /></label>",
-      "css": ".ds-field { display: block; } .ds-label { display: block; margin-bottom: 8px; color: #a6b0c3; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; } .ds-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 16px; outline: none; transition: border-color 200ms ease, box-shadow 200ms ease; } .ds-input::placeholder { color: rgb(166 176 195 / 0.6); } .ds-input:focus { border-color: rgb(212 175 55 / 0.6); box-shadow: 0 0 0 4px rgb(212 175 55 / 0.1); }"
+      "css": ".ds-field { display: block; } .ds-label { display: block; margin-bottom: 8px; color: #a6b0c3; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; } .ds-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 16px; outline: none; transition: border-color 200ms ease, box-shadow 200ms ease; } .ds-input::placeholder { color: rgb(166 176 195 / 0.8); } .ds-input:focus { border-color: rgb(212 175 55 / 0.6); box-shadow: 0 0 0 4px rgb(212 175 55 / 0.1); }"
     },
     {
       "name": "Glass Card",
@@ -139,6 +140,7 @@
       { "name": "The Case Label Rule", "body": "Headings are uppercase, 700, and tracked to -0.05em; nothing else on the page is uppercase except mono labels. Emphasis inside copy comes from ink versus muted, never from weight changes or colour.", "section": "typography" },
       { "name": "The Heading Speaks Rule", "body": "Section headings stand alone. No kicker or eyebrow above them; the mono label is a form and chrome device, not a heading ornament.", "section": "typography" },
       { "name": "The Readout Rule", "body": "Any number that is a fact (a quantity, a price in a table, a rating) is set in JetBrains Mono or in the display face with tabular-nums; prices that animate use the display face at 700, -0.04em.", "section": "typography" },
+      { "name": "The Five Steps Rule", "body": "Type sizes come from the five roles (10 / 12 / 14 / 16 / 18px and the two display clamps). A literal text-[13px] is drift: pick the nearest step, or add a step on purpose.", "section": "typography" },
       { "name": "The Glass Is a Surface Rule", "body": "Glass is used for what the visitor touches or reads as a unit: cards, panels, the nav pill, the sheet. It is not decoration on a heading or an image.", "section": "elevation" },
       { "name": "The One Glow Rule", "body": "The only coloured shadow on the page is the gold glow under a primary button. Depth elsewhere is black and soft.", "section": "elevation" }
     ],
@@ -153,10 +155,10 @@
       "Do pad fixed chrome and bottom-anchored copy by env(safe-area-inset-*), keep inputs at 16px on phones, and use 100svh for the hero."
     ],
     "donts": [
-      "Don't use a second accent. Cyan and pink report status only; violet, electric and the legacy amber alias are not for new work.",
+      "Don't use a second accent. Cyan and pink report status only; the amber, violet and electric tokens have been removed and must not come back.",
       "Don't wash gold over an area: no gold backgrounds above 10% opacity, no gradient text, no gold glow except under the primary button.",
       "Don't put a kicker or mono eyebrow above a heading, or a \"big number, small label\" metric block as a section's structure.",
-      "Don't animate a headline per word or per character, or reveal anything with more than a 6px blur; one authored entrance per surface.",
+      "Don't animate a headline per word or per character, and don't animate a filter or a layout property (height, width, top) to reveal something; one authored entrance per surface, on transform and opacity.",
       "Don't mount OrbitControls or any pointer handler on a canvas that the page scrolls past on a phone.",
       "Don't use same-size icon-heading-text cards as a page structure, or nest cards inside cards.",
       "Don't present stock photography as the company's own work; credit it on the card or use the poster.",

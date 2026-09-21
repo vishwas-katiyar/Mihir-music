@@ -11,16 +11,16 @@ import { gear, gearBrands } from "@/lib/gear";
  */
 export function GearHighlights() {
   return (
-    <section id="gear" className="border-y border-white/10 bg-panel/30 py-24 sm:py-32">
+    <section id="gear" aria-labelledby="gear-title" className="border-y border-white/10 bg-panel/30 py-24 sm:py-32">
       <Container>
         <Reveal>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
             <div>
-              <h2 className="display-tight text-4xl uppercase text-ink sm:text-5xl">Owned, not sub-hired</h2>
+              <h2 id="gear-title" className="display-tight text-4xl uppercase text-ink sm:text-5xl">Owned, not sub-hired</h2>
               <p className="mt-4 text-base text-muted">
                 Every array, fixture and truss section below is ours, serviced between shows and moved by our crew. What you see quoted is what arrives.
               </p>
-              <Link href="/gear" className="mt-6 inline-flex items-center gap-2 text-sm text-gold transition hover:text-amber-soft">
+              <Link href="/gear" className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm text-gold transition hover:text-gold-soft">
                 Full inventory and specs <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             </div>

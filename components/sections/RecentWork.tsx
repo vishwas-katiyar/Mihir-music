@@ -22,7 +22,7 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
     <article className="group relative flex h-full flex-col">
       <div
         className={cn(
-          "relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d12]",
+          "relative overflow-hidden rounded-3xl border border-white/10 bg-charcoal",
           featured ? "aspect-[4/3] lg:aspect-auto lg:min-h-0 lg:flex-1" : "aspect-[4/3]",
         )}
       >
@@ -36,8 +36,8 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
           />
         ) : (
           <>
-            <StagePoster accent="amber" />
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#07090d] to-transparent" />
+            <StagePoster accent="gold" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-stage to-transparent" />
             <p
               className={cn(
                 "display-tight absolute left-5 top-5 max-w-[10ch] uppercase text-ink/90",
@@ -56,7 +56,7 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
           {stock && photo.credit && (
             <p className="mt-1 text-xs text-muted/80">
               Reference photo by{" "}
-              <a href={photo.credit.url} target="_blank" rel="noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-ink">
+              <a href={photo.credit.url} target="_blank" rel="noreferrer" className="inline-block py-3.5 -my-3.5 underline decoration-white/20 underline-offset-2 hover:text-ink">
                 {photo.credit.name}
               </a>
             </p>
@@ -65,7 +65,7 @@ function WorkCard({ format, photo, featured }: { format: ShowFormat; photo?: Pho
         <Link
           href="/portfolio"
           aria-label={`${format.title}: see the full portfolio`}
-          className="mt-1 shrink-0 rounded-full border border-white/12 p-2 text-muted transition hover:border-gold/60 hover:text-gold"
+          className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-muted transition hover:border-gold/60 hover:text-gold"
         >
           <ArrowUpRight className="h-4 w-4" />
         </Link>
@@ -80,17 +80,17 @@ export function RecentWork() {
   const photoFor = (slug: ShowFormat["slug"]) => photos.find((p) => p.category === slug);
 
   return (
-    <section id="work" className="py-24 sm:py-32">
+    <section id="work" aria-labelledby="work-title" className="py-24 sm:py-32">
       <Container>
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <h2 className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Four shows, one crew</h2>
+              <h2 id="work-title" className="display-tight max-w-[14ch] text-4xl uppercase text-ink sm:text-5xl">Four shows, one crew</h2>
               <p className="mt-4 max-w-[52ch] text-base text-muted">
                 The rigs we run every season, from a 300-guest sangeet to a 10,000-crowd ground.
               </p>
             </div>
-            <a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-ink/80 transition hover:text-gold">
+            <a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 text-sm text-ink/80 transition hover:text-gold">
               <Instagram className="h-4 w-4" /> Filmed on the night: @{instagramHandle} <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>

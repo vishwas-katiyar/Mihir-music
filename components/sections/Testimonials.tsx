@@ -15,7 +15,7 @@ import { site } from "@/lib/site";
 function ReviewCard({ r }: { r: Review }) {
   return (
     <figure className="flex h-full w-[19rem] shrink-0 flex-col justify-between rounded-2xl border border-white/9 bg-[linear-gradient(180deg,rgb(18_24_33/0.86),rgb(12_17_25/0.78))] p-5 shadow-panel sm:w-[22rem]">
-      <blockquote className="text-[15px] leading-relaxed text-ink/90">“{r.text}”</blockquote>
+      <blockquote className="text-base leading-relaxed text-ink/90">“{r.text}”</blockquote>
       <figcaption className="mt-5 flex items-center justify-between gap-3 text-sm">
         <span>
           <span className="block font-medium text-ink">{r.name}</span>
@@ -37,12 +37,12 @@ export function Testimonials() {
   const secondRow = reviews.length > 1 ? [...reviews.slice(half), ...reviews.slice(0, half)].filter((r, i, a) => a.indexOf(r) === i) : reviews;
 
   return (
-    <section id="reviews" className="border-y border-white/10 py-24 sm:py-32">
+    <section id="reviews" aria-labelledby="reviews-title" className="border-y border-white/10 py-24 sm:py-32">
       <Container>
         <Reveal>
           <div className="flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="display-tight text-4xl uppercase text-ink sm:text-5xl">What clients say</h2>
-            <a href={site.social.google} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink">
+            <h2 id="reviews-title" className="display-tight text-4xl uppercase text-ink sm:text-5xl">What clients say</h2>
+            <a href={site.social.google} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted transition hover:text-ink">
               <span className="flex text-gold" aria-hidden>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="h-3.5 w-3.5 fill-current" strokeWidth={0} />

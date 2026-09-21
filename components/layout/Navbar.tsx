@@ -57,7 +57,7 @@ export function Navbar() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "eyebrow rounded-full px-4 py-2.5 transition-colors",
-                    active ? "bg-white/8 text-amber" : "text-ink/75 hover:text-ink",
+                    active ? "bg-white/8 text-gold" : "text-ink/75 hover:text-ink",
                   )}
                 >
                   {item.label}
@@ -136,7 +136,7 @@ export function Navbar() {
                 href={whatsappUrl(defaultWhatsappMessage)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-amber transition-transform duration-200 ease-out-strong active:scale-[0.97]"
+                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-gold transition-transform duration-200 ease-out-strong active:scale-[0.97]"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden /> WhatsApp Mihir
               </a>

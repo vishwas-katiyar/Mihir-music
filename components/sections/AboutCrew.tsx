@@ -23,11 +23,11 @@ const facts = [
 
 export function AboutCrew() {
   return (
-    <section id="about" className="border-t border-white/10 py-24 sm:py-32">
+    <section id="about" aria-labelledby="about-title" className="border-t border-white/10 py-24 sm:py-32">
       <Container>
         <div className={cn("grid gap-12", crewPhoto && "lg:grid-cols-12 lg:items-center lg:gap-16")}>
           <Reveal className={cn(crewPhoto && "lg:col-span-7")}>
-            <h2 className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-5xl lg:text-6xl">
+            <h2 id="about-title" className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-5xl lg:text-6xl">
               {years} years of load-ins, one crew.
             </h2>
             <div className="mt-8 max-w-[58ch] space-y-5 text-base leading-relaxed text-ink/80 sm:text-lg">
@@ -50,7 +50,7 @@ export function AboutCrew() {
           {crewPhoto && (
             <Reveal delay={0.1} className="lg:col-span-5">
               <figure>
-                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d12]">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10 bg-charcoal">
                   <Image src={crewPhoto.src} alt={crewPhoto.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
                 </div>
                 {crewPhoto.caption && <figcaption className="mt-3 text-sm text-muted">{crewPhoto.caption}</figcaption>}

@@ -10,12 +10,12 @@ interface TiltCardProps {
   className?: string;
   /** Max tilt in degrees */
   intensity?: number;
-  glint?: "amber" | "cyan" | "white";
+  glint?: "gold" | "cyan" | "white";
 }
 
 /** Spotlight gradient stops per accent (Tailwind classes, resolved at build). */
 const glintClass = {
-  amber: "from-gold/40 via-gold/15 to-transparent",
+  gold: "from-gold/40 via-gold/15 to-transparent",
   cyan: "from-cyan/35 via-cyan/12 to-transparent",
   white: "from-white/30 via-white/10 to-transparent",
 };
@@ -25,7 +25,7 @@ const glintClass = {
  * (specular hotspot tracking the pointer). Same API as before so call sites are unchanged.
  * Reduced-motion users get a static card.
  */
-export function TiltCard({ children, className, intensity = 9, glint = "amber" }: TiltCardProps) {
+export function TiltCard({ children, className, intensity = 9, glint = "gold" }: TiltCardProps) {
   const reduce = useReducedMotion();
   if (reduce) return <div className={cn("relative h-full", className)}>{children}</div>;
   return (

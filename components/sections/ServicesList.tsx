@@ -13,17 +13,17 @@ import { services } from "@/lib/services";
  */
 export function ServicesList() {
   return (
-    <section id="services" className="py-24 sm:py-32">
+    <section id="services" aria-labelledby="services-title" className="py-24 sm:py-32">
       <Container>
         <Reveal>
-          <h2 className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-5xl">What we bring to a show</h2>
+          <h2 id="services-title" className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-5xl">What we bring to a show</h2>
           <p className="mt-5 max-w-[60ch] text-base text-muted">
             Each system works on its own or as one integrated production. Open a row for the specification.
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="mt-12">
-          <Accordion className="border-t border-white/10" transition={{ type: "spring", stiffness: 220, damping: 30 }}>
+          <Accordion className="border-t border-white/10">
             {services.map((s) => (
               <AccordionItem key={s.slug} value={s.slug} className="border-b border-white/10">
                 <AccordionTrigger className="flex w-full items-start justify-between gap-6 py-6 text-left transition-colors hover:text-gold sm:items-center">
@@ -54,7 +54,7 @@ export function ServicesList() {
                             </li>
                           ))}
                         </ul>
-                        <Link href={`/services/${s.slug}`} className="mt-5 inline-flex items-center gap-2 text-sm text-gold transition hover:text-amber-soft">
+                        <Link href={`/services/${s.slug}`} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm text-gold transition hover:text-gold-soft">
                           Full specification <ArrowUpRight className="h-3.5 w-3.5" />
                         </Link>
                       </div>

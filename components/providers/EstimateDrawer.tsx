@@ -74,7 +74,7 @@ export function EstimateDrawer() {
             className="glass-specular flex max-h-[94dvh] w-full max-w-7xl flex-col rounded-t-[2.25rem]"
           >
             <div className="flex items-center justify-between px-6 pt-4 sm:px-8">
-              <div className="mx-auto h-1.5 w-14 rounded-full bg-white/20" aria-hidden />
+              <div className="mx-auto h-1.5 w-14 rounded-full bg-white/35" aria-hidden />
             </div>
             <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-3 sm:px-8">
               <h2 className="display-tight text-2xl uppercase text-ink sm:text-3xl">Configure the show. Send it to WhatsApp.</h2>

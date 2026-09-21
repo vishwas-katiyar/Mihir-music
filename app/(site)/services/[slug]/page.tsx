@@ -37,8 +37,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-const accentText = { amber: "text-amber", cyan: "text-cyan", white: "text-ink" };
-const accentBorder = { amber: "border-amber/40", cyan: "border-cyan/40", white: "border-white/30" };
+const accentText = { gold: "text-gold", cyan: "text-cyan", white: "text-ink" };
+const accentBorder = { gold: "border-gold/40", cyan: "border-cyan/40", white: "border-white/30" };
 
 export default async function ServicePage({ params }: Params) {
   const { slug } = await params;
@@ -91,7 +91,7 @@ export default async function ServicePage({ params }: Params) {
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <Reveal>
                 <GlassCard className="h-full">
-                  <h2 className="eyebrow text-amber">Technical specification</h2>
+                  <h2 className="eyebrow text-gold">Technical specification</h2>
                   <table className="mt-5 w-full text-sm">
                     <caption className="sr-only">{s.name} specifications</caption>
                     <tbody className="divide-y divide-white/8">
@@ -111,7 +111,7 @@ export default async function ServicePage({ params }: Params) {
               <div className="grid gap-6">
                 <Reveal delay={0.06}>
                   <GlassCard>
-                    <h2 className="eyebrow text-amber">What’s included</h2>
+                    <h2 className="eyebrow text-gold">What’s included</h2>
                     <ul className="mt-5 space-y-3 text-sm text-ink/85">
                       {s.deliverables.map((d) => (
                         <li key={d} className="flex gap-3">
@@ -123,7 +123,7 @@ export default async function ServicePage({ params }: Params) {
                 </Reveal>
                 <Reveal delay={0.12}>
                   <GlassCard>
-                    <h2 className="eyebrow text-amber">Ideal for</h2>
+                    <h2 className="eyebrow text-gold">Ideal for</h2>
                     <ul className="mt-5 flex flex-wrap gap-2">
                       {s.idealFor.map((d) => (
                         <li key={d} className={cn("rounded-full border px-3 py-1.5 text-xs text-ink/85", accentBorder[s.accent])}>
@@ -146,7 +146,7 @@ export default async function ServicePage({ params }: Params) {
             <ul className="mt-5 grid gap-4 sm:grid-cols-3">
               {related.map((r) => (
                 <li key={r.slug}>
-                  <Link href={`/services/${r.slug}`} className="glass block rounded-2xl p-5 transition hover:border-amber/50">
+                  <Link href={`/services/${r.slug}`} className="glass block rounded-2xl p-5 transition hover:border-gold/50">
                     <div className="font-display text-lg font-bold tracking-[-0.03em] text-ink">{r.shortName}</div>
                     <p className="mt-2 line-clamp-2 text-sm text-muted">{r.summary}</p>
                   </Link>

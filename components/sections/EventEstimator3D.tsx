@@ -32,7 +32,7 @@ interface Availability {
 }
 
 const inputCls =
-  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/60 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
+  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/80 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
 
 function Segmented<T extends string>({
   label,
@@ -59,7 +59,7 @@ function Segmented<T extends string>({
               aria-checked={active}
               onClick={() => onChange(o.id)}
               className={cn(
-                "rounded-full border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-[background-color,color,border-color,transform] duration-200 ease-out-strong active:scale-[0.97]",
+                "inline-flex min-h-11 items-center rounded-full border px-4 font-mono text-xs uppercase tracking-[0.14em] transition-[background-color,color,border-color,transform] duration-200 ease-out-strong active:scale-[0.97]",
                 active
                   ? "border-gold bg-gold text-charcoal"
                   : "border-white/12 bg-white/5 text-ink/80 hover:border-white/30 hover:text-ink",
@@ -183,8 +183,8 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
               {availability && (
                 <span
                   className={cn(
-                    "mt-2 inline-flex items-center gap-1.5 text-[11px]",
-                    availability.level === "high" ? "text-pink" : availability.level === "moderate" ? "text-amber-soft" : "text-cyan",
+                    "mt-2 inline-flex items-center gap-1.5 text-xs",
+                    availability.level === "high" ? "text-pink" : availability.level === "moderate" ? "text-gold-soft" : "text-cyan",
                   )}
                 >
                   <CalendarCheck className="h-3.5 w-3.5" />
@@ -275,7 +275,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
           target="_blank"
           rel="noreferrer"
           onClick={persistQuote}
-          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-amber transition-[transform,filter] duration-200 ease-out-strong hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.97]"
+          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-gold transition-[transform,filter] duration-200 ease-out-strong hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.97]"
         >
           <MessageCircle className="h-4 w-4" aria-hidden />
           Send this estimate on WhatsApp

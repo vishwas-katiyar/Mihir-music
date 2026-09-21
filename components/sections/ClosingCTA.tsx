@@ -5,11 +5,11 @@ import { site, whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
 
 export function ClosingCTA() {
   return (
-    <section className="border-t border-white/10 py-24 sm:py-32">
+    <section aria-labelledby="closing-title" className="border-t border-white/10 py-24 sm:py-32">
       <Container>
         <Reveal>
           <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-            <h2 className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-6xl lg:col-span-8">
+            <h2 id="closing-title" className="display-tight max-w-[16ch] text-4xl uppercase text-ink sm:text-6xl lg:col-span-8">
               Your date is the only thing we can’t rent more of.
             </h2>
             <div className="lg:col-span-4 lg:justify-self-end">

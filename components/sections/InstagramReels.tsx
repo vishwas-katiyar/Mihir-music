@@ -30,7 +30,7 @@ function ReelEmbed({ code, index }: { code: string; index: number }) {
   }, []);
 
   return (
-    <div ref={ref} className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/10 bg-[#0b0d12]">
+    <div ref={ref} className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/10 bg-charcoal">
       {show ? (
         <iframe
           title={`Instagram reel ${index + 1} from @${instagramHandle}`}

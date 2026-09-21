@@ -8,14 +8,14 @@ export interface GearItem {
 
 export interface GearGroup {
   title: string;
-  accent: "amber" | "cyan" | "white";
+  accent: "gold" | "cyan" | "white";
   items: GearItem[];
 }
 
 export const gear: GearGroup[] = [
   {
     title: "Audio Systems",
-    accent: "amber",
+    accent: "gold",
     items: [
       { category: "Array", equipment: "Line Array Modules", model: "JBL VT / RCF HDL", qty: "16", spec: "8\" / 140 dB SPL" },
       { category: "Subs", equipment: "Cardioid Subwoofers", model: "JBL SRX / RCF SUB 902", qty: "8", spec: "18\" high-output" },

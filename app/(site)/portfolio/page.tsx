@@ -25,11 +25,11 @@ export const metadata: Metadata = {
  * the home page digest). Photos and reels live on Instagram and YouTube, linked below.
  */
 const styling = {
-  wedding: { accent: "amber" as const, gradient: "from-amber/25 via-transparent to-pink/15" },
-  concert: { accent: "cyan" as const, gradient: "from-cyan/25 via-transparent to-violet/20" },
+  wedding: { accent: "gold" as const, gradient: "from-gold/25 via-transparent to-pink/15" },
+  concert: { accent: "cyan" as const, gradient: "from-cyan/25 via-transparent to-cyan/20" },
   corporate: { accent: "white" as const, gradient: "from-white/15 via-transparent to-cyan/15" },
-  club: { accent: "amber" as const, gradient: "from-pink/20 via-transparent to-amber/20" },
-} satisfies Record<string, { accent: "amber" | "cyan" | "white"; gradient: string }>;
+  club: { accent: "gold" as const, gradient: "from-pink/20 via-transparent to-gold/20" },
+} satisfies Record<string, { accent: "gold" | "cyan" | "white"; gradient: string }>;
 
 const formats = showFormats.map((f) => ({
   title: f.title,
@@ -38,7 +38,7 @@ const formats = showFormats.map((f) => ({
   ...styling[f.slug as keyof typeof styling],
 }));
 
-const accentText = { amber: "text-amber", cyan: "text-cyan", white: "text-ink" };
+const accentText = { gold: "text-gold", cyan: "text-cyan", white: "text-ink" };
 
 export default function PortfolioPage() {
   return (
@@ -52,10 +52,10 @@ export default function PortfolioPage() {
             lead="Every event is different; the rig logic is not. Here is what each format needs and how we build it. Watch the shows themselves on Instagram and YouTube."
           />
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={site.social.instagram} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2.5 text-ink/85 transition hover:border-amber/60 hover:text-amber">
+            <a href={site.social.instagram} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2.5 text-ink/85 transition hover:border-gold/60 hover:text-gold">
               <Instagram className="h-4 w-4" /> Reels on Instagram
             </a>
-            <a href={site.social.youtube} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2.5 text-ink/85 transition hover:border-amber/60 hover:text-amber">
+            <a href={site.social.youtube} target="_blank" rel="noreferrer" className="eyebrow inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2.5 text-ink/85 transition hover:border-gold/60 hover:text-gold">
               <Youtube className="h-4 w-4" /> Show videos on YouTube
             </a>
           </div>
@@ -78,7 +78,7 @@ export default function PortfolioPage() {
                       <ul className="mt-5 space-y-2.5 text-sm text-ink/85">
                         {f.rig.map((r) => (
                           <li key={r} className="flex gap-3">
-                            <span className={cn("mt-2 h-1 w-1 shrink-0 rounded-full", f.accent === "cyan" ? "bg-cyan" : f.accent === "white" ? "bg-ink" : "bg-amber")} />
+                            <span className={cn("mt-2 h-1 w-1 shrink-0 rounded-full", f.accent === "cyan" ? "bg-cyan" : f.accent === "white" ? "bg-ink" : "bg-gold")} />
                             {r}
                           </li>
                         ))}

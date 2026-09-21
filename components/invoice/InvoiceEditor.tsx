@@ -350,7 +350,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
               <dt className="text-muted">Received</dt>
               <dd className="tabular-nums text-emerald-200">{inr(paidPaise)}</dd>
             </div>
-            <div className={cn("flex justify-between text-base font-semibold", totals.balanceDuePaise > 0 ? "text-amber-soft" : "text-emerald-200")}>
+            <div className={cn("flex justify-between text-base font-semibold", totals.balanceDuePaise > 0 ? "text-gold-soft" : "text-emerald-200")}>
               <dt>Balance due</dt>
               <dd className="tabular-nums">{inr(totals.balanceDuePaise)}</dd>
             </div>

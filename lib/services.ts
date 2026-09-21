@@ -15,7 +15,7 @@ export interface Service {
   code: string;
   name: string;
   shortName: string;
-  accent: "amber" | "cyan" | "white";
+  accent: "gold" | "cyan" | "white";
   headline: string;
   summary: string;
   /** One-sentence direct answer for generative search engines. */
@@ -33,7 +33,7 @@ export const services: Service[] = [
     code: "SYS-01",
     name: "Arena Audio & Line-Array Sound Systems",
     shortName: "Arena Audio",
-    accent: "amber",
+    accent: "gold",
     headline: "Sound you feel in your chest, tuned so every seat hears the same mix.",
     summary:
       "Phase-aligned line arrays, cardioid subwoofers and SMAART-tuned system design for weddings, concerts and corporate stages in Indore and across India.",
@@ -153,7 +153,7 @@ export const services: Service[] = [
     code: "SYS-04",
     name: "DJ Setup & Party Sound",
     shortName: "DJ Setup",
-    accent: "amber",
+    accent: "gold",
     headline: "Club-grade DJ rigs for sangeets, cocktail nights and private parties.",
     summary:
       "Pioneer-standard DJ consoles, dance-floor subs, effect lighting and a DJ who reads the room, packaged for weddings and private events.",

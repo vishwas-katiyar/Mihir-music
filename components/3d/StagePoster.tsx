@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
  * and the pre-hydration / chunk-loading placeholder. `loading` adds a shimmer label so
  * the wait reads as progress, not a broken canvas.
  */
-export function StagePoster({ className, accent = "amber", loading = false }: { className?: string; accent?: "amber" | "cyan"; loading?: boolean }) {
-  const a = accent === "amber" ? "255 159 28" : "77 229 255";
-  const b = accent === "amber" ? "77 229 255" : "255 159 28";
+export function StagePoster({ className, accent = "gold", loading = false }: { className?: string; accent?: "gold" | "cyan"; loading?: boolean }) {
+  const a = accent === "gold" ? "212 175 55" : "77 229 255";
+  const b = accent === "gold" ? "77 229 255" : "212 175 55";
   return (
     <div
       className={cn("absolute inset-0 overflow-hidden", className)}

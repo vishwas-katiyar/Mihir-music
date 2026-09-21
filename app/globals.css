@@ -4,39 +4,35 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ─────────────────────────────────────────────────────────────
-   Theme tokens — dark charcoal stage + amber/cyan show colours
+   Theme tokens — charcoal stage, one gold accent, cyan/pink status
+   (see DESIGN.md: The One Beam Rule, The Status Light Rule)
    ───────────────────────────────────────────────────────────── */
 @theme {
   --color-stage: #07090d;
   --color-stage-2: #0d1118;
   --color-panel: #111827;
   --color-panel-soft: #171f2d;
-  --color-panel-strong: #1e293b;
-  /* One accent: gold. `amber` is kept as an alias so older components stay on-palette. */
-  --color-amber: #d4af37; /* brand gold */
-  --color-amber-soft: #f6e27a; /* brand gold light */
-  --color-cyan: #4de5ff;
-  --color-violet: #8b5cf6;
-  --color-electric: #7b2cbf;
-  --color-gold: #d4af37;
   --color-charcoal: #0b0c10;
+  /* One accent. */
+  --color-gold: #d4af37;
+  --color-gold-soft: #f6e27a;
+  /* Status only: availability notes and the second stage light. */
+  --color-cyan: #4de5ff;
   --color-pink: #ff4ecd;
   --color-ink: #f8fafc;
   --color-muted: #a6b0c3;
-  --color-line: rgb(148 163 184 / 0.18);
 
   --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-  --shadow-glow-amber: 0 0 32px rgb(255 159 28 / 0.28);
-  --shadow-glow-cyan: 0 0 32px rgb(77 229 255 / 0.24);
-  --shadow-glow-gold: 0 0 40px rgb(255 184 0 / 0.30);
-  --shadow-glow-electric: 0 0 40px rgb(123 44 191 / 0.40);
+  /* The only coloured shadow on the site, and it is the accent's own light. */
+  --shadow-glow-gold: 0 0 32px rgb(212 175 55 / 0.35);
   --shadow-panel: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05);
 
   --ease-stage: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+
   /* Hero entrance: pure CSS so the headline is never blank while the page hydrates. Delay per element via [animation-delay:…]. */
   --animate-enter: enter 0.7s var(--ease-out-strong) both;
   @keyframes enter {
@@ -45,37 +41,16 @@
   @keyframes enter-fade {
     from { opacity: 0; }
   }
-  --animate-led: led 1.8s ease-in-out infinite;
-  --animate-marquee: marquee 40s linear infinite;
-
-  @keyframes led {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.45; transform: scale(1.25); }
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
   /* Seamless track for components/ui/Marquee: shift by exactly one copy plus its gap */
   --animate-marquee-track: marquee-track var(--duration, 40s) linear infinite;
   @keyframes marquee-track {
     from { transform: translateX(0); }
     to { transform: translateX(calc(-100% - var(--gap, 1rem))); }
   }
-  --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgb(255 184 0 / 0.0), inset 0 1px 0 rgb(255 255 255 / 0.08); }
-    50% { box-shadow: 0 0 28px 2px rgb(255 184 0 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.12); }
-  }
   --animate-sheen: sheen 5s linear infinite;
   @keyframes sheen {
     0% { transform: translateX(-120%) skewX(-18deg); }
     35%, 100% { transform: translateX(220%) skewX(-18deg); }
-  }
-  --animate-laser: laser 3.2s ease-in-out infinite alternate;
-  @keyframes laser {
-    from { transform: rotate(-16deg); opacity: 0.35; }
-    to { transform: rotate(16deg); opacity: 0.8; }
   }
 }
 
@@ -93,49 +68,31 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-::selection { background: rgb(255 159 28 / 0.25); color: #fff; }
+::selection { background: rgb(212 175 55 / 0.25); color: #fff; }
 
 /* Controls: fire click on touch-up without the double-tap wait; a long-press must not select a label. */
 button, a, [role="button"] { touch-action: manipulation; }
-/* Keyboard focus is a lit gold ring; fields keep their own focus bloom instead. */
-button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="radio"]:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 2px;
-}
 button, [role="button"] {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+}
+/* Keyboard focus is a lit gold ring; fields keep their own focus bloom instead. */
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="radio"]:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 /* iOS zooms the page into any field under 16px and never zooms back out. */
 @media (pointer: coarse) {
   input, textarea, select { font-size: max(1rem, 16px); }
 }
 
-/* Stage backdrop: fixed grid + ambient light pools */
-.stage-bg {
-  background:
-    radial-gradient(circle at 12% 18%, rgb(255 184 94 / 0.08), transparent 26%),
-    radial-gradient(circle at 88% 82%, rgb(77 229 255 / 0.06), transparent 28%),
-    linear-gradient(180deg, #06080c 0%, #0a0d13 45%, #07090d 100%);
-}
 .grid-bg {
   background-image:
     linear-gradient(rgb(255 255 255 / 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 0.03) 1px, transparent 1px);
   background-size: 36px 36px;
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
-}
-
-/* Film grain overlay on a fixed, non-scrolling layer (GPU-safe) */
-.grain::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -147,11 +104,6 @@ button, [role="button"] {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: var(--shadow-panel);
-}
-@utility glass-strong {
-  background: linear-gradient(180deg, rgb(17 24 39 / 0.96), rgb(5 9 14 / 0.98));
-  border: 1px solid rgb(255 255 255 / 0.08);
-  box-shadow: 0 35px 90px rgb(2 6 23 / 0.75), inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 /* Specular glass: frosted panel + a moving highlight sheen along the top edge */
 @utility glass-specular {
@@ -174,10 +126,6 @@ button, [role="button"] {
   animation: var(--animate-sheen);
   pointer-events: none;
 }
-@utility text-gold-glow {
-  color: var(--color-gold);
-  text-shadow: 0 0 36px rgb(212 175 55 / 0.45), 0 0 2px rgb(212 175 55 / 0.6);
-}
 @utility eyebrow {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -190,28 +138,11 @@ button, [role="button"] {
   letter-spacing: -0.05em;
   line-height: 0.92;
 }
-@utility led {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border-radius: 9999px;
-  background: var(--color-amber);
-  box-shadow: 0 0 12px rgb(255 149 0 / 0.8);
-  animation: var(--animate-led);
-}
-@utility perspective-stage {
-  perspective: 1200px;
-}
-@utility preserve-3d {
-  transform-style: preserve-3d;
-}
-@utility text-balance {
-  text-wrap: balance;
-}
 
 /* Reduced motion: kill perpetual loops; entrances keep the fade and drop the travel */
 @media (prefers-reduced-motion: reduce) {
-  .led, .animate-marquee, .animate-marquee-track { animation: none !important; }
+  .animate-marquee-track { animation: none !important; }
   .animate-enter { animation-name: enter-fade; }
+  .glass-specular::before { animation: none !important; }
   html { scroll-behavior: auto; }
 }

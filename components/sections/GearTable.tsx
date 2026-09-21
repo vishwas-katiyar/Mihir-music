@@ -4,7 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/utils";
 
-const accentText = { amber: "text-amber", cyan: "text-cyan", white: "text-ink" };
+const accentText = { gold: "text-gold", cyan: "text-cyan", white: "text-ink" };
 
 export function GearTable({ heading = true }: { heading?: boolean }) {
   return (
@@ -25,7 +25,7 @@ export function GearTable({ heading = true }: { heading?: boolean }) {
               <table className="min-w-full border-collapse text-left text-sm">
                 <caption className="sr-only">Sound, lighting and rigging equipment inventory</caption>
                 <thead className="hidden bg-panel-soft/80 sm:table-header-group">
-                  <tr className="eyebrow text-amber">
+                  <tr className="eyebrow text-gold">
                     <th className="px-5 py-4 font-normal">Category</th>
                     <th className="px-5 py-4 font-normal">Equipment</th>
                     <th className="px-5 py-4 font-normal">Brand / Model</th>

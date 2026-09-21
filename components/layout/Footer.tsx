@@ -21,22 +21,22 @@ export function Footer() {
             </p>
             <address className="mt-6 space-y-2 text-sm not-italic text-muted">
               <div className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 text-amber" />
+                <MapPin className="mt-0.5 h-4 w-4 text-gold" />
                 <span>
                   {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
                 </span>
               </div>
               <a href={`tel:${site.phone}`} className="flex items-center gap-2 hover:text-ink">
-                <Phone className="h-4 w-4 text-amber" /> {site.phoneDisplay}
+                <Phone className="h-4 w-4 text-gold" /> {site.phoneDisplay}
               </a>
               <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-ink">
-                <Mail className="h-4 w-4 text-amber" /> {site.email}
+                <Mail className="h-4 w-4 text-gold" /> {site.email}
               </a>
             </address>
           </div>
 
           <div>
-            <h3 className="eyebrow text-amber">Explore</h3>
+            <h3 className="eyebrow text-gold">Explore</h3>
             <ul className="mt-5 space-y-3 text-sm">
               {nav.map((n) => (
                 <li key={n.href}>
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-amber">Services</h3>
+            <h3 className="eyebrow text-gold">Services</h3>
             <ul className="mt-5 space-y-3 text-sm">
               {services.map((s) => (
                 <li key={s.slug}>
@@ -62,7 +62,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-amber">Service areas</h3>
+            <h3 className="eyebrow text-gold">Service areas</h3>
             <ul className="mt-5 space-y-3 text-sm text-muted">
               {site.areasServed.map((a) => (
                 <li key={a}>{a}</li>
@@ -81,7 +81,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted transition hover:border-amber/60 hover:text-amber"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted transition hover:border-gold/60 hover:text-gold"
                 >
                   <Icon className="h-4 w-4" />
                 </a>

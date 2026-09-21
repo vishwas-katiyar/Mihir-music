@@ -4,7 +4,7 @@ export interface Package {
   price: string;
   priceValue: number;
   label: string;
-  accent: "amber" | "cyan" | "white";
+  accent: "gold" | "cyan" | "white";
   featured?: boolean;
   features: string[];
   cta: string;
@@ -32,7 +32,7 @@ export const packages: Package[] = [
     price: "₹1.6L",
     priceValue: 160000,
     label: "Signature production",
-    accent: "amber",
+    accent: "gold",
     featured: true,
     features: [
       "Premium line-array and cardioid subs",
