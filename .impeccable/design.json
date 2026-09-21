@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-21T00:00:00.000Z",
+  "title": "Design System: Mihir Sound & Light",
+  "extensions": {
+    "colorMeta": {
+      "stage-gold": { "role": "primary", "displayName": "Stage Gold", "canonical": "#d4af37", "tonalRamp": ["oklch(22% 0.06 90)", "oklch(34% 0.09 90)", "oklch(46% 0.12 90)", "oklch(58% 0.14 90)", "oklch(69% 0.15 90)", "oklch(78% 0.14 90)", "oklch(87% 0.10 90)", "oklch(95% 0.05 90)"] },
+      "gold-soft": { "role": "primary", "displayName": "Gold Soft", "canonical": "#f6e27a", "tonalRamp": ["oklch(25% 0.05 95)", "oklch(38% 0.08 95)", "oklch(51% 0.11 95)", "oklch(64% 0.13 95)", "oklch(76% 0.13 95)", "oklch(85% 0.12 95)", "oklch(91% 0.10 95)", "oklch(96% 0.05 95)"] },
+      "cyan-status": { "role": "secondary", "displayName": "Cyan Status", "canonical": "#4de5ff", "tonalRamp": ["oklch(22% 0.05 215)", "oklch(35% 0.08 215)", "oklch(48% 0.11 215)", "oklch(61% 0.13 215)", "oklch(74% 0.14 215)", "oklch(84% 0.12 215)", "oklch(91% 0.08 215)", "oklch(96% 0.04 215)"] },
+      "pink-alert": { "role": "tertiary", "displayName": "Pink Alert", "canonical": "#ff4ecd", "tonalRamp": ["oklch(22% 0.08 345)", "oklch(35% 0.13 345)", "oklch(48% 0.18 345)", "oklch(60% 0.22 345)", "oklch(70% 0.22 345)", "oklch(80% 0.16 345)", "oklch(89% 0.10 345)", "oklch(96% 0.04 345)"] },
+      "stage-black": { "role": "neutral", "displayName": "Stage Black", "canonical": "#07090d", "tonalRamp": ["oklch(12% 0.01 260)", "oklch(18% 0.012 260)", "oklch(26% 0.014 260)", "oklch(36% 0.016 260)", "oklch(48% 0.018 260)", "oklch(62% 0.018 260)", "oklch(78% 0.014 260)", "oklch(94% 0.006 260)"] },
+      "stage-2": { "role": "neutral", "displayName": "Stage 2", "canonical": "#0d1118", "tonalRamp": ["oklch(14% 0.012 260)", "oklch(20% 0.014 260)", "oklch(28% 0.016 260)", "oklch(38% 0.018 260)", "oklch(50% 0.02 260)", "oklch(64% 0.018 260)", "oklch(79% 0.014 260)", "oklch(94% 0.006 260)"] },
+      "charcoal": { "role": "neutral", "displayName": "Charcoal", "canonical": "#0b0c10", "tonalRamp": ["oklch(13% 0.008 270)", "oklch(19% 0.01 270)", "oklch(27% 0.012 270)", "oklch(37% 0.012 270)", "oklch(49% 0.012 270)", "oklch(63% 0.012 270)", "oklch(78% 0.01 270)", "oklch(94% 0.005 270)"] },
+      "panel": { "role": "neutral", "displayName": "Panel", "canonical": "#111827", "tonalRamp": ["oklch(16% 0.03 265)", "oklch(22% 0.035 265)", "oklch(30% 0.04 265)", "oklch(40% 0.045 265)", "oklch(52% 0.045 265)", "oklch(66% 0.04 265)", "oklch(80% 0.03 265)", "oklch(94% 0.01 265)"] },
+      "panel-soft": { "role": "neutral", "displayName": "Panel Soft", "canonical": "#171f2d", "tonalRamp": ["oklch(18% 0.03 262)", "oklch(24% 0.035 262)", "oklch(32% 0.04 262)", "oklch(42% 0.045 262)", "oklch(54% 0.045 262)", "oklch(67% 0.04 262)", "oklch(81% 0.03 262)", "oklch(94% 0.01 262)"] },
+      "panel-strong": { "role": "neutral", "displayName": "Panel Strong", "canonical": "#1e293b", "tonalRamp": ["oklch(20% 0.035 260)", "oklch(27% 0.04 260)", "oklch(35% 0.045 260)", "oklch(45% 0.05 260)", "oklch(57% 0.05 260)", "oklch(69% 0.045 260)", "oklch(82% 0.03 260)", "oklch(95% 0.01 260)"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#f8fafc", "tonalRamp": ["oklch(15% 0.01 250)", "oklch(28% 0.012 250)", "oklch(42% 0.014 250)", "oklch(56% 0.014 250)", "oklch(70% 0.012 250)", "oklch(82% 0.01 250)", "oklch(92% 0.006 250)", "oklch(98.5% 0.003 250)"] },
+      "muted": { "role": "neutral", "displayName": "Muted", "canonical": "#a6b0c3", "tonalRamp": ["oklch(15% 0.015 255)", "oklch(27% 0.02 255)", "oklch(39% 0.025 255)", "oklch(52% 0.028 255)", "oklch(64% 0.028 255)", "oklch(75% 0.025 255)", "oklch(86% 0.018 255)", "oklch(95% 0.008 255)"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgb(255 255 255 / 0.10)", "tonalRamp": ["rgb(255 255 255 / 0.04)", "rgb(255 255 255 / 0.06)", "rgb(255 255 255 / 0.08)", "rgb(255 255 255 / 0.10)", "rgb(255 255 255 / 0.12)", "rgb(255 255 255 / 0.15)", "rgb(255 255 255 / 0.25)", "rgb(255 255 255 / 0.30)"] },
+      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgb(255 255 255 / 0.12)", "tonalRamp": ["rgb(255 255 255 / 0.05)", "rgb(255 255 255 / 0.08)", "rgb(255 255 255 / 0.10)", "rgb(255 255 255 / 0.12)", "rgb(255 255 255 / 0.15)", "rgb(255 255 255 / 0.20)", "rgb(255 255 255 / 0.25)", "rgb(255 255 255 / 0.30)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline only; uppercase, balanced." },
+      "headline": { "displayName": "Headline", "purpose": "Every section heading, capped at 14 to 16ch." },
+      "title": { "displayName": "Title", "purpose": "Row titles, gear groups, work cards, FAQ questions." },
+      "body": { "displayName": "Body", "purpose": "Copy at 80 to 90% ink; leads in Muted; 40 to 60ch measure." },
+      "label": { "displayName": "Label (mono)", "purpose": "Form labels, nav items, footer heads, readout captions, chips. Never above a heading." }
+    },
+    "shadows": [
+      { "name": "panel-ambient", "value": "0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05)", "purpose": "Every glass surface; the inset line is light on the top edge." },
+      { "name": "sheet-ambient", "value": "0 30px 80px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 -1px 0 rgb(255 255 255 / 0.04)", "purpose": "The estimator bottom sheet (glass-specular)." },
+      { "name": "floating-control", "value": "0 12px 40px rgb(0 0 0 / 0.45)", "purpose": "Fixed WhatsApp button." },
+      { "name": "gold-glow", "value": "0 0 32px rgb(255 159 28 / 0.28)", "purpose": "Primary CTA only; the one coloured shadow." }
+    ],
+    "motion": [
+      { "name": "ease-stage", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Hover colour, nav transforms, image scale, scroll reveals (850ms)." },
+      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Hero entrance (700ms, 16px rise, 100ms stagger), pure CSS." },
+      { "name": "spring-control", "value": "spring(stiffness 400, damping 22)", "purpose": "Button hover lift and press." },
+      { "name": "spring-sheet", "value": "spring(stiffness 190, damping 26)", "purpose": "Estimator sheet enter/exit and drag release." },
+      { "name": "spring-tilt", "value": "spring(stiffness 160, damping 18, mass 0.5)", "purpose": "Tilt cards." },
+      { "name": "marquee", "value": "linear 40s to 65s, pause on hover", "purpose": "Review rows." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one gold action: sentence case, pill, glow, press to 0.97.",
+      "html": "<button class=\"ds-btn-primary\">Get an estimate <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 0 28px; border: 0; border-radius: 9999px; background: #d4af37; color: #0b0c10; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 0 32px rgb(255 159 28 / 0.28); cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), filter 200ms ease; } .ds-btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Glass Button",
+      "kind": "button",
+      "refersTo": "button-glass",
+      "description": "Secondary action on the glass surface; outline brightens on hover.",
+      "html": "<button class=\"ds-btn-glass\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/></svg> WhatsApp</button>",
+      "css": ".ds-btn-glass { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 0 28px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.09); background: linear-gradient(180deg, rgb(18 24 33 / 0.86), rgb(12 17 25 / 0.78)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05); cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms ease; } .ds-btn-glass:hover { transform: translateY(-2px); border-color: rgb(255 255 255 / 0.25); } .ds-btn-glass:active { transform: scale(0.97); } .ds-btn-glass:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "button-glass",
+      "description": "Ghost disc for close, menu and social links; outline and glyph turn gold on hover.",
+      "html": "<button class=\"ds-btn-icon\" aria-label=\"Close\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button>",
+      "css": ".ds-btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(255 255 255 / 0.05); color: #f8fafc; cursor: pointer; transition: border-color 200ms ease, color 200ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-icon:hover { border-color: rgb(212 175 55 / 0.6); color: #d4af37; } .ds-btn-icon:active { transform: scale(0.95); } .ds-btn-icon:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Chips",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Mono-label option pills; the selected one lights gold.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Event type\"><button class=\"ds-chip ds-chip--on\" role=\"radio\" aria-checked=\"true\">Luxe wedding</button><button class=\"ds-chip\" role=\"radio\" aria-checked=\"false\">Concert / fest</button><button class=\"ds-chip\" role=\"radio\" aria-checked=\"false\">Corporate summit</button></div>",
+      "css": ".ds-seg { display: flex; flex-wrap: wrap; gap: 8px; } .ds-chip { padding: 6px 12px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); backdrop-filter: blur(8px); color: rgb(248 250 252 / 0.8); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-chip:hover { border-color: rgb(255 255 255 / 0.3); color: #f8fafc; } .ds-chip:active { transform: scale(0.97); } .ds-chip--on { background: #d4af37; border-color: #d4af37; color: #0b0c10; } .ds-chip:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Mono label over a dark field; focus blooms a gold ring.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-label\">Venue city *</span><input class=\"ds-input\" placeholder=\"Indore, Ujjain, Bhopal…\" /></label>",
+      "css": ".ds-field { display: block; } .ds-label { display: block; margin-bottom: 8px; color: #a6b0c3; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; } .ds-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(7 9 13 / 0.7); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 16px; outline: none; transition: border-color 200ms ease, box-shadow 200ms ease; } .ds-input::placeholder { color: rgb(166 176 195 / 0.6); } .ds-input:focus { border-color: rgb(212 175 55 / 0.6); box-shadow: 0 0 0 4px rgb(212 175 55 / 0.1); }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card-glass",
+      "description": "The default content surface: frosted panel, hairline, ambient shadow. Shown as a review card.",
+      "html": "<figure class=\"ds-card\"><blockquote class=\"ds-card__quote\">“Crystal-clear audio and lighting that matched the mood perfectly. Punctual, professional and easy to work with.”</blockquote><figcaption class=\"ds-card__meta\"><span><span class=\"ds-card__name\">Raj &amp; Neha</span><span class=\"ds-card__role\">Wedding client</span></span><span class=\"ds-card__stars\" aria-label=\"5 out of 5 stars\">★★★★★</span></figcaption></figure>",
+      "css": ".ds-card { display: flex; flex-direction: column; justify-content: space-between; width: 352px; max-width: 100%; margin: 0; padding: 20px; border-radius: 16px; border: 1px solid rgb(255 255 255 / 0.09); background: linear-gradient(180deg, rgb(18 24 33 / 0.86), rgb(12 17 25 / 0.78)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-card__quote { margin: 0; font-size: 15px; line-height: 1.6; color: rgb(248 250 252 / 0.9); } .ds-card__meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; font-size: 14px; } .ds-card__name { display: block; font-weight: 500; } .ds-card__role { display: block; font-size: 12px; color: #a6b0c3; } .ds-card__stars { color: #d4af37; letter-spacing: 0.05em; font-size: 12px; }"
+    },
+    {
+      "name": "Package Card (radio)",
+      "kind": "card",
+      "refersTo": "card-glass",
+      "description": "Selectable starting-price card; gold hairline and gold price when chosen.",
+      "html": "<div class=\"ds-pkgs\" role=\"radiogroup\"><button class=\"ds-pkg ds-pkg--on\" role=\"radio\" aria-checked=\"true\"><span class=\"ds-pkg__name\">Wedding Luxe</span><span class=\"ds-pkg__price\">₹1,60,000</span></button><button class=\"ds-pkg\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-pkg__name\">Club / House</span><span class=\"ds-pkg__price\">₹85,000</span></button></div>",
+      "css": ".ds-pkgs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 360px; } .ds-pkg { text-align: left; padding: 12px; border-radius: 12px; border: 1px solid rgb(255 255 255 / 0.12); background: rgb(255 255 255 / 0.05); color: #f8fafc; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: border-color 300ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-pkg:hover { border-color: rgb(255 255 255 / 0.3); } .ds-pkg:active { transform: scale(0.98); } .ds-pkg--on { border-color: #d4af37; background: rgb(212 175 55 / 0.1); } .ds-pkg__name { display: block; font-size: 12px; font-weight: 500; line-height: 1.2; color: rgb(248 250 252 / 0.8); } .ds-pkg--on .ds-pkg__name { color: #f8fafc; } .ds-pkg__price { display: block; margin-top: 4px; font-size: 16px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; } .ds-pkg--on .ds-pkg__price { color: #d4af37; } .ds-pkg:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Island Nav",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "Detached glass pill with mono items; the active item sits in a small lit pill.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><span class=\"ds-nav__mark\" aria-hidden=\"true\">M</span><ul class=\"ds-nav__list\"><li><a class=\"ds-nav__item\" href=\"#\">Services</a></li><li><a class=\"ds-nav__item\" href=\"#\">Gear</a></li><li><a class=\"ds-nav__item ds-nav__item--active\" href=\"#\" aria-current=\"page\">Portfolio</a></li><li><a class=\"ds-nav__item\" href=\"#\">Contact</a></li></ul><a class=\"ds-nav__cta\" href=\"#\">WhatsApp</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 720px; padding: 8px 12px; border-radius: 9999px; border: 1px solid rgb(255 255 255 / 0.1); background: linear-gradient(180deg, rgb(18 24 33 / 0.86), rgb(12 17 25 / 0.78)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05); font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-nav__mark { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: 4px; border-radius: 9999px; color: #d4af37; font-weight: 700; font-size: 20px; } .ds-nav__list { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; } .ds-nav__item { display: inline-block; padding: 10px 16px; border-radius: 9999px; color: rgb(248 250 252 / 0.75); text-decoration: none; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; transition: color 200ms ease, background 200ms ease; } .ds-nav__item:hover { color: #f8fafc; } .ds-nav__item--active { background: rgb(255 255 255 / 0.08); color: #d4af37; } .ds-nav__cta { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 9999px; background: #d4af37; color: #0b0c10; text-decoration: none; font-size: 14px; font-weight: 600; transition: filter 200ms ease; } .ds-nav__cta:hover { filter: brightness(1.05); } .ds-nav__item:focus-visible, .ds-nav__cta:focus-visible { outline: 2px solid #d4af37; outline-offset: 2px; }"
+    },
+    {
+      "name": "Section Heading",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "Uppercase display heading with a muted lead; no kicker above it.",
+      "html": "<div class=\"ds-heading\"><h2 class=\"ds-heading__h\">Owned, not sub-hired</h2><p class=\"ds-heading__lead\">Every array, fixture and truss section is ours, serviced between shows and moved by our crew.</p></div>",
+      "css": ".ds-heading { max-width: 48rem; font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-heading__h { margin: 0; max-width: 16ch; font-size: clamp(2.25rem, 1.5rem + 2vw, 3.75rem); font-weight: 700; line-height: 0.92; letter-spacing: -0.05em; text-transform: uppercase; text-wrap: balance; color: #f8fafc; } .ds-heading__lead { margin: 20px 0 0; max-width: 60ch; font-size: 16px; line-height: 1.625; color: #a6b0c3; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The FOH Desk at Night",
+    "overview": "The site is the front-of-house position after the house lights drop: a black room, black glass, and the warm glow of a console. Everything sits on a near-black charcoal ground (stage-black), surfaces are frosted panels that let the stage bleed through, and a single metal, Stage Gold, does every job an accent can do: the primary button, the lit indicator on a selected chip, a quantity readout, a star. The 3D rig in the hero is the show itself; the interface is the crew around it, precise and unhurried.\n\nThe personality is engineered and premium. Engineered means every element could be signed off by the rigger who reads the load plan: type is set like case labels (uppercase, tight), numbers sit in mono, facts appear in rows and hairline-divided lists rather than in equal cards. Premium means restraint: large type with room around it, hairlines instead of boxes, one gold instead of a palette, motion that is slow and physical (a spring-damped sheet, a turntable rig, a 700 ms exponential ease) rather than fast and busy. It is dark by use scene, not by category: the visitor is planning a night show and the FOH desk is where that night is run.\n\nConfirmed rejections: template hero-metric blocks, per-word blur-stagger headlines, kicker labels above section headings, gradient text, stock people presented as crew, and any interaction that fights the phone's own scrolling.",
+    "keyCharacteristics": [
+      "One accent, Stage Gold, used where a beam would land; never as a wash.",
+      "Charcoal ground with frosted glass panels for anything interactive.",
+      "Uppercase Space Grotesk display at -0.05em tracking; JetBrains Mono for labels and readouts.",
+      "Hairline dividers (1px, white at 10%) do the structural work that borders and cards do elsewhere.",
+      "Motion is one authored moment per surface, exponential ease-out, physical springs for sheets and gestures.",
+      "Live 3D as backdrop and configurator, always inert to touch."
+    ],
+    "rules": [
+      { "name": "The One Beam Rule", "body": "Stage Gold is a source, not a wash. It appears as a solid pill, a hairline turning gold on hover, a lit indicator, a mono readout or a star; it never tints a background above 10% (gold/10 on a selected package card is the ceiling) and never appears in gradient text.", "section": "colors" },
+      { "name": "The Status Light Rule", "body": "Cyan and pink exist to report state (availability, the second stage light). If a colour is not reporting something, it is gold or a neutral.", "section": "colors" },
+      { "name": "The Hairline Rule", "body": "Structure is drawn with 1px lines at white/10, not with filled boxes. A border stronger than 12% is a hover or selected state, not a resting one.", "section": "colors" },
+      { "name": "The Case Label Rule", "body": "Headings are uppercase, 700, and tracked to -0.05em; nothing else on the page is uppercase except mono labels. Emphasis inside copy comes from ink versus muted, never from weight changes or colour.", "section": "typography" },
+      { "name": "The Heading Speaks Rule", "body": "Section headings stand alone. No kicker or eyebrow above them; the mono label is a form and chrome device, not a heading ornament.", "section": "typography" },
+      { "name": "The Readout Rule", "body": "Any number that is a fact (a quantity, a price in a table, a rating) is set in JetBrains Mono or in the display face with tabular-nums; prices that animate use the display face at 700, -0.04em.", "section": "typography" },
+      { "name": "The Glass Is a Surface Rule", "body": "Glass is used for what the visitor touches or reads as a unit: cards, panels, the nav pill, the sheet. It is not decoration on a heading or an image.", "section": "elevation" },
+      { "name": "The One Glow Rule", "body": "The only coloured shadow on the page is the gold glow under a primary button. Depth elsewhere is black and soft.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do set every section heading in the display face: uppercase, 700, -0.05em, 0.92 line height, capped at 14 to 16ch.",
+      "Do draw structure with 1px white/10 hairlines and space; group tightly, separate generously, more space above a heading than below.",
+      "Do put content that the visitor reads or touches as a unit on the glass surface (panel gradient, 14px blur, panel ambient shadow).",
+      "Do give every control a press (scale 0.97), a hover on a spring, and a 2px Stage Gold focus ring at 2px offset.",
+      "Do keep numbers that are facts in JetBrains Mono or tabular display figures, and animate a price when it changes.",
+      "Do write primary actions in sentence case in Space Grotesk 600 (\"Get an estimate\"), and keep mono uppercase for labels.",
+      "Do keep 3D canvases inert to touch (pointer-events: none, turntable camera) and provide the CSS poster fallback.",
+      "Do pad fixed chrome and bottom-anchored copy by env(safe-area-inset-*), keep inputs at 16px on phones, and use 100svh for the hero."
+    ],
+    "donts": [
+      "Don't use a second accent. Cyan and pink report status only; violet, electric and the legacy amber alias are not for new work.",
+      "Don't wash gold over an area: no gold backgrounds above 10% opacity, no gradient text, no gold glow except under the primary button.",
+      "Don't put a kicker or mono eyebrow above a heading, or a \"big number, small label\" metric block as a section's structure.",
+      "Don't animate a headline per word or per character, or reveal anything with more than a 6px blur; one authored entrance per surface.",
+      "Don't mount OrbitControls or any pointer handler on a canvas that the page scrolls past on a phone.",
+      "Don't use same-size icon-heading-text cards as a page structure, or nest cards inside cards.",
+      "Don't present stock photography as the company's own work; credit it on the card or use the poster.",
+      "Don't ship a hover state that is not gated by (hover: hover) (Tailwind v4 does this for you; hand-written CSS must too)."
+    ]
+  }
+}
