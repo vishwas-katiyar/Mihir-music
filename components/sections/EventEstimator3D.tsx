@@ -32,7 +32,7 @@ interface Availability {
 }
 
 const inputCls =
-  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none placeholder:text-muted/60 focus:border-amber/60 focus:ring-4 focus:ring-amber/10";
+  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/60 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
 
 function Segmented<T extends string>({
   label,
@@ -59,9 +59,9 @@ function Segmented<T extends string>({
               aria-checked={active}
               onClick={() => onChange(o.id)}
               className={cn(
-                "rounded-full border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-all duration-300 active:scale-[0.97]",
+                "rounded-full border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-[background-color,color,border-color,transform] duration-200 ease-out-strong active:scale-[0.97]",
                 active
-                  ? "border-amber bg-amber text-black"
+                  ? "border-gold bg-gold text-charcoal"
                   : "border-white/12 bg-white/5 text-ink/80 hover:border-white/30 hover:text-ink",
               )}
             >
@@ -144,7 +144,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
         <EstimatorCanvas rig={result.rig} people={people} className="absolute inset-0" />
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5">
           <span className="eyebrow rounded-full border border-white/12 bg-stage/70 px-3 py-1.5 text-ink/80 backdrop-blur">
-            Live rig preview · drag to orbit
+            Live rig preview<span className="hidden pointer-fine:inline"> · drag to orbit</span>
           </span>
           <AnimatePresence mode="popLayout">
             <motion.span
@@ -219,7 +219,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
           <ul className="mt-5 space-y-2.5 text-sm text-ink/85">
             {rigLines.map(({ Icon, text }) => (
               <li key={text} className="flex items-start gap-3">
-                <Icon className="mt-0.5 h-4 w-4 shrink-0 text-amber" strokeWidth={1.5} />
+                <Icon className="mt-0.5 h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} aria-hidden />
                 <span>{text}</span>
               </li>
             ))}
@@ -247,12 +247,12 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
                     aria-checked={active}
                     onClick={() => setPickedPackage(p.id === nearest.id ? null : p.id)}
                     className={cn(
-                      "rounded-xl border px-3 py-3 text-left transition-colors duration-300 active:scale-[0.98]",
-                      active ? "border-amber bg-amber/10" : "border-white/12 bg-white/5 hover:border-white/30",
+                      "rounded-xl border px-3 py-3 text-left transition-[border-color,background-color,transform] duration-200 ease-out-strong active:scale-[0.98]",
+                      active ? "border-gold bg-gold/10" : "border-white/12 bg-white/5 hover:border-white/30",
                     )}
                   >
                     <span className={cn("block text-xs font-medium leading-tight", active ? "text-ink" : "text-ink/80")}>{p.name}</span>
-                    <span className={cn("mt-1 block font-display text-base font-semibold tracking-[-0.03em]", active ? "text-amber" : "text-ink")}>
+                    <span className={cn("mt-1 block font-display text-base font-semibold tracking-[-0.03em] tabular-nums", active ? "text-gold" : "text-ink")}>
                       {formatINR(p.priceValue)}
                     </span>
                   </button>
@@ -262,7 +262,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
             <ul className="mt-4 grid gap-2 text-sm text-ink/85 sm:grid-cols-2">
               {pkg.features.map((f) => (
                 <li key={f} className="flex gap-3">
-                  <span className="mt-2.5 h-px w-3 shrink-0 bg-amber" aria-hidden />
+                  <span className="mt-2.5 h-px w-3 shrink-0 bg-gold" aria-hidden />
                   {f}
                 </li>
               ))}
@@ -275,9 +275,9 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
           target="_blank"
           rel="noreferrer"
           onClick={persistQuote}
-          className="group inline-flex items-center justify-center gap-3 rounded-full bg-amber px-6 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-black transition hover:bg-amber-soft active:scale-[0.98]"
+          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-amber transition-[transform,filter] duration-200 ease-out-strong hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.97]"
         >
-          <MessageCircle className="h-4 w-4" />
+          <MessageCircle className="h-4 w-4" aria-hidden />
           Send this estimate on WhatsApp
         </a>
       </div>

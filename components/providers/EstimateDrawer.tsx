@@ -77,10 +77,7 @@ export function EstimateDrawer() {
               <div className="mx-auto h-1.5 w-14 rounded-full bg-white/20" aria-hidden />
             </div>
             <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-3 sm:px-8">
-              <div>
-                <div className="eyebrow text-gold">Instant 3D estimator</div>
-                <h2 className="display-tight mt-2 text-2xl uppercase text-ink sm:text-3xl">Configure the show. Send it to WhatsApp.</h2>
-              </div>
+              <h2 className="display-tight text-2xl uppercase text-ink sm:text-3xl">Configure the show. Send it to WhatsApp.</h2>
               <button type="button" onClick={closeDrawer} aria-label="Close estimator" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/5 text-ink transition hover:border-gold/60 hover:text-gold">
                 <X className="h-4 w-4" />
               </button>

@@ -9,7 +9,6 @@ export function EstimatorSection() {
       <Container>
         <Reveal>
           <SectionHeading
-            eyebrow="Instant 3D estimator"
             title="Build your stage. Watch the rig respond. Send it in one tap."
             lead="Pick the event, the crowd and the venue. The rig, the budget and the nearest package update live, and the exact rig goes to WhatsApp as your quote."
           />
