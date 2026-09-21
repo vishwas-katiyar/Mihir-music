@@ -36,6 +36,15 @@
   --shadow-panel: 0 22px 60px rgb(2 6 23 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.05);
 
   --ease-stage: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Hero entrance: pure CSS so the headline is never blank while the page hydrates. Delay per element via [animation-delay:…]. */
+  --animate-enter: enter 0.7s var(--ease-out-strong) both;
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(16px); }
+  }
+  @keyframes enter-fade {
+    from { opacity: 0; }
+  }
   --animate-led: led 1.8s ease-in-out infinite;
   --animate-marquee: marquee 40s linear infinite;
 
@@ -71,7 +80,13 @@
 }
 
 /* Base */
-html { scroll-behavior: smooth; color-scheme: dark; }
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  /* Phones: no grey flash on tap (controls carry their own :active), no font inflation in landscape. */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
 body {
   background: var(--color-stage);
   color: var(--color-ink);
@@ -79,6 +94,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 ::selection { background: rgb(255 159 28 / 0.25); color: #fff; }
+
+/* Controls: fire click on touch-up without the double-tap wait; a long-press must not select a label. */
+button, a, [role="button"] { touch-action: manipulation; }
+button, [role="button"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+/* iOS zooms the page into any field under 16px and never zooms back out. */
+@media (pointer: coarse) {
+  input, textarea, select { font-size: max(1rem, 16px); }
+}
 
 /* Stage backdrop: fixed grid + ambient light pools */
 .stage-bg {
@@ -177,8 +204,9 @@ body {
   text-wrap: balance;
 }
 
-/* Reduced motion: kill perpetual loops */
+/* Reduced motion: kill perpetual loops; entrances keep the fade and drop the travel */
 @media (prefers-reduced-motion: reduce) {
   .led, .animate-marquee, .animate-marquee-track { animation: none !important; }
+  .animate-enter { animation-name: enter-fade; }
   html { scroll-behavior: auto; }
 }

@@ -10,7 +10,7 @@ import { Truss } from "./Truss";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
-import { StageLights, StageFloor, TouchScrollFriendly, useCoarsePointer } from "./SceneCommon";
+import { StageLights, StageFloor, Turntable, useCoarsePointer } from "./SceneCommon";
 
 type Rig = EstimateResult["rig"];
 
@@ -231,10 +231,15 @@ export interface EstimatorSceneProps {
 
 export function EstimatorScene({ rig, people, quality, active, still }: EstimatorSceneProps) {
   const camZ = 14 + rig.trussWidth * 0.45;
+  const lookY = rig.trussHeight * 0.45;
   const coarse = useCoarsePointer();
+  // Same view OrbitControls would settle on from the initial camera, clamped to its polar range.
+  const camDistance = Math.hypot(5.5 - lookY, camZ);
+  const camPolar = Math.min(1.5, Math.max(0.95, Math.acos((5.5 - lookY) / camDistance)));
   return (
     <Canvas
       className="absolute inset-0"
+      style={coarse && !still ? { pointerEvents: "none" } : undefined}
       dpr={still ? 1 : quality === "high" ? [1, 1.5] : 1}
       frameloop={active ? "always" : "never"}
       camera={{ fov: 40, position: [0, 5.5, camZ], near: 0.1, far: 140 }}
@@ -246,12 +251,13 @@ export function EstimatorScene({ rig, people, quality, active, still }: Estimato
           <StillCamera rig={rig} azimuth={still.azimuth} polar={still.polar} zoom={still.zoom} />
           <ReadyFlag frames={150} />
         </>
+      ) : coarse ? (
+        <Turntable target={[0, lookY, 0]} distance={camDistance} polar={camPolar} speed={0.35} range={0.85} />
       ) : (
         <OrbitControls
-          target={[0, rig.trussHeight * 0.45, 0]}
+          target={[0, lookY, 0]}
           enablePan={false}
           enableZoom={false}
-          enableRotate={!coarse}
           enableDamping
           dampingFactor={0.08}
           minPolarAngle={0.95}
@@ -262,7 +268,6 @@ export function EstimatorScene({ rig, people, quality, active, still }: Estimato
           autoRotateSpeed={0.35}
         />
       )}
-      {coarse && !still && <TouchScrollFriendly />}
       <Scene rig={rig} quality={quality} people={people} />
       <Crowd people={people} stageDepth={rig.stageDepth} quality={quality} />
     </Canvas>

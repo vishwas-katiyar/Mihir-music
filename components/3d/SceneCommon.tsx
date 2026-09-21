@@ -4,13 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
-import type { PointerTarget } from "./usePointerTarget";
 
-/** True on phones/tablets (coarse pointer). Decided on the client after mount. */
+const coarseQuery = "(pointer: coarse)";
+
+/**
+ * True on phones/tablets. Scenes are client-only (dynamic, ssr:false), so the first render
+ * can read the media query directly instead of flipping after mount; that flip is what let
+ * OrbitControls attach to touch devices for one frame and claim the gesture.
+ */
 export function useCoarsePointer() {
-  const [coarse, setCoarse] = useState(false);
+  const [coarse, setCoarse] = useState(() => typeof window !== "undefined" && window.matchMedia(coarseQuery).matches);
   useEffect(() => {
-    const mq = window.matchMedia("(pointer: coarse)");
+    const mq = window.matchMedia(coarseQuery);
     const update = () => setCoarse(mq.matches);
     update();
     mq.addEventListener("change", update);
@@ -20,26 +25,25 @@ export function useCoarsePointer() {
 }
 
 /**
- * OrbitControls sets `touch-action: none` on the canvas, which hijacks page scrolling on
- * phones. Mount this after the controls to hand vertical swipes back to the page.
+ * Presentational stand-in for OrbitControls on touch devices: a slow turntable around
+ * `target` with no event listeners, so the canvas never owns a finger. Speed matches
+ * OrbitControls' autoRotate units (revolutions per minute at 60fps).
  */
-export function TouchScrollFriendly() {
-  const { gl } = useThree();
-  useEffect(() => {
-    const el = gl.domElement;
-    const apply = () => {
-      if (el.style.touchAction !== "pan-y") el.style.touchAction = "pan-y";
-    };
-    apply();
-    // OrbitControls writes `touch-action: none` when it connects; undo it whenever that happens.
-    const mo = new MutationObserver(apply);
-    mo.observe(el, { attributes: true, attributeFilter: ["style"] });
-    const t = window.setTimeout(apply, 300);
-    return () => {
-      mo.disconnect();
-      window.clearTimeout(t);
-    };
-  }, [gl]);
+export function Turntable({ target, distance, polar, speed = 0.45, range }: { target: [number, number, number]; distance: number; polar: number; speed?: number; /** Limit the sweep to ±range radians (ping-pong) instead of full revolutions. */ range?: number }) {
+  const { camera } = useThree();
+  const look = useRef(new THREE.Vector3(...target));
+  const angle = useRef(0);
+  const perSecond = ((2 * Math.PI) / 60) * speed;
+  useFrame((_, dt) => {
+    angle.current += perSecond * Math.min(dt, 0.1);
+    const a = range == null ? angle.current : Math.sin(angle.current) * range;
+    camera.position.set(
+      look.current.x + distance * Math.sin(polar) * Math.sin(a),
+      look.current.y + distance * Math.cos(polar),
+      look.current.z + distance * Math.sin(polar) * Math.cos(a),
+    );
+    camera.lookAt(look.current);
+  });
   return null;
 }
 
@@ -86,44 +90,4 @@ export function StageDeck({ width, depth, height = 0.7, z = 0, accent = "#ff9f1c
       </mesh>
     </group>
   );
-}
-
-/**
- * Keeps a world-space aim point alive: follows the visitor's pointer / gyroscope,
- * falls back to a slow figure-8 sweep after 2.5 s of inactivity.
- */
-export function useAimTarget(pointer: React.RefObject<PointerTarget>, halfWidth: number, depth: number) {
-  const target = useRef(new THREE.Vector3(0, 0, 3));
-  const idleMix = useRef(1);
-  useFrame(({ clock }, dt) => {
-    const p = pointer.current;
-    const t = clock.elapsedTime;
-    const idle = performance.now() - p.lastInput > 2500;
-    idleMix.current += ((idle ? 1 : 0) - idleMix.current) * (1 - Math.exp(-dt * 1.5));
-    const sweepX = Math.sin(t * 0.45) * halfWidth * 0.8;
-    const sweepZ = 2 + Math.sin(t * 0.9) * depth * 0.5;
-    const ptrX = p.x * halfWidth;
-    const ptrZ = 3 - p.y * depth;
-    const m = idleMix.current;
-    const tx = ptrX * (1 - m) + sweepX * m;
-    const tz = ptrZ * (1 - m) + sweepZ * m;
-    target.current.x += (tx - target.current.x) * (1 - Math.exp(-dt * 4));
-    target.current.z += (tz - target.current.z) * (1 - Math.exp(-dt * 4));
-  });
-  return target;
-}
-
-/** Gentle camera parallax against the pointer. */
-export function CameraRig({ pointer, base, lookAt, amount = 1 }: { pointer: React.RefObject<PointerTarget>; base: [number, number, number]; lookAt: [number, number, number]; amount?: number }) {
-  const { camera } = useThree();
-  const look = useRef(new THREE.Vector3(...lookAt));
-  useFrame((_, dt) => {
-    const p = pointer.current;
-    const k = 1 - Math.exp(-dt * 2.5);
-    camera.position.x += (base[0] + p.x * 1.4 * amount - camera.position.x) * k;
-    camera.position.y += (base[1] + p.y * 0.6 * amount - camera.position.y) * k;
-    camera.position.z += (base[2] - camera.position.z) * k;
-    camera.lookAt(look.current);
-  });
-  return null;
 }

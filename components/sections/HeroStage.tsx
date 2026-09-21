@@ -3,13 +3,11 @@
 import { useRef } from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { TextEffect } from "@/components/motion-primitives/text-effect";
 import { RigShowcase } from "@/components/3d/RigShowcase";
 import { Container } from "@/components/ui/Container";
 import { useEstimateDrawer } from "@/components/providers/EstimateDrawer";
 import { whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
 
-const ease = [0.32, 0.72, 0, 1] as const;
 const spring = { type: "spring", stiffness: 400, damping: 22 } as const;
 
 /**
@@ -41,38 +39,19 @@ export function HeroStage() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,var(--color-stage)_0%,rgb(7_9_13/0.88)_30%,rgb(7_9_13/0.35)_58%,transparent_100%)] lg:bg-[linear-gradient(to_right,var(--color-stage)_0%,rgb(7_9_13/0.94)_32%,rgb(7_9_13/0.45)_54%,transparent_76%)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-stage to-transparent" />
 
-      <Container className="pointer-events-none relative z-10 flex flex-1 flex-col justify-end pt-24 pb-14 sm:pb-20 lg:justify-center lg:pb-24">
+      <Container className="pointer-events-none relative z-10 flex flex-1 flex-col justify-end pt-24 pb-[calc(3.5rem+env(safe-area-inset-bottom,0px))] sm:pb-20 lg:justify-center lg:pb-24">
+        {/* One entrance for the whole message: headline, sentence, actions rise in turn (CSS, see --animate-enter). */}
         <motion.div className="pointer-events-auto max-w-[44rem] lg:max-w-[52rem]" style={reduce ? undefined : { opacity: copyOpacity, y: copyY }}>
-          <TextEffect
-            as="h1"
-            per="word"
-            preset="fade-in-blur"
-            speedReveal={1.6}
-            className="display-tight text-balance uppercase text-ink text-[clamp(2.75rem,1.5rem+5.5vw,5rem)]"
-          >
+          <h1 className="display-tight text-balance uppercase text-ink text-[clamp(2.75rem,1.5rem+5.5vw,5rem)] animate-enter [animation-delay:120ms]">
             Sound and light that fill the floor.
-          </TextEffect>
+          </h1>
 
           {/* data-speakable: the one-sentence answer voice assistants may read aloud (see lib/schema.ts webPageSchema) */}
-          <div data-speakable>
-            <TextEffect
-              as="p"
-              per="word"
-              preset="fade"
-              delay={0.5}
-              speedReveal={3}
-              className="mt-6 max-w-[44ch] text-base leading-relaxed text-ink/80 sm:text-lg"
-            >
-              Line arrays, Sharpy beams and certified truss for weddings, concerts and corporate shows across Madhya Pradesh.
-            </TextEffect>
-          </div>
+          <p data-speakable className="mt-6 max-w-[44ch] text-base leading-relaxed text-ink/80 animate-enter [animation-delay:220ms] sm:text-lg">
+            Line arrays, Sharpy beams and certified truss for weddings, concerts and corporate shows across Madhya Pradesh.
+          </p>
 
-          <motion.div
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
-            initial={reduce ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.6, ease }}
-          >
+          <div className="mt-8 flex flex-col gap-3 animate-enter [animation-delay:320ms] sm:flex-row sm:items-center sm:gap-4">
             <motion.button
               type="button"
               onClick={openDrawer}
@@ -96,7 +75,7 @@ export function HeroStage() {
               <MessageCircle className="h-4 w-4" aria-hidden />
               WhatsApp
             </motion.a>
-          </motion.div>
+          </div>
         </motion.div>
       </Container>
     </section>

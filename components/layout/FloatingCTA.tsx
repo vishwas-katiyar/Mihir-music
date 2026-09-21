@@ -16,7 +16,7 @@ export function FloatingCTA() {
       target="_blank"
       rel="noreferrer"
       aria-label={`WhatsApp ${site.name}`}
-      className="fixed bottom-5 right-5 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gold text-charcoal shadow-[0_12px_40px_rgb(0_0_0/0.45)] transition hover:brightness-105 active:scale-95 lg:hidden"
+      className="fixed right-5 bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] z-40 flex h-13 w-13 items-center justify-center rounded-full bg-gold text-charcoal shadow-[0_12px_40px_rgb(0_0_0/0.45)] transition hover:brightness-105 active:scale-95 lg:hidden"
     >
       <WhatsAppIcon className="h-6 w-6" />
     </a>

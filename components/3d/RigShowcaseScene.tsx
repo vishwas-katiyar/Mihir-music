@@ -9,7 +9,7 @@ import { Truss } from "./Truss";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
-import { StageLights, StageFloor, StageDeck, TouchScrollFriendly, useCoarsePointer } from "./SceneCommon";
+import { StageLights, StageFloor, StageDeck, Turntable, useCoarsePointer } from "./SceneCommon";
 
 const GOLD = "#ffb800";
 const WHITE = "#eef0ff";
@@ -77,33 +77,38 @@ function Rig({ quality }: { quality: Exclude<Quality, "off"> }) {
 }
 
 /**
- * Contained "rig on a turntable" scene for the hero card. Slow auto-orbit, drag to look
- * around, beams track the pointer. Deliberately quiet: six fixtures, one accent colour.
+ * Contained "rig on a turntable" scene for the hero. Slow auto-orbit; on a mouse you can
+ * drag to look around and the beams track the pointer. On touch the canvas is purely a
+ * picture (no controls, no pointer events) so a swipe over it scrolls the page as normal.
+ * Deliberately quiet: six fixtures, one accent colour.
  */
 export function RigShowcaseScene({ quality, active }: { quality: Exclude<Quality, "off">; active: boolean }) {
   const coarse = useCoarsePointer();
   return (
     <Canvas
       className="absolute inset-0"
+      style={coarse ? { pointerEvents: "none" } : undefined}
       dpr={quality === "high" ? [1, 1.5] : 1}
       frameloop={active ? "always" : "never"}
       camera={{ fov: 34, near: 0.1, far: 80, position: [0, 3.2, 15] }}
       gl={{ antialias: quality === "high", alpha: true, powerPreference: "high-performance", stencil: false }}
       onCreated={({ gl }) => gl.setClearColor("#0b0d12", 0)}
     >
-      <OrbitControls
-        target={[0, 2.8, 0]}
-        enablePan={false}
-        enableZoom={false}
-        enableRotate={!coarse}
-        enableDamping
-        dampingFactor={0.08}
-        minPolarAngle={1.05}
-        maxPolarAngle={1.45}
-        autoRotate
-        autoRotateSpeed={0.45}
-      />
-      {coarse && <TouchScrollFriendly />}
+      {coarse ? (
+        <Turntable target={[0, 2.8, 0]} distance={15} polar={1.45} speed={0.45} />
+      ) : (
+        <OrbitControls
+          target={[0, 2.8, 0]}
+          enablePan={false}
+          enableZoom={false}
+          enableDamping
+          dampingFactor={0.08}
+          minPolarAngle={1.05}
+          maxPolarAngle={1.45}
+          autoRotate
+          autoRotateSpeed={0.45}
+        />
+      )}
       <Rig quality={quality} />
     </Canvas>
   );
