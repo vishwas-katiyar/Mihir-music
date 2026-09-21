@@ -8,7 +8,7 @@ import { packages } from "@/lib/packages";
 import { cn } from "@/lib/utils";
 
 const inputCls =
-  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-amber/60 focus:ring-4 focus:ring-amber/10";
+  "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/60 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
 
 /**
  * Booking form that composes a WhatsApp message — no backend, no data stored.
@@ -100,11 +100,11 @@ export function ContactForm() {
         target="_blank"
         rel="noreferrer"
         className={cn(
-          "inline-flex w-full items-center justify-center gap-3 rounded-full px-6 py-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] transition",
-          valid ? "bg-amber text-black shadow-glow-amber hover:bg-amber-soft active:scale-[0.98]" : "cursor-not-allowed bg-white/8 text-muted",
+          "inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full px-7 text-sm font-semibold transition-[transform,filter,background-color,color] duration-200 ease-out-strong",
+          valid ? "bg-gold text-charcoal shadow-glow-amber hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.97]" : "cursor-not-allowed bg-white/8 text-muted",
         )}
       >
-        <MessageCircle className="h-4 w-4" />
+        <MessageCircle className="h-4 w-4" aria-hidden />
         {valid ? "Send via WhatsApp" : "Fill the required fields to send"}
       </a>
       <p className="text-xs text-muted">Opens WhatsApp with your details pre-filled. Nothing is stored on this website.</p>
