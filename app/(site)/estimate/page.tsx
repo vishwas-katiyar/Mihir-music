@@ -23,7 +23,6 @@ export default function EstimatePage() {
         <Container>
           <SectionHeading
             as="h1"
-            eyebrow="Instant estimator"
             title="Configure the show. See the rig. Send it."
             lead="Three choices give you a live 3D stage and a realistic budget range. Add your date and city and the whole thing lands in Mihir's WhatsApp. No forms, no waiting."
           />

@@ -26,7 +26,6 @@ export function AudioShowcase() {
           <div className="order-1 lg:order-2">
             <Reveal>
               <SectionHeading
-                accent="cyan"
                 title="Phase-aligned. Room-tuned. Felt in the chest."
                 lead={audio.definition}
               />

@@ -12,7 +12,7 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
     <section id="contact" className="py-28 sm:py-36">
       <Container>
         <Reveal>
-          <SectionHeading as={as} eyebrow="Contact" title="Let's build the right signal path." lead="Tell us the date, the city and the scale. We reply on WhatsApp within the hour during show season." />
+          <SectionHeading as={as} title="Let's build the right signal path." lead="Tell us the date, the city and the scale. We reply on WhatsApp within the hour during show season." />
         </Reveal>
 
         <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">

@@ -48,7 +48,6 @@ export default function PortfolioPage() {
         <Container>
           <SectionHeading
             as="h1"
-            eyebrow="Portfolio"
             title="Four show formats we've refined over a decade of load-ins."
             lead="Every event is different; the rig logic is not. Here is what each format needs and how we build it. Watch the shows themselves on Instagram and YouTube."
           />

@@ -22,7 +22,6 @@ export default function ServicesPage() {
         <Container>
           <SectionHeading
             as="h1"
-            eyebrow="Services"
             title="Everything between the power drop and the last encore."
             lead="Each system is available on its own or as an integrated production. Explore the specs, then build a live estimate."
           />

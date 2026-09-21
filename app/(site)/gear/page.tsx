@@ -22,7 +22,6 @@ export default function GearPage() {
         <Container>
           <SectionHeading
             as="h1"
-            eyebrow="Gear"
             title="Owned inventory. Maintained in-house. On the truck when you need it."
             lead="No sub-hire roulette. Every array, fixture and truss section listed here is ours, serviced between shows and transported by our crew."
           />
