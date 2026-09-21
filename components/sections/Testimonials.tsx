@@ -8,12 +8,13 @@ import { site } from "@/lib/site";
 /**
  * Reviews as two counter-scrolling rows of cards with faded edges. Layout pattern
  * from 21st.dev "Testimonials Marquee" (shadcnspace/marquee-01), restyled to the site:
- * no avatars, no handles, gold stars, panel cards on the charcoal ground. Hovering a
- * row pauses it so a quote can be read in full.
+ * no avatars, no handles, gold stars, glass cards on the charcoal ground. Hovering a
+ * row pauses it so a quote can be read in full. The glass here skips backdrop blur:
+ * the cards are in constant motion and sit on a flat ground with nothing to frost.
  */
 function ReviewCard({ r }: { r: Review }) {
   return (
-    <figure className="flex h-full w-[19rem] shrink-0 flex-col justify-between rounded-2xl border border-white/10 bg-panel/40 p-5 sm:w-[22rem]">
+    <figure className="flex h-full w-[19rem] shrink-0 flex-col justify-between rounded-2xl border border-white/9 bg-[linear-gradient(180deg,rgb(18_24_33/0.86),rgb(12_17_25/0.78))] p-5 shadow-panel sm:w-[22rem]">
       <blockquote className="text-[15px] leading-relaxed text-ink/90">“{r.text}”</blockquote>
       <figcaption className="mt-5 flex items-center justify-between gap-3 text-sm">
         <span>
