@@ -17,12 +17,12 @@ const BUILD_DATE = new Date();
 
 /** Bump when the data behind each area changes. Format: YYYY-MM-DD. */
 const CONTENT_UPDATED = {
-  home: "2026-09-19",
-  services: "2026-09-19",
-  gear: "2026-09-19",
-  portfolio: "2026-09-19",
-  estimate: "2026-09-19",
-  contact: "2026-09-19",
+  home: "2026-09-21",
+  services: "2026-09-21",
+  gear: "2026-09-21",
+  portfolio: "2026-09-21",
+  estimate: "2026-09-21",
+  contact: "2026-09-21",
 } as const;
 
 const d = (iso: string) => {

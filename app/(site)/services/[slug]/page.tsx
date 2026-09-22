@@ -51,7 +51,7 @@ export default async function ServicePage({ params }: Params) {
     <>
       <JsonLd
         data={[
-          webPageSchema({ name: s.name, description: s.definition, path: `/services/${s.slug}`, speakableSelectors: ["h1", "[data-speakable]"], dateModified: "2026-09-19" }),
+          webPageSchema({ name: s.name, description: s.definition, path: `/services/${s.slug}`, speakableSelectors: ["h1", "[data-speakable]"], dateModified: "2026-09-21" }),
           serviceSchema(s),
           faqSchema(s.faq),
           breadcrumbSchema([
