@@ -25,6 +25,7 @@ mistaken for a fault.
 | OG / Twitter images | `app/opengraph-image.png`, `app/twitter-image.png` | Regenerated for the new brand (2026-09-21) |
 | Legacy-URL redirects | `next.config.ts` → `redirects()` | **New.** `/index.html`, `/invoice.html`, `/services.html`, `/contact.html` → 308 to the real route |
 | Honest `lastmod` | `app/sitemap.ts` → `CONTENT_UPDATED` | **New.** Bumped `2026-09-19` → `2026-09-21`, the redesign ship date |
+| Proof figures in the HTML | `components/sections/ProofBand.tsx` | **New.** Real numbers server-rendered; the count-up is now an enhancement on top |
 
 ### Why `lastmod` mattered here
 
@@ -35,6 +36,32 @@ dates now match the commits that actually changed those pages.
 
 **Maintenance rule:** when you edit `lib/services.ts`, `lib/packages.ts`, `lib/gear.ts` or
 `lib/media.ts`, bump the matching constant in `app/sitemap.ts`. That is the whole ritual.
+
+### The one real defect the crawl exposed
+
+Reading the rendered HTML in *Test live URL → HTML* turned up something the screenshot could
+not: the proof band was being indexed as
+
+    0+ years producing live shows, since 2012
+    0+ Google reviews, rated 4.9 out of 5
+    0  Clay Paky Sharpy moving heads in stock
+    0 t certified flown load
+
+Not a rendering artifact - that was the text in the crawled DOM. The figures are count-up
+animations, and the component only supplied the real value once the band scrolled into view
+(`value={inView ? s.value : 0}`), so the server shipped zeroes and zeroes are what Googlebot
+recorded. Four of the strongest trust signals on the page, indexed as nothing, flatly
+contradicting the FAQ text further down the same page that states 24 Sharpy heads and 8 tons.
+
+Now inverted: the true figure is what the server renders, and a hydrated, motion-enabled client
+rewinds to 0 and counts up when the band scrolls in. Verified end to end - the prerendered HTML
+carries `14+ / 120+ / 24 / 8 t`, a hydrated client off-screen reads `0/0/0/0`, and scrolling the
+band into view counts up through `8/67/13/4` and `12/99/20/7` to the real values. No-JS visitors
+and reduced-motion users get the figures with no animation at all.
+
+**The general rule this is an instance of:** any number, label or claim that only appears after
+an animation, a scroll or a user action is a number Google may never see. Server-render the
+truth; animate on top of it.
 
 ### Why the old URLs got redirects
 
@@ -93,13 +120,35 @@ Do **not** use *Removals → Outdated content* for this. That tool is for pages 
 whose content no longer matches the live page; here the live page is already correct and
 requesting indexing is the right lever.
 
-### 2.4 Check the rendered page, not just the HTML
+### 2.4 The rendered screenshot looks empty — this is expected, do not "fix" it
 
-Still in URL Inspection: *Test live URL → View tested page → Screenshot*. The homepage hero is a
-3D canvas. Confirm the screenshot shows the headline and the phone CTA — if Googlebot sees an
-empty black rectangle, the text it indexes is whatever is in the static HTML, and the hero copy
-must be real DOM text rather than something the canvas draws. (It is, today; this is a check,
-not a known fault.)
+**Checked 2026-09-22. Known artifact, not a fault.**
+
+*Test live URL → View tested page → Screenshot* on the homepage returns an almost entirely
+black column: the logo and the menu button, and nothing else.
+
+The cause is the hero, not the content. `components/sections/HeroStage.tsx` is
+`min-h-svh` with the copy anchored to the bottom on phones (`justify-end`) — the 3D rig fills
+the viewport and the message sits under it. On a real phone that is exactly right. But Googlebot
+renders mobile at a viewport far taller than any device (widely reported as ~411x12140) so that
+lazy-loaded content triggers, and `svh` obediently stretches the hero to that full height. The
+headline then sits ~12,000px down, well below where the screenshot crops.
+
+Reproduced locally: at 412x892 the hero renders perfectly; at 412x2400 the entire message is
+already pushed to the bottom of the frame.
+
+**It costs nothing that matters:**
+
+- The H1 and body copy are in the server-rendered HTML — confirmed with `curl`, no JS needed —
+  so Google indexes the text regardless of what the screenshot shows. Verify this yourself with
+  the **HTML** tab beside *Screenshot* in the same panel.
+- Core Web Vitals / LCP come from real Chrome field data (CrUX), not from this render.
+- Google retired the Mobile Usability report in December 2023, so nothing reports on it.
+
+**The only real cost is that this screenshot is useless to you as a verification tool.** Use the
+HTML tab instead. Capping the hero height would make the screenshot look right, but it would
+trade a deliberate design property on real devices for a crawler-viewport artifact — not a good
+trade, and it is why the hero is being left alone.
 
 ### 2.5 Wire up the two things GSC does not cover
 

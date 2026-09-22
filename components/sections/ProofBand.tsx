@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { useInView } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { useInView, useReducedMotion } from "motion/react";
 import { AnimatedNumber } from "@/components/motion-primitives/animated-number";
 import { Container } from "@/components/ui/Container";
 import { site } from "@/lib/site";
@@ -16,10 +16,27 @@ const stats = [
   { value: 8, suffix: " t", label: "certified flown load on Tomcat and Prolyte truss" },
 ];
 
-/** Full-width figures band. Numbers count up once the band scrolls into view. */
+/**
+ * Full-width figures band. Numbers count up once the band scrolls into view.
+ *
+ * The count-up is an enhancement layered on top of the real figure, never a
+ * precondition for it. Server-rendered markup, a no-JS visitor and a crawler all get
+ * the true number; only after hydration does a motion-enabled client rewind to 0 and
+ * count up when the band scrolls in. Gating it the other way round meant the server
+ * shipped "0+ years" and "0+ Google reviews", and that is what Googlebot indexed -
+ * zeroes that flatly contradict the FAQ text further down the same page.
+ *
+ * The band sits below a full-viewport hero, so the rewind happens off-screen.
+ */
 export function ProofBand() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduce = useReducedMotion();
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
+  /** True figure everywhere except a hydrated, motion-enabled client that has not scrolled here yet. */
+  const shown = (value: number) => (!hydrated || reduce || inView ? value : 0);
 
   return (
     <section aria-label="Company facts" className="border-y border-white/10">
@@ -28,7 +45,7 @@ export function ProofBand() {
           {stats.map((s, i) => (
             <div key={s.label} className={i % 2 === 1 ? "py-8 pl-6 md:pl-8" : "py-8 pr-6 md:pr-8 md:[&:not(:first-child)]:pl-8"}>
               <div className="font-display text-4xl font-bold tracking-[-0.04em] text-ink sm:text-5xl">
-                <AnimatedNumber value={inView ? s.value : 0} springOptions={{ stiffness: 60, damping: 20 }} />
+                <AnimatedNumber value={shown(s.value)} springOptions={{ stiffness: 60, damping: 20 }} />
                 <span className="text-gold">{s.suffix}</span>
               </div>
               <p className="mt-2 max-w-[22ch] text-sm leading-snug text-muted">{s.label}</p>
