@@ -20,6 +20,13 @@ export interface Service {
   summary: string;
   /** One-sentence direct answer for generative search engines. */
   definition: string;
+  /**
+   * Search-result copy for /services/[slug]. The title takes the " | Mihir Sound & Light"
+   * suffix from the root layout, so keep it at 38 characters or fewer (60 rendered); the
+   * description is 120-160 characters, names the service, "Indore" and the event types.
+   */
+  metaTitle: string;
+  metaDescription: string;
   specs: ServiceSpec[];
   deliverables: string[];
   idealFor: string[];
@@ -39,6 +46,9 @@ export const services: Service[] = [
       "Phase-aligned line arrays, cardioid subwoofers and SMAART-tuned system design for weddings, concerts and corporate stages in Indore and across India.",
     definition:
       "Arena audio is a professionally designed, high-SPL sound system, typically a flown or ground-stacked line array with cardioid subs, engineered to give even coverage and intelligible sound across audiences from 200 to 20,000 people.",
+    metaTitle: "Line Array Sound Rental in Indore",
+    metaDescription:
+      "JBL and RCF line-array sound system rental in Indore with cardioid subs, a live FOH engineer and SMAART tuning for weddings, concerts and corporate stages.",
     specs: [
       { label: "System", value: "JBL VT / RCF HDL line array modules" },
       { label: "Low end", value: "JBL SRX / RCF SUB 902 cardioid subs" },
@@ -82,6 +92,9 @@ export const services: Service[] = [
       "Clay Paky Sharpy beams, LED pixel mapping and Avolites-programmed cues that turn a stage into a scene. Wedding-soft to festival-loud.",
     definition:
       "Intelligent DMX lighting uses digitally controlled moving-head fixtures, LED pixel bars and effects (strobes, haze, lasers) programmed on a lighting console so every look and colour change is cued precisely to the show.",
+    metaTitle: "DMX Stage Lighting Rental in Indore",
+    metaDescription:
+      "DMX stage lighting rental in Indore: Clay Paky Sharpy moving heads, LED pixel bars, haze and Avolites cues for weddings, concerts and corporate shows.",
     specs: [
       { label: "Movers", value: "Clay Paky Sharpy 10R / 15R beams" },
       { label: "Console", value: "Avolites Tiger Touch Pro, 1024 ch" },
@@ -121,6 +134,9 @@ export const services: Service[] = [
       "Tomcat / Prolyte aluminium truss, 4×8 ft modular risers and insured rigging crews with locked-off load plans for indoor and outdoor stages.",
     definition:
       "Stage rigging is the structural system (aluminium truss, ground support towers and modular stage decks) that safely suspends lighting, audio and scenic elements above performers and audiences.",
+    metaTitle: "Stage Truss & Rigging Rental, Indore",
+    metaDescription:
+      "Certified aluminium truss and stage rental in Indore: Tomcat and Prolyte truss to 30 ft, flown loads to 8 tons, insured rigging crew, load plan on every build.",
     specs: [
       { label: "Truss", value: "Tomcat / Prolyte aluminium, 200+ ft" },
       { label: "Load rating", value: "Certified flown systems up to 8 tons" },
@@ -159,6 +175,9 @@ export const services: Service[] = [
       "Pioneer-standard DJ consoles, dance-floor subs, effect lighting and a DJ who reads the room, packaged for weddings and private events.",
     definition:
       "A professional DJ setup pairs a club-standard DJ controller and monitors with a tuned dance-floor PA and synchronised effect lighting, operated by an experienced DJ for weddings and parties.",
+    metaTitle: "Wedding & Party DJ Setup in Indore",
+    metaDescription:
+      "Wedding and party DJ setup in Indore: Pioneer-standard console, dance-floor line array with dual subs, moving lights and haze, run by a DJ who reads the room.",
     specs: [
       { label: "Console", value: "Pioneer-standard DJ controller + booth monitors" },
       { label: "PA", value: "Compact line array + dual 18\" subs" },
@@ -186,6 +205,9 @@ export const services: Service[] = [
       "Show callers, RF and hardline intercom, stage managers and backup consoles: the operational layer that makes a big production feel effortless.",
     definition:
       "Show execution is the on-site production management of a live event: cue calling, crew communications, changeovers and contingency planning that keep audio, lighting and performers synchronised.",
+    metaTitle: "Live Show Production Crew in Indore",
+    metaDescription:
+      "Live event production crew in Indore: show caller, stage manager, RF and hardline intercom, backup consoles and strike team for concerts, summits and weddings.",
     specs: [
       { label: "Comms", value: "RF + hardline intercom networks" },
       { label: "Cue calling", value: "Dedicated show caller + run sheet" },

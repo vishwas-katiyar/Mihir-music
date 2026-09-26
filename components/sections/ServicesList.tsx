@@ -55,7 +55,7 @@ export function ServicesList() {
                           ))}
                         </ul>
                         <Link href={`/services/${s.slug}`} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm text-gold transition hover:text-gold-soft">
-                          Full specification <ArrowUpRight className="h-3.5 w-3.5" />
+                          Full {s.shortName.toLowerCase()} specification <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
                         </Link>
                       </div>
                     </div>
@@ -64,6 +64,9 @@ export function ServicesList() {
               </AccordionItem>
             ))}
           </Accordion>
+          <Link href="/services" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm text-ink/80 transition hover:text-gold">
+            All five services side by side <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
         </Reveal>
       </Container>
     </section>

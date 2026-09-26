@@ -26,7 +26,9 @@ export const metadata: Metadata = {
     default: `${site.name} | Line-Array Sound, DMX Stage Lighting & Truss Rigging in Indore`,
     template: `%s | ${site.name}`,
   },
-  description: site.description,
+  // Fallback only: every public page sets its own <=160-char description. This one reaches the 404 page.
+  description:
+    "Line-array sound, DMX stage lighting, certified truss rigging and show crew for weddings, concerts and corporate events in Indore and across Madhya Pradesh.",
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
@@ -43,7 +45,6 @@ export const metadata: Metadata = {
     "event production company Indore",
     "sound and light company India",
   ],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -63,13 +64,18 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
   verification: { google: site.analytics.googleSiteVerification },
+  // Google Search only shows favicons in ICO/PNG/JPEG/GIF/BMP (never SVG) and may ignore every rel=icon if one
+  // fails its guidelines, so favicon.svg stays off this list. favicon.ico lives in public/ (not app/) so its URL is
+  // stable: app/favicon.ico gets a content-hash query string from Next, and Google wants a hash-free, crawlable URL.
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/favicon-96.png", sizes: "96x96", type: "image/png" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   category: "Event production",
   other: {

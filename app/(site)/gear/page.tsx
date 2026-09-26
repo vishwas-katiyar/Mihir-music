@@ -5,20 +5,31 @@ import { GearTable } from "@/components/sections/GearTable";
 import { AudioShowcase } from "@/components/sections/AudioShowcase";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { breadcrumbSchema, shareMeta, webPageSchema } from "@/lib/schema";
+
+const title = "Sound & Lighting Equipment, Indore";
+const description =
+  "Owned sound, lighting and rigging inventory in Indore: JBL and RCF line arrays, cardioid subs, Clay Paky Sharpy movers, Avolites console and Tomcat truss.";
 
 export const metadata: Metadata = {
-  title: "Equipment Inventory: Line Arrays, Sharpy Beams, Avolites, Truss",
-  description:
-    "Full sound, lighting and rigging inventory: JBL/RCF line arrays, cardioid subs, Clay Paky Sharpy moving heads, Avolites Tiger Touch Pro, Tomcat/Prolyte truss and modular staging, owned and operated in Indore.",
+  title,
+  description,
   alternates: { canonical: "/gear" },
+  ...shareMeta({ title, description, path: "/gear" }),
 };
 
 export default function GearPage() {
   return (
     <>
-      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Gear", path: "/gear" }])} />
-      <section className="pb-4 pt-40">
+      <JsonLd
+        data={[
+          webPageSchema({ name: title, description, path: "/gear", dateModified: "2026-09-21" }),
+          breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Gear", path: "/gear" }]),
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Gear", href: "/gear" }]} />
+      <section className="pb-4 pt-8">
         <Container>
           <SectionHeading
             as="h1"

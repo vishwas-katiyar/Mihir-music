@@ -11,11 +11,19 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { faqSchema, webPageSchema } from "@/lib/schema";
+import { faqSchema, shareMeta, webPageSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 
+/** Brand first on the home result (54 chars, under the 60 Google shows); the root layout's 84-char default is too long. */
+const title = `${site.name} | Event Sound & Lighting in Indore`;
+const description =
+  "Line-array sound, DMX stage lighting, truss rigging and DJ setups for weddings, concerts and corporate events in Indore. Owned gear and a live crew since 2012.";
+
 export const metadata: Metadata = {
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/" },
+  ...shareMeta({ title, description, path: "/" }),
 };
 
 export default function HomePage() {

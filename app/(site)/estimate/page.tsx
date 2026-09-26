@@ -4,22 +4,34 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { EventEstimator3D } from "@/components/sections/EventEstimator3D";
 import { FAQ } from "@/components/sections/FAQ";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { breadcrumbSchema, faqSchema, shareMeta, webPageSchema } from "@/lib/schema";
 import { faqs } from "@/lib/faqs";
 
+const title = "Sound & Light Cost Estimator, Indore";
+const description =
+  "Pick event type, crowd size and venue for an instant sound, lighting and stage budget in Indore with a live 3D rig preview, then send it to WhatsApp in one tap.";
+
 export const metadata: Metadata = {
-  title: "Instant 3D Event Estimate: Sound, Lighting & Stage Cost Calculator",
-  description:
-    "Pick event type, crowd size and venue to see a live 3D stage preview and an instant budget range for sound, lighting and rigging in Indore and across India. Send the exact rig to WhatsApp in one tap.",
+  title,
+  description,
   alternates: { canonical: "/estimate" },
+  ...shareMeta({ title, description, path: "/estimate" }),
 };
 
 export default function EstimatePage() {
   const pricingFaqs = faqs.filter((f) => /cost|quote|price|setup/i.test(f.q));
   return (
     <>
-      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Estimate", path: "/estimate" }])} />
-      <section className="pb-6 pt-40">
+      <JsonLd
+        data={[
+          webPageSchema({ name: title, description, path: "/estimate", dateModified: "2026-09-21" }),
+          breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Estimate", path: "/estimate" }]),
+          faqSchema(pricingFaqs),
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Estimate", href: "/estimate" }]} />
+      <section className="pb-6 pt-8">
         <Container>
           <SectionHeading
             as="h1"

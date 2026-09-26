@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
@@ -22,6 +23,17 @@ export function ClosingCTA() {
               >
                 <MessageCircle className="h-4 w-4" /> WhatsApp {site.phoneDisplay}
               </a>
+              <p className="mt-5 max-w-[34ch] text-sm text-muted">
+                Want a number first?{" "}
+                <Link href="/estimate" className="text-ink underline decoration-white/30 underline-offset-4 transition hover:decoration-gold">
+                  Run the 3D event estimate
+                </Link>
+                . Prefer a form?{" "}
+                <Link href="/contact" className="text-ink underline decoration-white/30 underline-offset-4 transition hover:decoration-gold">
+                  Send your event details
+                </Link>
+                .
+              </p>
             </div>
           </div>
         </Reveal>

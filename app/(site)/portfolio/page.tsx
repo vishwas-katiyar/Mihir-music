@@ -8,16 +8,21 @@ import { InstagramReels } from "@/components/sections/InstagramReels";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { breadcrumbSchema, shareMeta, webPageSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 import { formats as showFormats } from "@/lib/formats";
 import { cn } from "@/lib/utils";
 
+const title = "Event Production Portfolio, Indore";
+const description =
+  "Wedding sangeet stages, open-ground concerts, corporate summits and club nights produced by Mihir Sound & Light in Indore, with the rig specs behind each.";
+
 export const metadata: Metadata = {
-  title: "Live Show Portfolio: Weddings, Concerts, Corporate & Club Productions",
-  description:
-    "Production formats we run in Indore and across India: wedding sangeet stages, open-ground concerts, corporate summits and club nights, with the rig specs behind each one.",
+  title,
+  description,
   alternates: { canonical: "/portfolio" },
+  ...shareMeta({ title, description, path: "/portfolio" }),
 };
 
 /**
@@ -43,8 +48,26 @@ const accentText = { gold: "text-gold", cyan: "text-cyan", white: "text-ink" };
 export default function PortfolioPage() {
   return (
     <>
-      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Portfolio", path: "/portfolio" }])} />
-      <section className="pb-4 pt-40">
+      <JsonLd
+        data={[
+          webPageSchema({
+            name: title,
+            description,
+            path: "/portfolio",
+            type: "CollectionPage",
+            mainEntity: {
+              "@type": "ItemList",
+              name: "Show formats",
+              numberOfItems: formats.length,
+              itemListElement: formats.map((f, i) => ({ "@type": "ListItem", position: i + 1, name: f.title })),
+            },
+            dateModified: "2026-09-21",
+          }),
+          breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Portfolio", path: "/portfolio" }]),
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Portfolio", href: "/portfolio" }]} />
+      <section className="pb-4 pt-8">
         <Container>
           <SectionHeading
             as="h1"

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/lib/site";
@@ -38,7 +39,11 @@ export function HowItWorks() {
             First show with us? This is the whole process, from the first message to load-out. Prefer to talk it through? Call{" "}
             <a href={`tel:${site.phone}`} className="text-ink underline decoration-white/30 underline-offset-4 transition hover:decoration-gold">
               {site.phoneDisplay}
-            </a>
+            </a>{" "}
+            or{" "}
+            <Link href="/contact" className="text-ink underline decoration-white/30 underline-offset-4 transition hover:decoration-gold">
+              send your event details from the contact page
+            </Link>
             .
           </p>
         </Reveal>

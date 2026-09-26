@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, ArrowLeft } from "lucide-react";
+import { Check } from "lucide-react";
 import { services, getService } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { breadcrumbSchema, faqSchema, serviceSchema, webPageSchema } from "@/lib/schema";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { breadcrumbSchema, faqSchema, serviceId, serviceSchema, shareMeta, webPageSchema } from "@/lib/schema";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { FAQ } from "@/components/sections/FAQ";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
+import { RelatedServices } from "@/components/sections/RelatedServices";
 import { whatsappUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -29,11 +30,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const s = getService(slug);
   if (!s) return {};
   return {
-    title: `${s.name} in Indore & Madhya Pradesh`,
-    description: `${s.definition} ${s.summary}`,
+    title: s.metaTitle,
+    description: s.metaDescription,
     keywords: s.keywords,
     alternates: { canonical: `/services/${s.slug}` },
-    openGraph: { title: s.name, description: s.summary },
+    ...shareMeta({ title: s.metaTitle, description: s.metaDescription, path: `/services/${s.slug}` }),
   };
 }
 
@@ -45,13 +46,18 @@ export default async function ServicePage({ params }: Params) {
   const s = getService(slug);
   if (!s) notFound();
 
-  const related = services.filter((x) => x.slug !== s.slug).slice(0, 3);
-
   return (
     <>
       <JsonLd
         data={[
-          webPageSchema({ name: s.name, description: s.definition, path: `/services/${s.slug}`, speakableSelectors: ["h1", "[data-speakable]"], dateModified: "2026-09-21" }),
+          webPageSchema({
+            name: s.name,
+            description: s.definition,
+            path: `/services/${s.slug}`,
+            mainEntity: { "@id": serviceId(s.slug) },
+            speakableSelectors: ["h1", "[data-speakable]"],
+            dateModified: "2026-09-21",
+          }),
           serviceSchema(s),
           faqSchema(s.faq),
           breadcrumbSchema([
@@ -62,13 +68,17 @@ export default async function ServicePage({ params }: Params) {
         ]}
       />
 
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Services", href: "/services" },
+          { label: s.shortName, href: `/services/${s.slug}` },
+        ]}
+      />
       <article>
-        <section className="pt-40 pb-20">
+        <section className="pt-8 pb-20">
           <Container>
-            <Link href="/services" className="eyebrow inline-flex items-center gap-2 text-muted transition hover:text-ink">
-              <ArrowLeft className="h-3.5 w-3.5" /> All services
-            </Link>
-            <div className={cn("mt-8 eyebrow", accentText[s.accent])}>{s.shortName}</div>
+            <div className={cn("eyebrow", accentText[s.accent])}>{s.shortName}</div>
             <h1 className="display-tight mt-4 max-w-4xl text-balance text-4xl uppercase text-ink sm:text-6xl lg:text-7xl">{s.headline}</h1>
 
             {/* Direct-answer block: the first paragraph is written to be quoted verbatim by AI search. */}
@@ -140,21 +150,7 @@ export default async function ServicePage({ params }: Params) {
 
         <FAQ items={s.faq} title={`${s.shortName}: questions we get asked.`} />
 
-        <section className="pb-12">
-          <Container>
-            <h2 className="eyebrow text-muted">Pairs with</h2>
-            <ul className="mt-5 grid gap-4 sm:grid-cols-3">
-              {related.map((r) => (
-                <li key={r.slug}>
-                  <Link href={`/services/${r.slug}`} className="glass block rounded-2xl p-5 transition hover:border-gold/50">
-                    <div className="font-display text-lg font-bold tracking-[-0.03em] text-ink">{r.shortName}</div>
-                    <p className="mt-2 line-clamp-2 text-sm text-muted">{r.summary}</p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </section>
+        <RelatedServices current={s.slug} />
       </article>
       <ClosingCTA />
     </>

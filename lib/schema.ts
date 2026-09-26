@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { site } from "./site";
 import { services, type Service } from "./services";
 import { faqs, type Faq } from "./faqs";
 import { packages } from "./packages";
 
-const abs = (path: string) => `${site.url}${path}`;
+/** Absolute URL. The bare root matches the rendered canonical (`site.url`, no trailing slash). */
+const abs = (path: string) => (path === "/" ? site.url : `${site.url}${path}`);
 
 /** Stable node ids so every block on the site references one entity, not many copies. */
 export const ID = {
@@ -42,6 +44,28 @@ const areaServed = [
   { "@type": "AdministrativeArea", name: "Madhya Pradesh" },
   { "@type": "Country", name: "India" },
 ];
+
+const DAY_NAMES: Record<string, string> = {
+  Mo: "Monday",
+  Tu: "Tuesday",
+  We: "Wednesday",
+  Th: "Thursday",
+  Fr: "Friday",
+  Sa: "Saturday",
+  Su: "Sunday",
+};
+
+/** site.hours ("Mo,Tu,... 09:00-22:00", the schema.org openingHours format) as an OpeningHoursSpecification. */
+function openingHours() {
+  const [days, range] = site.hours.split(" ");
+  const [opens, closes] = range.split("-");
+  return {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: days.split(",").map((d) => DAY_NAMES[d] ?? d),
+    opens,
+    closes,
+  };
+}
 
 /**
  * Package offers. Prices in lib/packages.ts are "starting from" figures, so they are
@@ -128,12 +152,8 @@ export function localBusinessSchema() {
     hasMap: site.social.google,
     areaServed,
     serviceArea: areaServed[0],
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "09:00",
-      closes: "22:00",
-    },
+    openingHours: site.hours,
+    openingHoursSpecification: openingHours(),
     sameAs: [
       `https://wa.me/${site.whatsapp}`,
       site.social.instagram,
@@ -149,12 +169,7 @@ export function localBusinessSchema() {
         contactType: "sales",
         areaServed: "IN",
         availableLanguage: ["English", "Hindi"],
-        hoursAvailable: {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          opens: "09:00",
-          closes: "22:00",
-        },
+        hoursAvailable: openingHours(),
       },
       {
         "@type": "ContactPoint",
@@ -184,12 +199,15 @@ export function localBusinessSchema() {
   };
 }
 
+/** The `@id` of a service's node, referenced from the business, its siblings and its WebPage. */
+export const serviceId = (slug: string) => abs(`/services/${slug}#service`);
+
 /** Service node for each /services/[slug] page. */
 export function serviceSchema(s: Service) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": abs(`/services/${s.slug}#service`),
+    "@id": serviceId(s.slug),
     name: s.name,
     alternateName: s.shortName,
     serviceType: s.shortName,
@@ -272,10 +290,15 @@ export function faqSchema(items: Faq[] = faqs) {
   };
 }
 
+/** The `@id` a page's BreadcrumbList carries, so its WebPage node can point at it. */
+export const breadcrumbId = (path: string) => abs(`${path}#breadcrumb`);
+
+/** Pass the trail root-first; the last item is the current page and names the list's `@id`. */
 export function breadcrumbSchema(items: { name: string; path: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": breadcrumbId(items[items.length - 1].path),
     itemListElement: items.map((it, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -310,14 +333,21 @@ export function webPageSchema(opts: {
   name: string;
   description: string;
   path: string;
+  /** schema.org WebPage subtype: CollectionPage for listings, ContactPage for /contact. */
+  type?: "WebPage" | "CollectionPage" | "ContactPage";
+  /** The thing the page is about, by `@id` or as an inline node (an ItemList, a Service). */
+  mainEntity?: Record<string, unknown>;
+  /** Set false on a page that emits no BreadcrumbList; the home page never links one. */
+  breadcrumb?: boolean;
   speakableSelectors?: string[];
   datePublished?: string;
   dateModified?: string;
 }) {
   const selectors = opts.speakableSelectors ?? ["h1", "[data-speakable]"];
+  const hasBreadcrumb = opts.path !== "/" && opts.breadcrumb !== false;
   return {
     "@context": "https://schema.org",
-    "@type": "WebPage",
+    "@type": opts.type ?? "WebPage",
     "@id": abs(`${opts.path}#webpage`),
     url: abs(opts.path),
     name: opts.name,
@@ -327,9 +357,42 @@ export function webPageSchema(opts: {
     about: { "@id": ID.business },
     publisher: { "@id": ID.business },
     primaryImageOfPage: { "@id": ID.logo },
+    ...(hasBreadcrumb ? { breadcrumb: { "@id": breadcrumbId(opts.path) } } : {}),
+    ...(opts.mainEntity ? { mainEntity: opts.mainEntity } : {}),
     ...(opts.datePublished ? { datePublished: opts.datePublished } : {}),
     ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
     speakable: { "@type": "SpeakableSpecification", cssSelector: selectors },
+  };
+}
+
+/**
+ * Open Graph and Twitter card fields for one page.
+ *
+ * Next.js replaces, rather than merges, a parent's `openGraph` / `twitter` object when a
+ * page defines its own, and that also drops the images the app/opengraph-image.png and
+ * app/twitter-image.png file conventions inject. So every field a share card needs is
+ * restated here, image included. Titles are given in full: neither object applies the
+ * root layout's title template.
+ */
+export function shareMeta(opts: { title: string; description: string; path: string }): Pick<Metadata, "openGraph" | "twitter"> {
+  const title = opts.title.includes(site.name) ? opts.title : `${opts.title} | ${site.name}`;
+  const alt = `${site.name} - Sound & Light | Event | Production`;
+  return {
+    openGraph: {
+      type: "website",
+      locale: "en_IN",
+      siteName: site.name,
+      url: abs(opts.path),
+      title,
+      description: opts.description,
+      images: [{ url: "/opengraph-image.png", width: 1200, height: 630, type: "image/png", alt }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: opts.description,
+      images: [{ url: "/twitter-image.png", width: 1200, height: 630, type: "image/png", alt }],
+    },
   };
 }
 

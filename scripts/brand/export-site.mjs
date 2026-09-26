@@ -1,4 +1,6 @@
-// Export the site-facing brand files into public/ (and app/favicon.ico) from the kit masters.
+// Export the site-facing brand files into public/ (plus app/opengraph-image.png and app/twitter-image.png) from the kit masters.
+// favicon.ico deliberately lives in public/, not app/: Next hashes app/favicon.ico into a query string, and Google
+// wants a stable favicon URL. Google also ignores SVG favicons, so the PNG sizes here are the ones Search can use.
 // Run after `node scripts/brand/build-all.mjs`, or via `npm run brand:site`.
 import fs from "node:fs";
 import path from "node:path";
@@ -28,6 +30,7 @@ const copy = (from, to) => {
 const jobs = [
   // Round/square avatars in nav, footer, admin shell, manifest, apple icon, schema.org logo
   () => svgToPng(path.join(kit, "08-social-media-avatar/avatar-square-gold-on-black.svg"), path.join(pub, "logo.png"), 512, { background: "#000000" }),
+  () => svgToPng(path.join(kit, "08-social-media-avatar/avatar-square-gold-on-black.svg"), path.join(pub, "favicon-96.png"), 96, { background: "#000000" }),
   () => svgToPng(path.join(kit, "08-social-media-avatar/avatar-square-gold-on-black.svg"), path.join(pub, "icon-192.png"), 192, { background: "#000000" }),
   () => svgToPng(path.join(kit, "08-social-media-avatar/avatar-square-gold-on-black.svg"), path.join(pub, "icon-512.png"), 512, { background: "#000000" }),
   // Gold monogram on transparent: seals, dark surfaces
@@ -41,7 +44,7 @@ const jobs = [
   () => svgToPng(path.join(kit, "01-primary-logo/primary-logo-gold-transparent.svg"), path.join(pub, "logo-primary.png"), 1200),
   // Favicons
   () => copy(path.join(kit, "10-responsive-logo/favicon/favicon.svg"), path.join(pub, "favicon.svg")),
-  () => copy(path.join(kit, "10-responsive-logo/favicon/favicon.ico"), path.join(root, "app", "favicon.ico")),
+  () => copy(path.join(kit, "10-responsive-logo/favicon/favicon.ico"), path.join(pub, "favicon.ico")),
   () => copy(path.join(kit, "10-responsive-logo/favicon/favicon-180.png"), path.join(pub, "apple-touch-icon.png")),
 ];
 

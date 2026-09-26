@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { ID, breadcrumbSchema, shareMeta, webPageSchema } from "@/lib/schema";
+
+const title = "Contact & Booking, Indore";
+const description =
+  "Book Mihir Sound & Light in Indore for weddings, concerts and corporate events. Call or WhatsApp +91 70000 51042, 9am to 10pm daily. Madhya Pradesh and beyond.";
 
 export const metadata: Metadata = {
-  title: "Contact & Booking: Indore Event Sound and Lighting",
-  description:
-    "Book Mihir Sound & Light for weddings, concerts and corporate events. Call +91 70000 51042, WhatsApp, or send your event details. Bajrang Nagar, Indore, serving Madhya Pradesh and pan-India.",
+  title,
+  description,
   alternates: { canonical: "/contact" },
+  ...shareMeta({ title, description, path: "/contact" }),
 };
 
 export default function ContactPage() {
   return (
     <>
-      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }])} />
-      <div className="pt-12">
+      <JsonLd
+        data={[
+          webPageSchema({ name: title, description, path: "/contact", type: "ContactPage", mainEntity: { "@id": ID.business }, dateModified: "2026-09-21" }),
+          breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]),
+        ]}
+      />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact", href: "/contact" }]} />
+      <div>
         <ContactSection as="h1" />
       </div>
     </>

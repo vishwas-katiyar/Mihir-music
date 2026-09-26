@@ -221,3 +221,59 @@ When that happens, in this order:
 7. Update the website URL on the Google Business Profile and on Instagram, YouTube and Facebook.
 
 Keep the Vercel domain live and redirecting for at least six months.
+
+---
+
+## 5. 2026-09-26 — favicon, per-page metadata, visible breadcrumbs, internal links
+
+Owner report: few indexed pages, generic icon in results after a re-crawl request, empty Links report.
+Nothing server-side was blocking indexing (all 11 URLs 200, no `X-Robots-Tag`, self-canonical), but the
+audit found real gaps in how the pages *present*. Detailed research (status meanings, timelines, India
+citation list, what to click) is in [search-console-playbook.md](./search-console-playbook.md).
+
+### Favicon — why Google was ignoring it
+
+| Defect | Fix |
+|---|---|
+| `favicon.svg` declared as `rel=icon`. Google's supported formats are BMP/GIF/ICO/PNG/JPEG/PPM/TIFF — **SVG is not one of them**, and Google may ignore every declared icon if one fails its guidelines. | Removed from the `icons` list. The SVG stays on disk for browsers that want it via the manifest. |
+| `app/favicon.ico` was served as `/favicon.ico?favicon.<hash>.ico`. Google requires a stable favicon URL. | Moved to `public/favicon.ico`, served hash-free. `scripts/brand/export-site.mjs` now writes there. |
+| No PNG in the 48-px-multiple range Google recommends (ICO tops out at 48). | New `public/favicon-96.png` (96x96, RGB, black background). |
+
+Live head now declares, in order: `/favicon.ico` (48x48) → `/favicon-96.png` → `/icon-192.png` → `/icon-512.png`,
+plus `shortcut icon` and `apple-touch-icon`. Googlebot-Image is allowed on all of them.
+
+**Expectation:** the icon updates when the homepage is *re-indexed*, not when the request is queued — days to
+a few weeks. Check with a `site:mihir-music.vercel.app` search. URL Inspection cannot inspect the `.ico`
+itself; use *Test live URL → HTML* on the homepage and search for `rel="icon"`.
+
+### Titles and descriptions
+
+Every title was 72–92 chars (Google truncates ~60 and rewrites stuffed titles) and every description
+170–381 chars. Now: unique per page, 47–58 chars rendered, one service + city + brand; descriptions
+150–163 chars. Service pages carry `metaTitle` / `metaDescription` in `lib/services.ts`.
+
+Page-level `openGraph` in Next **replaces** the root object instead of merging, so the service pages had
+silently lost `og:image`, `og:url` and `og:site_name`. `shareMeta()` in `lib/schema.ts` now returns the
+full OG + Twitter block per page.
+
+### Structured data
+
+Added `WebPage` / `CollectionPage` / `ContactPage` nodes on every inner page, `@id` on `BreadcrumbList`
+so pages link to their trail, `openingHoursSpecification` derived from `site.hours`. Still no
+`aggregateRating` (see §3).
+
+### Visible breadcrumbs and internal links
+
+Google wants `BreadcrumbList` markup to match what is on the page. `components/seo/Breadcrumbs.tsx` now
+renders the same trail visibly on every non-home page. `components/sections/RelatedServices.tsx` links
+each service page to all four siblings (it was three of four). Footer and in-body anchors use
+descriptive text instead of "Full specification" ×5 and one-word nav labels.
+
+The crawl showed no orphans and nothing deeper than one click, so the empty **Links** report is age:
+it only populates after the *linking* pages are indexed, and external rows need someone else to link
+first. The playbook §C lists the Indian directories and the EESA trade body to register on.
+
+### Maintenance
+
+- Keep `favicon.ico` in `public/`, never `app/`. Never add an SVG under `icons.icon`.
+- `sitemap.ts` `CONTENT_UPDATED` bumped to 2026-09-26 (links and page content changed).

@@ -6,6 +6,19 @@ import { site, nav } from "@/lib/site";
 import { services } from "@/lib/services";
 import { Container } from "@/components/ui/Container";
 
+/**
+ * Footer link labels say what the page is, not just its nav name, so the anchor text
+ * carries meaning for crawlers as well as visitors. Keyed by route so lib/site.ts stays
+ * the single source of the route list.
+ */
+const exploreLabels: Record<(typeof nav)[number]["href"], string> = {
+  "/services": "Event production services",
+  "/gear": "Sound, lighting and rigging inventory",
+  "/portfolio": "Live show portfolio",
+  "/estimate": "Instant 3D event estimate",
+  "/contact": "Contact and booking",
+};
+
 export function Footer() {
   return (
     <footer className="relative mt-32 border-t border-white/8 bg-stage-2/60">
@@ -38,10 +51,15 @@ export function Footer() {
           <div>
             <h3 className="eyebrow text-gold">Explore</h3>
             <ul className="mt-5 space-y-3 text-sm">
+              <li>
+                <Link href="/" className="text-muted transition hover:text-ink">
+                  {site.name} home
+                </Link>
+              </li>
               {nav.map((n) => (
                 <li key={n.href}>
                   <Link href={n.href} className="text-muted transition hover:text-ink">
-                    {n.label}
+                    {exploreLabels[n.href] ?? n.label}
                   </Link>
                 </li>
               ))}
@@ -54,7 +72,7 @@ export function Footer() {
               {services.map((s) => (
                 <li key={s.slug}>
                   <Link href={`/services/${s.slug}`} className="text-muted transition hover:text-ink">
-                    {s.shortName}
+                    {s.name}
                   </Link>
                 </li>
               ))}
@@ -79,8 +97,8 @@ export function Footer() {
                   key={label}
                   href={href}
                   target="_blank"
-                  rel="noreferrer"
-                  aria-label={label}
+                  rel="noopener"
+                  aria-label={`${site.name} on ${label}`}
                   className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted transition hover:border-gold/60 hover:text-gold"
                 >
                   <Icon className="h-4 w-4" />
