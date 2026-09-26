@@ -7,6 +7,7 @@ import { OrbitControls } from "@react-three/drei";
 import type { EstimateResult } from "@/lib/estimator";
 import type { Quality } from "./CanvasGate";
 import { Truss } from "./Truss";
+import { TrussBanner } from "./TrussBanner";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
@@ -139,7 +140,12 @@ function Scene({ rig, quality }: { rig: Rig; quality: Exclude<Quality, "off">; p
 
   const frontCount = Math.min(rig.beams, 24);
   const backCount = rig.beams - frontCount;
+  const frontZ = -rig.stageDepth * 0.15;
   const backZ = -rig.stageDepth * 0.55;
+
+  // Banner scales with the rig it hangs on, and never drops more than a third of the truss height.
+  const bannerWidth = rig.trussWidth * 0.46;
+  const bannerHeight = Math.min(bannerWidth / 2.67, rig.trussHeight * 0.34);
 
   const fixtures = (count: number, z: number, y: number, phaseOffset: number) =>
     Array.from({ length: count }, (_, i) => {
@@ -173,8 +179,16 @@ function Scene({ rig, quality }: { rig: Rig; quality: Exclude<Quality, "off">; p
       <Deck width={rig.stageWidth} depth={rig.stageDepth} accent={rig.accent} />
       <PixelBars count={rig.pixelBars} width={rig.stageWidth} accent={rig.accent} />
 
-      <Truss width={rig.trussWidth} height={rig.trussHeight} position={[0, 0, -rig.stageDepth * 0.15]} />
-      {fixtures(frontCount, -rig.stageDepth * 0.15, rig.trussHeight - 0.55, 0)}
+      <Truss width={rig.trussWidth} height={rig.trussHeight} position={[0, 0, frontZ]} />
+      <TrussBanner
+        width={bannerWidth}
+        height={bannerHeight}
+        top={rig.trussHeight - 0.42}
+        z={frontZ - 0.62}
+        hang={[rig.trussHeight - 0.21, frontZ - 0.21]}
+        accent={rig.accent}
+      />
+      {fixtures(frontCount, frontZ, rig.trussHeight - 0.55, 0)}
 
       {backCount > 0 && (
         <>

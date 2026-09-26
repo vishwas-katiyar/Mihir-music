@@ -42,6 +42,8 @@ const jobs = [
   () => copy(path.join(kit, "02-horizontal-logo/horizontal-logo-gold-transparent.svg"), path.join(pub, "logo-horizontal.svg")),
   () => svgToPng(path.join(kit, "02-horizontal-logo/horizontal-logo-gold-transparent.svg"), path.join(pub, "logo-horizontal.png"), 1600),
   () => svgToPng(path.join(kit, "01-primary-logo/primary-logo-gold-transparent.svg"), path.join(pub, "logo-primary.png"), 1200),
+  // Stage-banner texture for the 3D rigs (components/3d/TrussBanner.tsx): 1024 px is all a phone GPU should carry
+  () => svgToPng(path.join(kit, "02-horizontal-logo/horizontal-logo-gold-transparent.svg"), path.join(pub, "logo-banner.png"), 1024),
   // Favicons
   () => copy(path.join(kit, "10-responsive-logo/favicon/favicon.svg"), path.join(pub, "favicon.svg")),
   () => copy(path.join(kit, "10-responsive-logo/favicon/favicon.ico"), path.join(pub, "favicon.ico")),

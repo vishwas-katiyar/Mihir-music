@@ -6,6 +6,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import type { Quality } from "./CanvasGate";
 import { Truss } from "./Truss";
+import { TrussBanner } from "./TrussBanner";
 import { MovingHead } from "./MovingHead";
 import { Haze } from "./Haze";
 import { LineArray, SubStack } from "./Speakers";
@@ -50,6 +51,7 @@ function Rig({ quality }: { quality: Exclude<Quality, "off"> }) {
       <StageFloor />
       <StageDeck width={10} depth={4} z={-0.5} accent={GOLD} />
       <Truss width={width} height={height} />
+      <TrussBanner width={5.6} height={2.1} top={height - 0.42} z={-0.62} hang={[height - 0.21, -0.21]} accent={GOLD} />
       {Array.from({ length: count }, (_, i) => {
         const t = i / Math.max(1, count - 1);
         return (
