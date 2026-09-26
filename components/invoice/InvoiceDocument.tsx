@@ -17,6 +17,7 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
   const status = inv.status as InvoiceStatus;
   const cancelled = status === "cancelled";
   const pending = inv.balanceDuePaise > 0 && !cancelled;
+  const refundPaise = cancelled ? 0 : Math.max(inv.advancePaidPaise - inv.grandTotalPaise, 0);
   const settled = !cancelled && inv.grandTotalPaise > 0 && inv.balanceDuePaise === 0;
   const eventDate =
     inv.eventStart && inv.eventEnd && inv.eventStart !== inv.eventEnd ? `${formatDateIN(inv.eventStart)} to ${formatDateIN(inv.eventEnd)}` : formatDateIN(inv.eventStart || inv.eventEnd);
@@ -24,10 +25,10 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
   return (
     <article className="mx-auto w-full max-w-[860px] overflow-hidden bg-white font-sans text-[13px] leading-snug text-[#334155] shadow-[0_30px_80px_rgb(0_0_0/0.5)] print:max-w-none print:shadow-none">
       {/* Header band */}
-      <header className="bg-[#0b0b0b] px-6 py-6 text-white sm:px-10">
+      <header className="bg-[#0b0b0b] px-4 py-5 text-white sm:px-10 sm:py-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-4">
-            <Image src="/logo-horizontal.png" alt={site.name} width={800} height={346} className="h-[66px] w-auto shrink-0" />
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
+            <Image src="/logo-horizontal.png" alt={site.name} width={800} height={346} className="h-[52px] w-auto shrink-0 sm:h-[66px]" />
             <div className="hidden h-[62px] w-px shrink-0 bg-[#d4af37]/45 sm:block" />
             <div>
               <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d4af37]">Tax invoice</div>
@@ -63,7 +64,7 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
       </header>
       <div className="h-1.5 bg-[#d4af37]" />
 
-      <div className="px-6 pb-8 pt-5 sm:px-10">
+      <div className="px-4 pb-8 pt-5 sm:px-10">
         {/* Bill To / From */}
         <div className="grid gap-3 sm:grid-cols-2">
           <section className="rounded-md bg-[#f8fafc] px-4 py-3">
@@ -96,10 +97,10 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
           </div>
         </section>
 
-        {/* Items */}
+        {/* Items — phones drop the header row and restack each line as a card rather than scroll sideways. */}
         <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse">
-            <thead>
+          <table className="w-full border-collapse sm:min-w-[600px]">
+            <thead className="hidden sm:table-header-group">
               <tr className="bg-[#1a1a1a] text-left text-white">
                 <th className="w-9 px-2 py-2 text-center font-bold">#</th>
                 <th className="w-32 px-2 py-2 font-bold">Item</th>
@@ -109,15 +110,28 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
                 <th className="w-32 px-2 py-2 text-right font-bold">Amount (INR)</th>
               </tr>
             </thead>
-            <tbody className="text-[#1e293b] [&_td]:border [&_td]:border-[#e2e8f0]">
+            <tbody className="text-[#1e293b] [&_td]:border-[#e2e8f0] sm:[&_td]:border">
               {inv.items.map((l, i) => (
-                <tr key={i} className={cn(i % 2 === 1 && "bg-[#f8fafc]")}>
-                  <td className="px-2 py-2 text-center">{i + 1}</td>
-                  <td className="px-2 py-2 font-medium">{l.title || "-"}</td>
-                  <td className="px-2 py-2 text-[#334155]">{l.description || "-"}</td>
-                  <td className="px-2 py-2 text-right tabular-nums">{l.quantity}</td>
-                  <td className="px-2 py-2 text-right tabular-nums">{num(l.ratePaise)}</td>
-                  <td className="px-2 py-2 text-right font-medium tabular-nums">{num(lineAmountPaise(l))}</td>
+                <tr
+                  key={i}
+                  className={cn(
+                    "grid grid-cols-[1.25rem_minmax(0,1fr)_auto] gap-x-2 border-b border-[#e2e8f0] px-1 py-2.5 sm:table-row sm:border-0 sm:p-0",
+                    i % 2 === 1 && "bg-[#f8fafc]",
+                  )}
+                >
+                  <td className="col-start-1 row-start-1 text-slate-500 sm:w-9 sm:px-2 sm:py-2 sm:text-center sm:text-[#1e293b]">{i + 1}</td>
+                  <td className="col-start-2 row-start-1 font-medium sm:px-2 sm:py-2">{l.title || "-"}</td>
+                  {/* An empty description earns no line of its own on a phone; the table still needs the cell. */}
+                  <td className={cn("col-span-2 col-start-2 row-start-2 text-xs text-slate-500 sm:px-2 sm:py-2 sm:text-[13px] sm:text-[#334155]", !l.description && "hidden sm:table-cell")}>
+                    {l.description || "-"}
+                  </td>
+                  <td className="col-start-2 row-start-3 text-xs tabular-nums text-slate-500 before:content-['Qty_'] sm:px-2 sm:py-2 sm:text-right sm:text-[13px] sm:text-[#1e293b] sm:before:content-none">
+                    {l.quantity}
+                  </td>
+                  <td className="col-start-3 row-start-3 text-right text-xs tabular-nums text-slate-500 before:content-['Rate_'] sm:px-2 sm:py-2 sm:text-[13px] sm:text-[#1e293b] sm:before:content-none">
+                    {num(l.ratePaise)}
+                  </td>
+                  <td className="col-start-3 row-start-1 text-right font-medium tabular-nums sm:px-2 sm:py-2">{num(lineAmountPaise(l))}</td>
                 </tr>
               ))}
             </tbody>
@@ -196,6 +210,12 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
               <dt className="text-[#1e293b]">Remaining Due:</dt>
               <dd className={cn("tabular-nums", pending ? "text-[#bd2d33]" : "text-[#0b7a4e]")}>{cancelled ? inr(0) : inr(inv.balanceDuePaise)}</dd>
             </div>
+            {refundPaise > 0 && (
+              <div className="mt-1 flex justify-between text-[15px] font-bold">
+                <dt className="text-[#1e293b]">Refund Due to You:</dt>
+                <dd className="tabular-nums text-[#bd2d33]">{inr(refundPaise)}</dd>
+              </div>
+            )}
             <div className="mt-2 text-xs text-slate-500">In words: {amountInWords(inv.grandTotalPaise)}</div>
           </dl>
         </div>
@@ -232,9 +252,9 @@ export function InvoiceDocument({ invoice: inv, qrSrc }: { invoice: InvoiceRow; 
         )}
 
         {/* Seal + signature */}
-        <div className="mt-5 flex items-end justify-between gap-6">
+        <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="text-xs text-slate-500">{settled ? "Received with thanks." : "Thank you for your business."}</div>
-          <div className="flex items-end gap-2.5">
+          <div className="flex items-end gap-2.5 self-end">
             <Image src="/logo-mark.png" alt="" width={54} height={54} className="h-[54px] w-[54px] object-contain opacity-90" />
             <div className="w-[170px] border-t border-[#1e293b] pt-1.5 text-right">
               <div className="font-bold text-[#1e293b]">For {site.name}</div>

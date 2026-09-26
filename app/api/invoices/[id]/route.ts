@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/invoices/auth";
 import { InvoiceInputSchema, INVOICE_STATUSES, PaymentInputSchema } from "@/lib/invoices/calc";
-import { addPayment, deleteInvoice, getInvoiceById, removePayment, restoreInvoice, rotateToken, setStatus, updateInvoice } from "@/lib/invoices/repo";
+import { addPayment, deleteInvoice, getInvoiceById, InvoiceRuleError, removePayment, restoreInvoice, rotateToken, setStatus, updateInvoice } from "@/lib/invoices/repo";
 import { rowToJson } from "@/lib/invoices/serialize";
 
 export const runtime = "nodejs";
@@ -58,13 +58,18 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
     return NextResponse.json({ ok: false, error: issue?.message ?? "Invalid patch" }, { status: 400 });
   }
   const d = parsed.data;
-  const row =
-    "status" in d ? await setStatus(id, d.status)
-    : "rotateToken" in d ? await rotateToken(id)
-    : "addPayment" in d ? await addPayment(id, d.addPayment)
-    : "restore" in d ? await restoreInvoice(id)
-    : await removePayment(id, d.removePayment);
-  return row ? NextResponse.json({ ok: true, invoice: rowToJson(row) }) : notFound();
+  try {
+    const row =
+      "status" in d ? await setStatus(id, d.status)
+      : "rotateToken" in d ? await rotateToken(id)
+      : "addPayment" in d ? await addPayment(id, d.addPayment)
+      : "restore" in d ? await restoreInvoice(id)
+      : await removePayment(id, d.removePayment);
+    return row ? NextResponse.json({ ok: true, invoice: rowToJson(row) }) : notFound();
+  } catch (e) {
+    if (e instanceof InvoiceRuleError) return NextResponse.json({ ok: false, error: e.message }, { status: 409 });
+    throw e;
+  }
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {

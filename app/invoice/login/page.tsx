@@ -26,11 +26,11 @@ export default function InvoiceLoginPage() {
   };
 
   return (
-    <div className="mx-auto mt-16 max-w-sm">
+    <div className="mx-auto mt-10 max-w-sm sm:mt-16">
       <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/12 bg-white/5 text-gold">
         <Lock className="h-5 w-5" />
       </div>
-      <h1 className="mt-6 font-display text-3xl font-bold tracking-[-0.03em]">Admin sign in</h1>
+      <h1 className="mt-6 font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Admin sign in</h1>
       <p className="mt-2 text-sm text-muted">Invoices are for internal use. Enter the daily password.</p>
       <form onSubmit={submit} className="mt-8 space-y-4">
         <label className="block">
@@ -50,7 +50,7 @@ export default function InvoiceLoginPage() {
             {error}
           </p>
         )}
-        <button type="submit" disabled={busy || !password} className="w-full rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 disabled:opacity-50">
+        <button type="submit" disabled={busy || !password} className="min-h-11 w-full rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 disabled:opacity-50">
           {busy ? "Checking" : "Sign in"}
         </button>
       </form>

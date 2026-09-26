@@ -37,19 +37,19 @@ export default async function BrandAssetFolderPage({ params }: Props) {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-6">
+      <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-6">
         <div>
-          <Link href="/invoice/assets" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted transition hover:text-ink">
+          <Link href="/invoice/assets" className="inline-flex min-h-11 items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted transition hover:text-ink sm:min-h-0">
             <ArrowLeft className="h-3.5 w-3.5" /> Brand assets
           </Link>
-          <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.03em]">{label}</h1>
+          <h1 className="mt-2 font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">{label}</h1>
           <p className="mt-1 text-sm text-muted">
             {files.length} {files.length === 1 ? "file" : "files"}
           </p>
         </div>
         <a
           href={`/api/assets/download?folder=${encodeURIComponent(folder)}`}
-          className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 sm:w-auto"
         >
           <Download className="h-4 w-4" /> Download this folder (ZIP)
         </a>
@@ -58,7 +58,7 @@ export default async function BrandAssetFolderPage({ params }: Props) {
       {images.length > 0 && (
         <div className="mt-8">
           <h2 className="eyebrow text-amber">Preview</h2>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {images.map((f) => (
               <div key={f.relPath} className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
                 <a href={previewUrl(f.relPath)} target="_blank" rel="noreferrer" className="block">
@@ -67,10 +67,11 @@ export default async function BrandAssetFolderPage({ params }: Props) {
                     <img src={previewUrl(f.relPath)} alt={f.name} loading="lazy" className="max-h-full max-w-full object-contain" />
                   </div>
                 </a>
+                {/* Touch has no hover, so the download stays visible until there is a pointer to reveal it. */}
                 <a
                   href={downloadUrl(f.relPath)}
                   aria-label={`Download ${f.name}`}
-                  className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-ink opacity-0 backdrop-blur transition hover:bg-black/80 group-hover:opacity-100"
+                  className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-ink backdrop-blur transition hover:bg-black/80 sm:h-8 sm:w-8 sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <Download className="h-3.5 w-3.5" />
                 </a>
@@ -100,7 +101,7 @@ export default async function BrandAssetFolderPage({ params }: Props) {
                 <a
                   href={downloadUrl(f.relPath)}
                   aria-label={`Download ${f.name}`}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-ink/80 transition hover:border-gold/60 hover:text-ink"
+                  className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border border-white/15 px-3 text-xs font-semibold text-ink/80 transition hover:border-gold/60 hover:text-ink sm:min-h-0 sm:py-2"
                 >
                   <Download className="h-3.5 w-3.5" /> Download
                 </a>

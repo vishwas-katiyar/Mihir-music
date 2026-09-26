@@ -11,6 +11,7 @@ import {
   formatDateIN,
   inr,
   lineAmountPaise,
+  paymentFits,
   pruneLines,
   toPaise,
   toRupees,
@@ -26,8 +27,13 @@ import {
 import type { InvoiceJson } from "@/lib/invoices/serialize";
 import { cn } from "@/lib/utils";
 
-const input = "w-full rounded-xl border border-white/12 bg-white/5 px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-muted/60 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
+/** 16px on phones: anything smaller makes iOS zoom into the field and never zoom back out. */
+const input =
+  "min-h-11 w-full rounded-xl border border-white/12 bg-white/5 px-3.5 py-2.5 text-base text-ink outline-none placeholder:text-muted/60 focus:border-gold/60 focus:ring-4 focus:ring-gold/10 sm:min-h-0 sm:text-sm";
 const label = "mb-1.5 block text-[11px] uppercase tracking-[0.14em] text-muted";
+/** Client-link buttons and the quieter row under them: full 44px targets on touch, unchanged from `sm` up. */
+const share = "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 hover:border-gold/60 sm:min-h-0 sm:px-3 sm:py-2";
+const minorAction = "inline-flex min-h-11 items-center gap-1 sm:min-h-0";
 
 interface Props {
   mode: "create" | "edit";
@@ -48,7 +54,7 @@ function MoneyInput({ paise, onChange, className, ...rest }: { paise: number; on
       value={text}
       onChange={(e) => {
         setText(e.target.value);
-        onChange(toPaise(Number(e.target.value) || 0));
+        onChange(Math.max(0, toPaise(Number(e.target.value) || 0)));
       }}
       onBlur={() => setText(paise ? String(toRupees(paise)) : "")}
       className={cn(input, "text-right tabular-nums", className)}
@@ -69,6 +75,13 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
 
   const paidPaise = rec ? rec.advancePaidPaise : form.initialPayment?.amountPaise ?? 0;
   const totals = useMemo(() => computeTotals(pruneLines(form.items), form.discountPaise, form.gstRateBp, paidPaise), [form, paidPaise]);
+
+  /** Money in cannot exceed money billed: both entry points are checked here and again on the server. */
+  const advanceAmount = form.initialPayment?.amountPaise ?? 0;
+  const advanceError = mode === "create" && advanceAmount > 0 ? paymentFits(totals.grandTotalPaise, 0, advanceAmount) : null;
+  const paymentError = newPayment.amountPaise > 0 ? paymentFits(totals.grandTotalPaise, paidPaise, newPayment.amountPaise) : null;
+  /** A discount larger than the subtotal is capped rather than driving the invoice negative. */
+  const discountCapped = form.discountPaise > totals.discountPaise;
 
   const set = <K extends keyof InvoiceInput>(k: K, v: InvoiceInput[K]) => setForm((f) => ({ ...f, [k]: v }));
   const setLine = (i: number, patch: Partial<InvoiceLine>) => setForm((f) => ({ ...f, items: f.items.map((l, j) => (j === i ? { ...l, ...patch } : l)) }));
@@ -103,6 +116,10 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
   };
 
   const save = async () => {
+    if (advanceError) {
+      setMessage({ tone: "err", text: advanceError });
+      return;
+    }
     const payload: InvoiceInput = { ...form, items: pruneLines(form.items) };
     if (payload.initialPayment && payload.initialPayment.amountPaise <= 0) delete payload.initialPayment;
     if (mode === "create") {
@@ -128,7 +145,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
   };
 
   const recordPayment = async () => {
-    if (newPayment.amountPaise <= 0) return;
+    if (paymentError || newPayment.amountPaise <= 0) return;
     const ok = await patch({ addPayment: newPayment }, "pay", `Recorded ${inr(newPayment.amountPaise)}`);
     if (ok) {
       setNewPayment(emptyPayment());
@@ -168,22 +185,28 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
+    /* The bottom padding clears the phone-only action bar at the end of this component. */
+    <div className="grid gap-6 pb-24 lg:grid-cols-[1fr_380px] lg:gap-8 lg:pb-0">
       <div className="space-y-8">
         {rec?.deletedAt && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-rose-400/40 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
             <span>This invoice was deleted on {new Date(rec.deletedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}. The client link is disabled.</span>
-            <button type="button" onClick={restore} disabled={busy !== null} className="rounded-full bg-rose-100 px-4 py-1.5 text-xs font-semibold text-rose-900 hover:brightness-105 disabled:opacity-50">
+            <button
+              type="button"
+              onClick={restore}
+              disabled={busy !== null}
+              className="inline-flex min-h-11 items-center rounded-full bg-rose-100 px-4 text-xs font-semibold text-rose-900 hover:brightness-105 disabled:opacity-50 sm:min-h-0 sm:py-1.5"
+            >
               Restore
             </button>
           </div>
         )}
-        <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <div>
-            <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">{mode === "create" ? "New invoice" : rec?.invoiceNumber}</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+          <div className="min-w-0">
+            <h1 className="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">{mode === "create" ? "New invoice" : rec?.invoiceNumber}</h1>
             <p className="mt-1 text-sm text-muted">{mode === "create" ? "Number is assigned on save." : `Last saved ${new Date(rec!.updatedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`}</p>
           </div>
-          <Link href="/invoice" className="text-sm text-muted hover:text-ink">
+          <Link href="/invoice" className="inline-flex min-h-11 items-center text-sm text-muted hover:text-ink sm:min-h-0">
             All invoices
           </Link>
         </div>
@@ -237,20 +260,25 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-ink">Line items</h2>
-            <button type="button" onClick={addLine} className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs text-ink/85 hover:border-gold/60">
+            <button
+              type="button"
+              onClick={addLine}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/15 px-3 text-xs text-ink/85 hover:border-gold/60 sm:min-h-0 sm:py-1.5"
+            >
               <Plus className="h-3.5 w-3.5" /> Add line
             </button>
           </div>
           <div className="space-y-3">
             {form.items.map((l, i) => (
-              <div key={i} className="grid gap-2 rounded-2xl border border-white/10 p-3 sm:grid-cols-[1fr_90px_130px_130px_36px] sm:items-end">
-                <div className="grid gap-2">
+              /* Phones: title on its own, then Qty beside Rate and Amount beside the bin. */
+              <div key={i} className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 p-3 sm:grid-cols-[1fr_90px_130px_130px_36px] sm:items-end">
+                <div className="col-span-2 grid gap-2 sm:col-span-1">
                   <input className={input} value={l.title} onChange={(e) => setLine(i, { title: e.target.value })} placeholder="Item, e.g. JBL line array 6/side" />
-                  <input className={cn(input, "text-xs")} value={l.description} onChange={(e) => setLine(i, { description: e.target.value })} placeholder="Description (optional)" />
+                  <input className={cn(input, "text-base sm:text-xs")} value={l.description} onChange={(e) => setLine(i, { description: e.target.value })} placeholder="Description (optional)" />
                 </div>
                 <div>
                   <label className={label}>Qty</label>
-                  <input className={cn(input, "text-right tabular-nums")} type="number" min={0} step="0.5" value={l.quantity} onChange={(e) => setLine(i, { quantity: Number(e.target.value) || 0 })} />
+                  <input className={cn(input, "text-right tabular-nums")} type="number" min={0} step="0.5" value={l.quantity} onChange={(e) => setLine(i, { quantity: Math.max(0, Number(e.target.value) || 0) })} />
                 </div>
                 <div>
                   <label className={label}>Rate ₹</label>
@@ -258,9 +286,14 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                 </div>
                 <div>
                   <label className={label}>Amount</label>
-                  <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3.5 py-2.5 text-right text-sm tabular-nums text-ink/85">{inr(lineAmountPaise(l))}</div>
+                  <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3.5 py-2.5 text-right text-base tabular-nums text-ink/85 sm:text-sm">{inr(lineAmountPaise(l))}</div>
                 </div>
-                <button type="button" onClick={() => removeLine(i)} aria-label="Remove line" className="flex h-10 w-9 items-center justify-center rounded-xl text-muted hover:text-rose-300">
+                <button
+                  type="button"
+                  onClick={() => removeLine(i)}
+                  aria-label="Remove line"
+                  className="flex h-11 w-11 items-center justify-center justify-self-end self-end rounded-xl text-muted hover:text-rose-300 sm:h-10 sm:w-9 sm:justify-self-auto"
+                >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
@@ -272,6 +305,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
           <div>
             <label className={label}>Discount ₹</label>
             <MoneyInput paise={form.discountPaise} onChange={(p) => set("discountPaise", p)} />
+            {discountCapped && <p className="mt-1.5 text-[11px] text-gold-soft">Capped at the {inr(totals.subtotalPaise)} subtotal.</p>}
           </div>
           <div>
             <label className={label}>GST</label>
@@ -291,7 +325,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
             <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_150px_140px]">
               <div>
                 <label className={label}>Amount ₹</label>
-                <MoneyInput paise={form.initialPayment?.amountPaise ?? 0} onChange={(p) => set("initialPayment", { ...(form.initialPayment ?? emptyPayment()), amountPaise: p })} />
+                <MoneyInput paise={form.initialPayment?.amountPaise ?? 0} onChange={(p) => set("initialPayment", { ...(form.initialPayment ?? emptyPayment()), amountPaise: p })} aria-invalid={advanceError ? true : undefined} className={advanceError ? "border-rose-400/60 focus:border-rose-400/60 focus:ring-rose-400/10" : undefined} />
               </div>
               <div>
                 <label className={label}>Date</label>
@@ -308,6 +342,11 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                 </select>
               </div>
             </div>
+            {advanceError && (
+              <p role="alert" className="mt-3 text-xs text-rose-300">
+                {advanceError}
+              </p>
+            )}
           </section>
         )}
 
@@ -318,7 +357,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
           </div>
           <div>
             <label className={label}>Terms (one per line)</label>
-            <textarea className={cn(input, "text-xs")} rows={5} value={form.terms.join("\n")} onChange={(e) => set("terms", e.target.value.split("\n"))} />
+            <textarea className={cn(input, "text-base sm:text-xs")} rows={5} value={form.terms.join("\n")} onChange={(e) => set("terms", e.target.value.split("\n"))} />
           </div>
         </section>
       </div>
@@ -354,6 +393,12 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
               <dt>Balance due</dt>
               <dd className="tabular-nums">{inr(totals.balanceDuePaise)}</dd>
             </div>
+            {totals.overpaidPaise > 0 && (
+              <div className="flex justify-between border-t border-rose-400/30 pt-2 text-sm font-semibold text-rose-300">
+                <dt>Refund owed</dt>
+                <dd className="tabular-nums">{inr(totals.overpaidPaise)}</dd>
+              </div>
+            )}
           </dl>
 
           <div className="mt-5">
@@ -368,7 +413,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
             <p className="mt-1.5 text-[11px] text-muted">Paid and partially paid follow the payments automatically; use this for Sent or Cancelled.</p>
           </div>
 
-          <button type="button" onClick={save} disabled={busy !== null || !form.clientName.trim()} className="mt-5 w-full rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 disabled:opacity-50">
+          <button type="button" onClick={save} disabled={busy !== null || !form.clientName.trim() || advanceError !== null} className="mt-5 w-full rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 disabled:opacity-50">
             {busy === "save" ? "Saving" : mode === "create" ? "Create invoice" : "Save changes"}
           </button>
           {message && (
@@ -401,7 +446,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                       aria-label="Remove payment"
                       disabled={busy !== null}
                       onClick={() => window.confirm(`Remove the ${inr(p.amountPaise)} payment?`) && patch({ removePayment: p.id }, "unpay", "Payment removed")}
-                      className="mt-0.5 text-muted hover:text-rose-300"
+                      className="-mr-2 inline-flex min-h-11 min-w-11 items-center justify-center text-muted hover:text-rose-300 sm:mr-0 sm:mt-0.5 sm:min-h-0 sm:min-w-0"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -415,7 +460,14 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className={label}>Amount ₹</label>
-                    <MoneyInput key={paymentKey} paise={newPayment.amountPaise} onChange={(p) => setNewPayment((x) => ({ ...x, amountPaise: p }))} placeholder={String(toRupees(totals.balanceDuePaise))} />
+                    <MoneyInput
+                      key={paymentKey}
+                      paise={newPayment.amountPaise}
+                      onChange={(p) => setNewPayment((x) => ({ ...x, amountPaise: p }))}
+                      placeholder={String(toRupees(totals.balanceDuePaise))}
+                      aria-invalid={paymentError ? true : undefined}
+                      className={paymentError ? "border-rose-400/60 focus:border-rose-400/60 focus:ring-rose-400/10" : undefined}
+                    />
                   </div>
                   <div>
                     <label className={label}>Date</label>
@@ -433,16 +485,34 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                   <input className={input} value={newPayment.reference} onChange={(e) => setNewPayment((x) => ({ ...x, reference: e.target.value }))} placeholder="UTR / reference" />
                 </div>
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => setNewPayment((x) => ({ ...x, amountPaise: totals.balanceDuePaise }))} className="rounded-full border border-white/15 px-3 py-2 text-xs text-ink/85 hover:border-gold/60">
+                  <button
+                    type="button"
+                    onClick={() => setNewPayment((x) => ({ ...x, amountPaise: totals.balanceDuePaise }))}
+                    className="min-h-11 rounded-full border border-white/15 px-3 text-xs text-ink/85 hover:border-gold/60 sm:min-h-0 sm:py-2"
+                  >
                     Full balance
                   </button>
-                  <button type="button" onClick={recordPayment} disabled={busy !== null || newPayment.amountPaise <= 0} className="flex-1 rounded-full bg-gold px-3 py-2 text-xs font-semibold text-charcoal hover:brightness-105 disabled:opacity-50">
+                  <button
+                    type="button"
+                    onClick={recordPayment}
+                    disabled={busy !== null || newPayment.amountPaise <= 0 || paymentError !== null}
+                    className="min-h-11 flex-1 rounded-full bg-gold px-3 text-xs font-semibold text-charcoal hover:brightness-105 disabled:opacity-50 sm:min-h-0 sm:py-2"
+                  >
                     {busy === "pay" ? "Recording" : "Record payment"}
                   </button>
                 </div>
+                {paymentError && (
+                  <p role="alert" className="text-[11px] text-rose-300">
+                    {paymentError}
+                  </p>
+                )}
               </div>
             ) : (
-              <p className="mt-3 rounded-xl bg-emerald-400/10 px-3 py-2 text-xs text-emerald-200">Paid in full. The client link and PDF now show PAID.</p>
+              <p className={cn("mt-3 rounded-xl px-3 py-2 text-xs", totals.overpaidPaise > 0 ? "bg-rose-400/10 text-rose-200" : "bg-emerald-400/10 text-emerald-200")}>
+                {totals.overpaidPaise > 0
+                  ? `Received ${inr(totals.overpaidPaise)} more than this invoice bills. Remove or correct a payment, or refund the difference.`
+                  : "Paid in full. The client link and PDF now show PAID."}
+              </p>
             )}
           </div>
         )}
@@ -452,38 +522,54 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
             <div className="text-[11px] uppercase tracking-[0.14em] text-muted">Client link</div>
             <div className="mt-2 break-all rounded-lg bg-white/[0.04] px-3 py-2 font-mono text-xs text-ink/85">{shareUrl}</div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-              <button type="button" onClick={copyLink} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-3 py-2 hover:border-gold/60">
+              <button type="button" onClick={copyLink} className={share}>
                 <Copy className="h-4 w-4" /> Copy
               </button>
-              <a href={whatsappHref()} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-3 py-2 font-semibold text-charcoal hover:brightness-105">
+              <a href={whatsappHref()} target="_blank" rel="noreferrer" className={cn(share, "border-transparent bg-gold font-semibold text-charcoal hover:border-transparent hover:brightness-105")}>
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
-              <a href={`/api/i/${rec.token}/pdf`} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-3 py-2 hover:border-gold/60">
+              <a href={`/api/i/${rec.token}/pdf`} className={share}>
                 <Download className="h-4 w-4" /> PDF
               </a>
-              <a href={`/i/${rec.token}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-3 py-2 hover:border-gold/60">
+              <a href={`/i/${rec.token}`} target="_blank" rel="noreferrer" className={share}>
                 <ExternalLink className="h-4 w-4" /> Preview
               </a>
             </div>
-            <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted">
-              <button type="button" onClick={duplicate} disabled={busy !== null} className="inline-flex items-center gap-1 hover:text-ink">
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted sm:gap-3">
+              <button type="button" onClick={duplicate} disabled={busy !== null} className={cn(minorAction, "hover:text-ink")}>
                 <RefreshCw className="h-3.5 w-3.5" /> Duplicate
               </button>
               <button
                 type="button"
                 onClick={() => window.confirm("Issue a new link? The current link stops working.") && patch({ rotateToken: true }, "rotate", "New link issued")}
                 disabled={busy !== null}
-                className="inline-flex items-center gap-1 hover:text-ink"
+                className={cn(minorAction, "hover:text-ink")}
               >
                 <Link2 className="h-3.5 w-3.5" /> New link
               </button>
-              <button type="button" onClick={remove} disabled={busy !== null} className="inline-flex items-center gap-1 hover:text-rose-300">
+              <button type="button" onClick={remove} disabled={busy !== null} className={cn(minorAction, "hover:text-rose-300")}>
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>
             </div>
           </div>
         )}
       </aside>
+
+      {/* Phones: the form runs several screens, so the figure that matters and Save stay within reach. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-4 border-t border-white/10 bg-charcoal/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3 backdrop-blur lg:hidden">
+        <div className="min-w-0">
+          <div className="text-[11px] uppercase tracking-[0.14em] text-muted">Balance due</div>
+          <div className={cn("truncate text-base font-semibold tabular-nums", totals.balanceDuePaise > 0 ? "text-gold-soft" : "text-emerald-200")}>{inr(totals.balanceDuePaise)}</div>
+        </div>
+        <button
+          type="button"
+          onClick={save}
+          disabled={busy !== null || !form.clientName.trim() || advanceError !== null}
+          className="ml-auto min-h-11 shrink-0 rounded-full bg-gold px-6 text-sm font-semibold text-charcoal transition hover:brightness-105 disabled:opacity-50"
+        >
+          {busy === "save" ? "Saving" : mode === "create" ? "Create" : "Save"}
+        </button>
+      </div>
     </div>
   );
 }

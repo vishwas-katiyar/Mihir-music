@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdmin } from "@/lib/invoices/auth";
 import { InvoiceInputSchema, INVOICE_STATUSES } from "@/lib/invoices/calc";
-import { createInvoice, listInvoices, summary, type ListStatus } from "@/lib/invoices/repo";
+import { createInvoice, listInvoices, summary, InvoiceRuleError, type ListStatus } from "@/lib/invoices/repo";
 import { rowToJson } from "@/lib/invoices/serialize";
 import { isDbConfigured } from "@/lib/db";
 
@@ -31,6 +31,11 @@ export async function POST(req: NextRequest) {
     const issue = parsed.error.issues[0];
     return NextResponse.json({ ok: false, error: issue ? `${issue.path.join(".")}: ${issue.message}` : "Invalid invoice" }, { status: 400 });
   }
-  const row = await createInvoice(parsed.data);
-  return NextResponse.json({ ok: true, invoice: rowToJson(row) }, { status: 201 });
+  try {
+    const row = await createInvoice(parsed.data);
+    return NextResponse.json({ ok: true, invoice: rowToJson(row) }, { status: 201 });
+  } catch (e) {
+    if (e instanceof InvoiceRuleError) return NextResponse.json({ ok: false, error: e.message }, { status: 409 });
+    throw e;
+  }
 }

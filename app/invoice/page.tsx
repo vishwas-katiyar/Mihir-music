@@ -24,25 +24,32 @@ export default async function InvoiceListPage({ searchParams }: Props) {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-6">
+      <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-6">
         <div>
-          <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">Invoices</h1>
+          <h1 className="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Invoices</h1>
+          {/* Each figure stays whole on a phone; only the separators break. */}
           <p className="mt-1 text-sm text-muted">
-            {stats.count} invoices · {inr(stats.billedPaise)} billed · <span className="text-emerald-200">{inr(stats.collectedPaise)} collected</span> ·{" "}
-            <span className="text-gold-soft">{inr(stats.duePaise)} outstanding</span>
+            <span className="whitespace-nowrap">{stats.count} invoices</span> · <span className="whitespace-nowrap">{inr(stats.billedPaise)} billed</span> ·{" "}
+            <span className="whitespace-nowrap text-emerald-200">{inr(stats.collectedPaise)} collected</span> ·{" "}
+            <span className="whitespace-nowrap text-gold-soft">{inr(stats.duePaise)} outstanding</span>
           </p>
         </div>
-        <form className="flex flex-wrap items-center gap-2" action="/invoice" method="get">
-          <label className="relative">
+        {/* Phones: search on its own line, then status and Filter share the next one. */}
+        <form className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:flex sm:flex-wrap" action="/invoice" method="get">
+          <label className="relative col-span-2 sm:col-auto">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <input
               name="q"
               defaultValue={q}
               placeholder="Search client, number, event"
-              className="w-64 rounded-full border border-white/12 bg-white/5 py-2 pl-9 pr-4 text-sm text-ink outline-none placeholder:text-muted/70 focus:border-gold/60"
+              className="min-h-11 w-full rounded-full border border-white/12 bg-white/5 py-2 pl-9 pr-4 text-base text-ink outline-none placeholder:text-muted/70 focus:border-gold/60 sm:min-h-0 sm:w-64 sm:text-sm"
             />
           </label>
-          <select name="status" defaultValue={status} className="rounded-full border border-white/12 bg-charcoal px-3 py-2 text-sm text-ink outline-none focus:border-gold/60">
+          <select
+            name="status"
+            defaultValue={status}
+            className="min-h-11 w-full min-w-0 rounded-full border border-white/12 bg-charcoal px-3 py-2 text-base text-ink outline-none focus:border-gold/60 sm:min-h-0 sm:w-auto sm:text-sm"
+          >
             <option value="all">All statuses</option>
             {INVOICE_STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -51,7 +58,7 @@ export default async function InvoiceListPage({ searchParams }: Props) {
             ))}
             <option value="deleted">Deleted (restorable)</option>
           </select>
-          <button type="submit" className={cn("rounded-full border border-white/15 px-4 py-2 text-sm text-ink/85 transition hover:border-gold/60")}>
+          <button type="submit" className={cn("min-h-11 rounded-full border border-white/15 px-4 py-2 text-sm text-ink/85 transition hover:border-gold/60 sm:min-h-0")}>
             Filter
           </button>
         </form>

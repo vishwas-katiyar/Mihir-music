@@ -295,6 +295,7 @@ export function InvoicePdf({
   const status = inv.status as InvoiceStatus;
   const cancelled = status === "cancelled";
   const pending = inv.balanceDuePaise > 0 && !cancelled;
+  const refundPaise = cancelled ? 0 : Math.max(inv.advancePaidPaise - inv.grandTotalPaise, 0);
   const settled =
     !cancelled && inv.grandTotalPaise > 0 && inv.balanceDuePaise === 0;
   const eventDate =
@@ -584,6 +585,16 @@ export function InvoicePdf({
                   {cancelled ? money(0) : money(inv.balanceDuePaise)}
                 </Text>
               </View>
+              {refundPaise > 0 ? (
+                <View style={s.totRow}>
+                  <Text style={[W(700), { fontSize: 12, color: c.ink }]}>
+                    Refund Due to You:
+                  </Text>
+                  <Text style={[W(700), { fontSize: 12, color: c.red }]}>
+                    {money(refundPaise)}
+                  </Text>
+                </View>
+              ) : null}
               <Text
                 style={{ fontSize: 8.5, color: c.muted, marginTop: 8 }}
               >{`In words: ${amountInWords(inv.grandTotalPaise)}`}</Text>

@@ -30,7 +30,13 @@ export function ClickableRow({ href, className, children }: { href: string; clas
   };
 
   return (
-    <tr tabIndex={0} role="link" onClick={onClick} onKeyDown={onKeyDown} className={cn("cursor-pointer outline-none focus-visible:bg-white/[0.05]", className)}>
+    <tr
+      tabIndex={0}
+      role="link"
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      className={cn("cursor-pointer outline-none transition-colors focus-visible:bg-white/[0.05] active:bg-white/[0.06]", className)}
+    >
       {children}
     </tr>
   );

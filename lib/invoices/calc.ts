@@ -49,6 +49,8 @@ export interface Totals {
   grandTotalPaise: number;
   advancePaidPaise: number;
   balanceDuePaise: number;
+  /** Received beyond the grand total: a refund the client is owed. Only reachable by editing an invoice down after payment. */
+  overpaidPaise: number;
 }
 
 export const lineAmountPaise = (l: InvoiceLine) => Math.round(l.quantity * l.ratePaise);
@@ -75,7 +77,26 @@ export function computeTotals(items: InvoiceLine[], discountPaise: number, gstRa
   const grandTotalPaise = taxablePaise + gstPaise;
   const advance = Math.max(0, Math.round(advancePaidPaise));
   const balanceDuePaise = Math.max(grandTotalPaise - advance, 0);
-  return { subtotalPaise, discountPaise: discount, taxablePaise, gstPaise, grandTotalPaise, advancePaidPaise: advance, balanceDuePaise };
+  const overpaidPaise = Math.max(advance - grandTotalPaise, 0);
+  return { subtotalPaise, discountPaise: discount, taxablePaise, gstPaise, grandTotalPaise, advancePaidPaise: advance, balanceDuePaise, overpaidPaise };
+}
+
+/**
+ * Guards money coming in: an invoice can never be paid more than it bills, so an
+ * advance or payment above the outstanding amount is a typo, not a credit.
+ * Returns the reason to refuse, or null when the amount fits.
+ */
+export function paymentFits(grandTotalPaise: number, alreadyPaidPaise: number, amountPaise: number): string | null {
+  const amount = Math.round(amountPaise);
+  if (!Number.isFinite(amount) || amount <= 0) return "Enter an amount above zero";
+  if (grandTotalPaise <= 0) return "Add priced line items before recording money received";
+  const outstanding = grandTotalPaise - Math.max(0, Math.round(alreadyPaidPaise));
+  if (outstanding <= 0) return "This invoice is already paid in full";
+  if (amount > outstanding)
+    return outstanding === grandTotalPaise
+      ? `That is more than the ${inr(grandTotalPaise)} this invoice totals`
+      : `That is more than the ${inr(outstanding)} still outstanding on this ${inr(grandTotalPaise)} invoice`;
+  return null;
 }
 
 /** Suggests a status from money state; the admin can still override. */
@@ -114,6 +135,12 @@ export const InvoiceInputSchema = z.object({
   notes: z.string().trim().max(2000).optional().or(z.literal("")),
   terms: z.array(z.string().trim().max(400)).max(20).default(DEFAULT_TERMS),
   status: z.enum(INVOICE_STATUSES).default("draft"),
+}).superRefine((v, ctx) => {
+  // The advance in hand is the invoice's first payment, so it obeys the same ceiling.
+  if (!v.initialPayment || v.initialPayment.amountPaise <= 0) return;
+  const t = computeTotals(pruneLines(v.items), v.discountPaise, v.gstRateBp, 0);
+  const reason = paymentFits(t.grandTotalPaise, 0, v.initialPayment.amountPaise);
+  if (reason) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["initialPayment", "amountPaise"], message: reason });
 });
 
 export type InvoiceInput = z.infer<typeof InvoiceInputSchema>;

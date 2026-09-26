@@ -2,9 +2,12 @@ import { randomBytes } from "node:crypto";
 import { and, desc, eq, ilike, isNotNull, isNull, or, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import type { InvoicePayment, InvoiceRow } from "@/lib/db/schema";
-import { computeTotals, pruneLines, sumPayments, type InvoiceInput, type InvoiceStatus, type PaymentInput } from "./calc";
+import { computeTotals, paymentFits, pruneLines, sumPayments, type InvoiceInput, type InvoiceStatus, type PaymentInput } from "./calc";
 
 const { invoices } = schema;
+
+/** A well-formed request that would leave the invoice in an impossible state, e.g. paid more than it bills. */
+export class InvoiceRuleError extends Error {}
 
 const newToken = () => randomBytes(16).toString("base64url");
 const newId = () => randomBytes(6).toString("base64url");
@@ -69,8 +72,13 @@ function toColumns(input: InvoiceInput, payments: InvoicePayment[]) {
 const toPayment = (p: PaymentInput): InvoicePayment => ({ id: newId(), date: p.date, amountPaise: Math.round(p.amountPaise), method: p.method, reference: p.reference, note: p.note });
 
 export async function createInvoice(input: InvoiceInput): Promise<InvoiceRow> {
-  const payments = input.initialPayment ? [toPayment(input.initialPayment)] : [];
+  const advance = input.initialPayment && input.initialPayment.amountPaise > 0 ? input.initialPayment : null;
+  const payments = advance ? [toPayment(advance)] : [];
   const cols = toColumns(input, payments);
+  if (advance) {
+    const reason = paymentFits(cols.grandTotalPaise, 0, advance.amountPaise);
+    if (reason) throw new InvoiceRuleError(reason);
+  }
   for (let attempt = 0; attempt < 3; attempt++) {
     const invoiceNumber = await nextInvoiceNumber(input.issueDate);
     try {
@@ -115,6 +123,8 @@ async function savePayments(row: InvoiceRow, payments: InvoicePayment[]): Promis
 export async function addPayment(id: number, payment: PaymentInput): Promise<InvoiceRow | null> {
   const row = await getInvoiceById(id);
   if (!row) return null;
+  const reason = paymentFits(row.grandTotalPaise, sumPayments(row.payments), payment.amountPaise);
+  if (reason) throw new InvoiceRuleError(reason);
   return savePayments(row, [...row.payments, toPayment(payment)]);
 }
 
