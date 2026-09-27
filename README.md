@@ -83,6 +83,50 @@ line before anything that isn't routine editing.
 - `GET /api/quote` (Bearer `ADMIN_TOKEN`) still works for scripted exports; the admin UI
   uses `/api/leads` (same cookie session as `/invoice`) instead.
 
+## Live Google reviews
+
+The "What clients say" marquee (`components/sections/Testimonials.tsx`) shows real Google
+reviews, fetched server-side via the official **Business Profile API** and cached 24 hours
+(`lib/reviews/business-profile.ts`). It's free (no per-call billing, unlike the Places API
+alternative), but the setup is a one-time manual process because Google gates access and
+requires OAuth rather than a simple API key. Without every env var below set, or if the
+call ever fails, the section falls back to the three hand-picked reviews in
+`lib/reviews.ts` — never empty, never invented either way.
+
+**1. Request API access** (only Google can do this; expect days to weeks, not instant):
+- You need a Google Cloud project first — [console.cloud.google.com](https://console.cloud.google.com) → create one (or reuse the one this project's other Google keys live in) → note its **Project number** on the dashboard.
+- Submit the [Business Profile API contact form](https://support.google.com/business/contact/api_default), choosing **"Application for Basic API Access"**. Use the Google account that's an owner/manager on the Mihir Sound & Light Business Profile — Google checks the profile has been verified and active 60+ days and that it lists this website.
+- You'll get an email when approved. Until then the project's quota for these APIs is 0.
+
+**2. Enable the APIs** (after approval), in that Cloud project's API Library:
+- **Google Business Profile API** (serves the reviews)
+- **My Business Account Management API** (used once, to look up your account ID below)
+- **My Business Business Information API** (used once, to look up your location ID below)
+
+**3. Create OAuth credentials:**
+- Cloud Console → APIs & Services → Credentials → Create Credentials → OAuth client ID → type **Web application**.
+- Under Authorized redirect URIs, add `https://developers.google.com/oauthplayground` (needed for step 4).
+- Note the **Client ID** and **Client secret** → these are `GBP_CLIENT_ID` / `GBP_CLIENT_SECRET`.
+- If prompted, configure the OAuth consent screen first (External, or Internal if this is a Google Workspace account) — app name/support email is enough, no verification needed for your own use.
+
+**4. Get a refresh token**, using Google's own [OAuth Playground](https://developers.google.com/oauthplayground) (no code to write):
+- Gear icon (top right) → check **"Use your own OAuth credentials"** → paste the Client ID/secret from step 3.
+- Step 1: in the scope input, paste `https://www.googleapis.com/auth/business.manage` → Authorize APIs → sign in as the **same Google account that manages the Business Profile**.
+- Step 2: **Exchange authorization code for tokens** → copy the **Refresh token** shown → this is `GBP_REFRESH_TOKEN`. (The access token shown alongside it expires in about an hour and isn't needed — the app fetches its own.)
+
+**5. Find your account and location IDs**, still in the Playground, using the access token from step 4 in the **"Step 3: Configure request to API"** panel (enter the URL, method GET, and hit "Send the request"):
+- `https://mybusinessaccountmanagement.googleapis.com/v1/accounts` → the response's `accounts[].name` looks like `accounts/1234567890123456789` — the number after the slash is `GBP_ACCOUNT_ID`.
+- `https://mybusinessbusinessinformation.googleapis.com/v1/accounts/<that number>/locations?readMask=name,title` → find the entry whose `title` matches the business, take the number after `locations/` in its `name` — that's `GBP_LOCATION_ID`.
+
+**6. Set all five env vars** in Vercel (Project → Settings → Environment Variables) and in `.env.local` for local dev: `GBP_CLIENT_ID`, `GBP_CLIENT_SECRET`, `GBP_REFRESH_TOKEN`, `GBP_ACCOUNT_ID`, `GBP_LOCATION_ID`. Redeploy — reviews should appear within the 24h cache window (or immediately on the next build).
+
+Notes: the API can return more than the old 5-review cap, so the code keeps the freshest
+8; anonymous reviewers don't come with a name or photo (Google withholds both), so those
+fall back to "Google user" with no avatar. The 4.9/120+ figure quoted everywhere else on
+the site (footer, FAQ, JSON-LD `sameAs`) stays a manually-maintained fact in `lib/site.ts`
+on purpose, so it never drifts out of sync with itself across pages — only the review
+cards themselves are live.
+
 ## Where things live
 
 ```
