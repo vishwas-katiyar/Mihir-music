@@ -17,6 +17,7 @@ import { EstimatorCanvas } from "@/components/3d/EstimatorCanvas";
 import { packages, closestPackage } from "@/lib/packages";
 import { AnimatedNumber } from "@/components/motion-primitives/animated-number";
 import { cn, formatINR } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   /** Full-page variant adds the contact fields */
@@ -121,6 +122,7 @@ export function EventEstimator3D({ expanded = false, source = "estimator" }: Pro
     } catch {
       /* offline — ignore */
     }
+    trackEvent("estimate_submit", { eventType, crowd, venue, source });
   };
 
   const result = useMemo(() => estimate({ eventType, crowd, venue }), [eventType, crowd, venue]);

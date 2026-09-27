@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Plus, FolderDown } from "lucide-react";
+import { LogOut, Plus, FolderDown, Users } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +35,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           {!onLogin && (
             /* Phones get 44px icon buttons; the labels come back with the room to hold them. */
             <div className="flex shrink-0 items-center gap-2">
+              <Link href="/invoice/leads" aria-label="Leads" className={cn(action, pathname.startsWith("/invoice/leads") && "border-gold/60 text-ink")}>
+                <Users className="h-4 w-4" /> <span className="hidden sm:inline">Leads</span>
+              </Link>
               <Link href="/invoice/assets" aria-label="Brand assets" className={action}>
                 <FolderDown className="h-4 w-4" /> <span className="hidden sm:inline">Brand assets</span>
               </Link>

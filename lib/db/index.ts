@@ -27,8 +27,24 @@ function createPool() {
   });
 }
 
+const isFirstPoolThisProcess = !globalForDb.__mihirPool;
 export const pool = globalForDb.__mihirPool ?? createPool();
 if (process.env.NODE_ENV !== "production") globalForDb.__mihirPool = pool;
+
+/**
+ * Local dev and production currently point at the same Postgres unless you've branched
+ * it (see README "Local dev database"). Printed once per process so which database
+ * `npm run dev` / `db:migrate` / `db:seed` is about to touch is never a guess — host and
+ * database name only, no credentials.
+ */
+if (process.env.NODE_ENV !== "production" && connectionString && isFirstPoolThisProcess) {
+  try {
+    const u = new URL(connectionString);
+    console.warn(`[db] connected to ${u.hostname}${u.pathname} — if this is production, stop and read the README before writing anything.`);
+  } catch {
+    /* unparseable connection string — nothing to warn about safely */
+  }
+}
 
 export const db = drizzle(pool, { schema });
 export { schema };

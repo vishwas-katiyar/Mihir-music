@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { services } from "@/lib/services";
+import { areas } from "@/lib/areas";
 
 /**
  * Build-time timestamp. The site is statically generated, so a rebuild genuinely is the
@@ -23,6 +24,7 @@ const CONTENT_UPDATED = {
   portfolio: "2026-09-26",
   estimate: "2026-09-26",
   contact: "2026-09-26",
+  areas: "2026-09-27",
 } as const;
 
 const d = (iso: string) => {
@@ -61,5 +63,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...serviceRoutes];
+  const areaRoutes: MetadataRoute.Sitemap = [
+    { url: `${site.url}/areas`, lastModified: d(CONTENT_UPDATED.areas), changeFrequency: "monthly", priority: 0.6 },
+    ...areas.map((a) => ({
+      url: `${site.url}/areas/${a.slug}`,
+      lastModified: d(CONTENT_UPDATED.areas),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+
+  return [...staticRoutes, ...serviceRoutes, ...areaRoutes];
 }

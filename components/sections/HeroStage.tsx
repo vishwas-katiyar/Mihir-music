@@ -6,6 +6,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
 import { RigShowcase } from "@/components/3d/RigShowcase";
 import { Container } from "@/components/ui/Container";
 import { site, whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
 
 const spring = { type: "spring", stiffness: 400, damping: 22 } as const;
 
@@ -52,6 +53,7 @@ export function HeroStage() {
           <div className="mt-8 flex flex-col gap-3 animate-enter [animation-delay:320ms] sm:flex-row sm:items-center sm:gap-4">
             <motion.a
               href={`tel:${site.phone}`}
+              onClick={() => trackEvent("phone_click", { location: "hero" })}
               whileHover={reduce ? undefined : { y: -2 }}
               whileTap={reduce ? undefined : { scale: 0.97 }}
               transition={spring}
@@ -64,6 +66,7 @@ export function HeroStage() {
               href={whatsappUrl(defaultWhatsappMessage)}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("whatsapp_click", { location: "hero" })}
               whileHover={reduce ? undefined : { y: -2 }}
               whileTap={reduce ? undefined : { scale: 0.97 }}
               transition={spring}

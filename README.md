@@ -19,7 +19,34 @@ The app is the repository root and is git-connected to the `mihir-music` Vercel 
 Required environment variables (Project → Settings → Environment Variables):
 `POSTGRES_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`,
 `ADMIN_TOKEN`, `INDEXNOW_KEY`, `NEXT_PUBLIC_SITE_URL`. Optional: `INVOICE_PASSWORD`
-(overrides the daily date password for /invoice), `INVOICE_SESSION_SECRET`.
+(overrides the daily date password for /invoice), `INVOICE_SESSION_SECRET`, `RESEND_API_KEY`
++ `LEAD_ALERT_EMAIL` (email alert on every new lead — see `.env.example`).
+
+## Local dev database
+
+**Local dev and production currently share one Postgres.** Every `npm run dev`,
+`db:migrate` or `db:seed` on your machine reads and writes the real, live database — the
+same one the deployed site uses. `lib/db/index.ts` prints the host it connected to once
+per process (`[db] connected to ...`) specifically so this is never invisible; if that
+line ever names a host you don't recognise as your dev branch, stop before running
+anything that writes.
+
+To stop sharing it (recommended, free on both providers):
+
+1. **Neon** — open the project → Branches → "Create branch" from `main`. Copy that
+   branch's connection string into a *separate* `.env.local` (do not touch the Vercel
+   production env vars). Neon branches are copy-on-write, so this is instant and costs
+   nothing until you write divergent data.
+2. **Supabase** — same idea via a second (free-tier) project, or Supabase's branching
+   feature if your plan includes it.
+3. Run `npm run db:migrate` against the new branch, then `npm run db:seed` to load
+   `lib/gear.ts` into it.
+4. Keep `.env.local` (dev branch) and Vercel's env vars (production) permanently
+   different connection strings from here on.
+
+Until that split happens, treat every local write as a production write: no bulk deletes,
+no destructive migrations tested "just to see", and double-check the `[db] connected to`
+line before anything that isn't routine editing.
 
 ## Invoices (admin)
 
@@ -39,7 +66,22 @@ Required environment variables (Project → Settings → Environment Variables):
   totals with balance due, terms and signature. It embeds Inter and Space Grotesk from
   `public/fonts` (fetch with `node scripts/fetch-fonts.mjs`). Add `?inline=1` to the PDF URL
   to view it in the browser instead of downloading. The share page mirrors the same layout.
-- The local dev server and production share the same database. Do not bulk-delete rows.
+- The local dev server and production share the same database. Do not bulk-delete rows
+  (see "Local dev database" above).
+
+## Leads (admin)
+
+- `/invoice/leads` lists every enquiry from the 3D estimator and the contact form, newest
+  first — filterable by status, searchable by name/phone/city.
+- Every submission optionally sends an email alert (`RESEND_API_KEY` in `.env.example`);
+  without it, leads still land in this table, they just don't page anyone.
+- Status (`New → Contacted → Quoted → Won/Lost`) is set from a dropdown on each row; the
+  summary strip above the table shows total, new-this-week and win rate once some leads
+  are decided.
+- "Invoice" on a row opens `/invoice/new?leadId=<id>` with client name, phone, venue,
+  event date and a first line item pre-filled from the estimate.
+- `GET /api/quote` (Bearer `ADMIN_TOKEN`) still works for scripted exports; the admin UI
+  uses `/api/leads` (same cookie session as `/invoice`) instead.
 
 ## Where things live
 

@@ -6,13 +6,16 @@ import { whatsappUrl } from "@/lib/site";
 import { services } from "@/lib/services";
 import { packages } from "@/lib/packages";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const inputCls =
   "w-full rounded-xl border border-white/12 bg-stage/70 px-4 py-3 text-sm text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/80 focus:border-gold/60 focus:ring-4 focus:ring-gold/10";
 
 /**
- * Booking form that composes a WhatsApp message — no backend, no data stored.
- * The send button is a plain link, so it works without JS-driven popups.
+ * Booking form that composes a WhatsApp message. The send button is a plain link, so it
+ * works without JS-driven popups; a fire-and-forget POST alongside it logs the same
+ * details as a lead (Leads admin + email alert), so an enquiry is never lost if the
+ * visitor closes WhatsApp without following through.
  */
 export function ContactForm() {
   const [form, setForm] = useState({ name: "", phone: "", date: "", time: "", city: "", service: "", notes: "" });
@@ -42,6 +45,25 @@ export function ContactForm() {
       .join("\n");
     return whatsappUrl(msg);
   }, [form]);
+
+  /** Fire-and-forget persistence; WhatsApp opens regardless of the API outcome. */
+  const persistLead = () => {
+    const payload = JSON.stringify({
+      eventType: form.service,
+      name: form.name,
+      phone: form.phone,
+      city: form.city,
+      date: form.date,
+      notes: form.notes,
+      source: "contact",
+    });
+    try {
+      fetch("/api/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(() => null);
+    } catch {
+      /* offline — ignore */
+    }
+    trackEvent("contact_submit", { service: form.service });
+  };
 
   return (
     <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
@@ -99,6 +121,7 @@ export function ContactForm() {
         aria-disabled={!valid}
         target="_blank"
         rel="noreferrer"
+        onClick={() => valid && persistLead()}
         className={cn(
           "inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full px-7 text-sm font-semibold transition-[transform,filter,background-color,color] duration-200 ease-out-strong",
           valid ? "bg-gold text-charcoal shadow-glow-gold hover:-translate-y-0.5 hover:brightness-105 active:scale-[0.97]" : "cursor-not-allowed bg-white/8 text-muted",
@@ -107,7 +130,7 @@ export function ContactForm() {
         <MessageCircle className="h-4 w-4" aria-hidden />
         {valid ? "Send via WhatsApp" : "Fill the required fields to send"}
       </a>
-      <p className="text-xs text-muted">Opens WhatsApp with your details pre-filled. Nothing is stored on this website.</p>
+      <p className="text-xs text-muted">Opens WhatsApp with your details pre-filled and logs your enquiry with our team.</p>
     </form>
   );
 }

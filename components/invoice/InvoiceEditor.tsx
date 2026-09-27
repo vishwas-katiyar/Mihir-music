@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Copy, Download, ExternalLink, Link2, MessageCircle, Plus, RefreshCw, Trash2, Wallet } from "lucide-react";
+import { Copy, Download, ExternalLink, Link2, MessageCircle, Plus, RefreshCw, Star, Trash2, Wallet } from "lucide-react";
+import { site } from "@/lib/site";
 import type { InvoiceLine } from "@/lib/db/schema";
 import {
   computeTotals,
@@ -181,6 +182,14 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
     const to = digits.length === 10 ? `91${digits}` : digits;
     const due = totals.balanceDuePaise > 0 ? `Balance due: ${inr(totals.balanceDuePaise)}` : "Paid in full, thank you.";
     const text = `Hi ${form.clientName || ""}, here is your invoice ${rec?.invoiceNumber ?? ""} from Mihir Sound & Light.\n\nTotal: ${inr(totals.grandTotalPaise)}\nReceived: ${inr(paidPaise)}\n${due}\n\nView and download: ${shareUrl}`;
+    return `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
+  };
+
+  /** Best moment to ask is the moment the invoice actually clears, while the client is still pleased. */
+  const reviewWhatsappHref = () => {
+    const digits = (form.clientPhone ?? "").replace(/\D/g, "");
+    const to = digits.length === 10 ? `91${digits}` : digits;
+    const text = `Hi ${form.clientName || ""}, thank you for having us for ${form.eventTitle || "your event"}! If the show delivered, a quick Google review helps other people find us: ${site.social.google}`;
     return `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
   };
 
@@ -551,6 +560,23 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>
             </div>
+          </div>
+        )}
+
+        {rec?.status === "paid" && (
+          <div className="rounded-2xl border border-gold/30 bg-gold/5 p-5">
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-gold-soft">
+              <Star className="h-3.5 w-3.5 fill-current" /> Paid in full
+            </div>
+            <p className="mt-2 text-sm text-ink/85">The client&apos;s still pleased right now — this is the moment a review lands.</p>
+            <a
+              href={reviewWhatsappHref()}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-4 text-sm font-semibold text-charcoal transition hover:brightness-105 sm:min-h-0 sm:py-2.5"
+            >
+              <MessageCircle className="h-4 w-4" /> Ask for a Google review
+            </a>
           </div>
         )}
       </aside>

@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ContactForm } from "./ContactForm";
 
 export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
@@ -26,12 +27,12 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
                   {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
                 </address>
                 <div className="mt-6 flex flex-col gap-3">
-                  <a href={`tel:${site.phone}`} className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
+                  <TrackedLink event="phone_click" params={{ location: "contact_section" }} href={`tel:${site.phone}`} className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
                     <Phone className="h-4 w-4" /> {site.phoneDisplay}
-                  </a>
-                  <a href={whatsappUrl(defaultWhatsappMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
+                  </TrackedLink>
+                  <TrackedLink event="whatsapp_click" params={{ location: "contact_section" }} href={whatsappUrl(defaultWhatsappMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink transition hover:border-gold/60 hover:text-gold">
                     <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
-                  </a>
+                  </TrackedLink>
                 </div>
                 <div className="mt-6 flex flex-wrap gap-2">
                   {[

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Phone } from "lucide-react";
 import { site, whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -58,6 +59,7 @@ export function FloatingCTA() {
               key={a.key}
               href={a.href}
               {...(a.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              onClick={() => trackEvent(a.key === "whatsapp" ? "whatsapp_click" : "phone_click", { location: "floating" })}
               aria-label={a.label}
               initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
               animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}

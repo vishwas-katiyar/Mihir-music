@@ -19,9 +19,17 @@ export const inquiries = pgTable(
     estimatedBudgetHigh: integer("estimated_budget_high").notNull(),
     rig: text("rig"), // JSON snapshot of the rig config the visitor saw
     source: text("source").default("estimator"),
+    /** new | contacted | quoted | won | lost — set from the leads admin, never by the public API. */
+    status: text("status").notNull().default("new"),
+    contactedAt: timestamp("contacted_at", { withTimezone: true }),
+    adminNotes: text("admin_notes"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (t) => [index("inquiries_event_date_idx").on(t.eventDate), index("inquiries_created_at_idx").on(t.createdAt)],
+  (t) => [
+    index("inquiries_event_date_idx").on(t.eventDate),
+    index("inquiries_created_at_idx").on(t.createdAt),
+    index("inquiries_status_idx").on(t.status),
+  ],
 );
 
 /** InventoryItems — mirrors lib/gear.ts so availability can later be tracked per unit. */

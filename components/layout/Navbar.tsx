@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { MessageCircle } from "lucide-react";
 import { nav, site, whatsappUrl, defaultWhatsappMessage } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Floating "island" nav: detached glass pill on desktop, full-screen staggered overlay on mobile.
@@ -72,6 +73,7 @@ export function Navbar() {
             href={whatsappUrl(defaultWhatsappMessage)}
             target="_blank"
             rel="noreferrer"
+            onClick={() => trackEvent("whatsapp_click", { location: "navbar" })}
             className="hidden min-h-10 items-center gap-2 rounded-full bg-gold px-4 text-sm font-semibold text-charcoal transition-[transform,filter] duration-200 ease-out-strong hover:brightness-105 active:scale-[0.97] sm:inline-flex"
           >
             <MessageCircle className="h-4 w-4" aria-hidden />
@@ -136,11 +138,12 @@ export function Navbar() {
                 href={whatsappUrl(defaultWhatsappMessage)}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackEvent("whatsapp_click", { location: "navbar_mobile" })}
                 className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-gold px-7 text-sm font-semibold text-charcoal shadow-glow-gold transition-transform duration-200 ease-out-strong active:scale-[0.97]"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden /> WhatsApp Mihir
               </a>
-              <a href={`tel:${site.phone}`} className="eyebrow text-center text-muted">
+              <a href={`tel:${site.phone}`} onClick={() => trackEvent("phone_click", { location: "navbar_mobile" })} className="eyebrow text-center text-muted">
                 {site.phoneDisplay}
               </a>
             </motion.div>

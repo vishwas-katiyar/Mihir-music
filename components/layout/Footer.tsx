@@ -4,7 +4,9 @@ import { Globe, Phone, Mail, MapPin } from "lucide-react";
 import { Instagram, Youtube, Facebook } from "@/components/ui/SocialIcons";
 import { site, nav } from "@/lib/site";
 import { services } from "@/lib/services";
+import { getArea } from "@/lib/areas";
 import { Container } from "@/components/ui/Container";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 /**
  * Footer link labels say what the page is, not just its nav name, so the anchor text
@@ -39,9 +41,9 @@ export function Footer() {
                   {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
                 </span>
               </div>
-              <a href={`tel:${site.phone}`} className="flex items-center gap-2 hover:text-ink">
+              <TrackedLink event="phone_click" params={{ location: "footer" }} href={`tel:${site.phone}`} className="flex items-center gap-2 hover:text-ink">
                 <Phone className="h-4 w-4 text-gold" /> {site.phoneDisplay}
-              </a>
+              </TrackedLink>
               <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-ink">
                 <Mail className="h-4 w-4 text-gold" /> {site.email}
               </a>
@@ -82,9 +84,20 @@ export function Footer() {
           <div>
             <h3 className="eyebrow text-gold">Service areas</h3>
             <ul className="mt-5 space-y-3 text-sm text-muted">
-              {site.areasServed.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
+              {site.areasServed.map((name) => {
+                const area = getArea(name.toLowerCase());
+                return (
+                  <li key={name}>
+                    {area ? (
+                      <Link href={`/areas/${area.slug}`} className="transition hover:text-ink">
+                        {name}
+                      </Link>
+                    ) : (
+                      name
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             <div className="mt-8 flex gap-2">
               {[
