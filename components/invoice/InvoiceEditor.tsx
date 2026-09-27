@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Copy, Download, ExternalLink, Link2, MessageCircle, Plus, RefreshCw, Star, Trash2, Wallet } from "lucide-react";
 import { site } from "@/lib/site";
 import type { InvoiceLine } from "@/lib/db/schema";
+import { ItemPicker } from "@/components/invoice/ItemPicker";
+import { catalogRatePaise, type CatalogItem } from "@/lib/invoices/catalog";
 import {
   computeTotals,
   emptyLine,
@@ -42,9 +44,13 @@ interface Props {
   record?: InvoiceJson;
 }
 
-/** Rupee input that stores paise; shows blank while typing. */
+/** Rupee input that stores paise; shows blank while typing, and picks up external changes (e.g. an "Add item" pick) when not focused. */
 function MoneyInput({ paise, onChange, className, ...rest }: { paise: number; onChange: (paise: number) => void; className?: string } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
   const [text, setText] = useState(paise ? String(toRupees(paise)) : "");
+  const focused = useRef(false);
+  useEffect(() => {
+    if (!focused.current) setText(paise ? String(toRupees(paise)) : "");
+  }, [paise]);
   return (
     <input
       {...rest}
@@ -53,11 +59,17 @@ function MoneyInput({ paise, onChange, className, ...rest }: { paise: number; on
       min={0}
       step="0.01"
       value={text}
+      onFocus={() => {
+        focused.current = true;
+      }}
       onChange={(e) => {
         setText(e.target.value);
         onChange(Math.max(0, toPaise(Number(e.target.value) || 0)));
       }}
-      onBlur={() => setText(paise ? String(toRupees(paise)) : "")}
+      onBlur={() => {
+        focused.current = false;
+        setText(paise ? String(toRupees(paise)) : "");
+      }}
       className={cn(input, "text-right tabular-nums", className)}
     />
   );
@@ -73,6 +85,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
   const [message, setMessage] = useState<{ tone: "ok" | "err"; text: string } | null>(null);
   const [newPayment, setNewPayment] = useState<PaymentInput>(emptyPayment());
   const [paymentKey, setPaymentKey] = useState(0); // remounts the amount input after adding
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const paidPaise = rec ? rec.advancePaidPaise : form.initialPayment?.amountPaise ?? 0;
   const totals = useMemo(() => computeTotals(pruneLines(form.items), form.discountPaise, form.gstRateBp, paidPaise), [form, paidPaise]);
@@ -86,8 +99,20 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
 
   const set = <K extends keyof InvoiceInput>(k: K, v: InvoiceInput[K]) => setForm((f) => ({ ...f, [k]: v }));
   const setLine = (i: number, patch: Partial<InvoiceLine>) => setForm((f) => ({ ...f, items: f.items.map((l, j) => (j === i ? { ...l, ...patch } : l)) }));
-  const addLine = () => setForm((f) => ({ ...f, items: [...f.items, emptyLine()] }));
   const removeLine = (i: number) => setForm((f) => ({ ...f, items: f.items.length > 1 ? f.items.filter((_, j) => j !== i) : [emptyLine()] }));
+
+  /** Drops the new line into the first still-blank row instead of stacking an unused one under it. */
+  const isBlankLine = (l: InvoiceLine) => !l.title.trim() && !l.description.trim() && l.ratePaise === 0;
+  const insertLine = (line: InvoiceLine) =>
+    setForm((f) => {
+      const i = f.items.findIndex(isBlankLine);
+      return i === -1 ? { ...f, items: [...f.items, line] } : { ...f, items: f.items.map((l, j) => (j === i ? line : l)) };
+    });
+  const addCatalogItem = (item: CatalogItem) => insertLine({ title: item.title, description: item.description, quantity: 1, ratePaise: catalogRatePaise(item) });
+  const addCustomLine = () => {
+    insertLine(emptyLine());
+    setPickerOpen(false);
+  };
 
   const shareUrl = rec ? `${typeof window !== "undefined" ? window.location.origin : ""}/i/${rec.token}` : "";
 
@@ -194,7 +219,8 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
   };
 
   return (
-    /* The bottom padding clears the phone-only action bar at the end of this component. */
+    <>
+    {/* The bottom padding clears the phone-only action bar at the end of this component. */}
     <div className="grid gap-6 pb-24 lg:grid-cols-[1fr_380px] lg:gap-8 lg:pb-0">
       <div className="space-y-8">
         {rec?.deletedAt && (
@@ -271,10 +297,10 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
             <h2 className="text-sm font-semibold text-ink">Line items</h2>
             <button
               type="button"
-              onClick={addLine}
+              onClick={() => setPickerOpen(true)}
               className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/15 px-3 text-xs text-ink/85 hover:border-gold/60 sm:min-h-0 sm:py-1.5"
             >
-              <Plus className="h-3.5 w-3.5" /> Add line
+              <Plus className="h-3.5 w-3.5" /> Add item
             </button>
           </div>
           <div className="space-y-3">
@@ -597,5 +623,7 @@ export function InvoiceEditor({ mode, initial, record }: Props) {
         </button>
       </div>
     </div>
+    <ItemPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={addCatalogItem} onAddCustom={addCustomLine} />
+    </>
   );
 }
