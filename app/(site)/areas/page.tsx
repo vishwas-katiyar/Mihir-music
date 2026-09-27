@@ -36,8 +36,7 @@ export default function AreasIndexPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Areas", href: "/areas" }]} />
       <section className="pt-8 pb-24">
         <Container>
-          <div className="eyebrow text-gold">Coverage</div>
-          <h1 className="display-tight mt-4 max-w-4xl text-balance text-4xl uppercase text-ink sm:text-6xl">Based in Indore, travelling further.</h1>
+          <h1 className="display-tight max-w-4xl text-balance text-4xl uppercase text-ink sm:text-6xl">Based in Indore, travelling further.</h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/85">
             The crew, rig and FOH engineer are the same wherever the show is. Beyond Indore we regularly travel to:
           </p>

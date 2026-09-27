@@ -37,7 +37,9 @@ export function FloatingCTA() {
       href: whatsappUrl(defaultWhatsappMessage),
       external: true,
       label: `WhatsApp ${site.name}`,
+      // Inline: the `glass` utility's own box-shadow otherwise wins over a shadow-* class here.
       surface: "glass text-ink",
+      style: { boxShadow: "0 12px 40px rgb(0 0 0 / 0.45)" },
       icon: <WhatsAppIcon className="h-6 w-6" />,
     },
     {
@@ -45,7 +47,8 @@ export function FloatingCTA() {
       href: `tel:${site.phone}`,
       external: false,
       label: `Call ${site.name} on ${site.phoneDisplay}`,
-      surface: "bg-gold text-charcoal shadow-[0_12px_40px_rgb(0_0_0/0.45)]",
+      surface: "bg-gold text-charcoal shadow-glow-gold",
+      style: undefined,
       icon: <Phone className="h-5 w-5" aria-hidden />,
     },
   ];
@@ -66,6 +69,7 @@ export function FloatingCTA() {
               exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 22, delay: reduce ? 0 : i * 0.04 }}
               whileTap={reduce ? undefined : { scale: 0.95 }}
+              style={a.style}
               className={`flex h-13 w-13 items-center justify-center rounded-full transition-[filter] hover:brightness-105 ${a.surface}`}
             >
               {a.icon}

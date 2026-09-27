@@ -77,8 +77,8 @@ button, [role="button"] {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-/* Keyboard focus is a lit gold ring; fields keep their own focus bloom instead. */
-button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="radio"]:focus-visible {
+/* Keyboard focus is a lit gold ring; text/date fields keep their own focus bloom instead (selects have no bloom of their own, so they take the ring). */
+button:focus-visible, a:focus-visible, select:focus-visible, [role="button"]:focus-visible, [role="radio"]:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
 }

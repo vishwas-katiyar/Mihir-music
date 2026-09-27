@@ -44,7 +44,7 @@ function toHtml(lead: LeadAlert): string {
       <h2 style="margin:0 0 12px">New enquiry — ${lead.eventType}</h2>
       <table>${body}</table>
       <p style="margin-top:16px">
-        <a href="${site.url}/invoice/leads" style="color:#b8860b">Open in Leads</a>
+        <a href="${site.url}/invoice/leads" style="color:#d4af37">Open in Leads</a>
         ${waLink ? ` &nbsp;·&nbsp; <a href="${waLink}" style="color:#25D366">Reply on WhatsApp</a>` : ""}
       </p>
     </div>`;

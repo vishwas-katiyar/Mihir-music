@@ -84,28 +84,31 @@ export function LeadsTable({ rows }: { rows: Inquiry[] }) {
           {rows.map((r) => {
             const wa = whatsappHrefFor(r);
             return (
-              <tr key={r.id} className="grid grid-cols-2 items-start gap-x-3 gap-y-2 px-4 py-4 sm:table-row sm:p-0">
-                <td className={cn("col-span-2 min-w-0", cell)}>
+              <tr
+                key={r.id}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 px-4 py-4 hover:bg-white/[0.04] sm:table-row sm:p-0"
+              >
+                <td className={cn("order-1 min-w-0", cell)}>
                   <div className="break-words text-ink">{r.name || "No name given"}</div>
                   {r.phone && <div className="text-xs text-muted">{r.phone}</div>}
                 </td>
-                <td className={cn("col-span-2 min-w-0 text-ink/85", cell)}>
+                <td className={cn("order-3 col-span-2 min-w-0 text-ink/85", cell)}>
                   <div className="break-words">{r.eventType}</div>
                   <div className="text-xs text-muted">
                     {r.crowdSize} · {r.venueType}
                   </div>
                 </td>
-                <td className={cn("min-w-0", cell)}>
+                <td className={cn("order-4 col-span-2 min-w-0", cell)}>
                   <span className={cardLabel}>City / Date</span>
                   <div className="text-ink/85">{r.venueCity || "—"}</div>
                   <div className="text-xs text-muted">{r.eventDate || "Date not given"}</div>
                 </td>
-                <td className={cn("tabular-nums text-ink sm:text-right", cell)}>
+                <td className={cn("order-5 tabular-nums text-ink", cell)}>
                   <span className={cardLabel}>Estimate</span>
                   {r.estimatedBudgetHigh > 0 ? `${inr(r.estimatedBudgetLow)} – ${inr(r.estimatedBudgetHigh)}` : "Contact form"}
                 </td>
-                <td className={cn(cell)}>
-                  <span className={cardLabel}>Status</span>
+                {/* order-2 (not -6): visually pairs with Contact on the mobile card, even though it sits here in source to match the desktop header order. */}
+                <td className={cn("order-2 justify-self-end", cell)}>
                   <select
                     value={r.status}
                     disabled={busy === r.id}
@@ -122,8 +125,11 @@ export function LeadsTable({ rows }: { rows: Inquiry[] }) {
                     ))}
                   </select>
                 </td>
-                <td className={cn("text-xs text-muted", cell)}>{relativeTime(new Date(r.createdAt))}</td>
-                <td className={cn("col-span-2 whitespace-nowrap sm:text-right", cell)}>
+                <td className={cn("order-6 text-right text-xs text-muted sm:text-left", cell)}>
+                  <span className={cardLabel}>Received</span>
+                  {relativeTime(new Date(r.createdAt))}
+                </td>
+                <td className={cn("order-7 col-span-2 whitespace-nowrap", cell)}>
                   <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end">
                     {wa && (
                       <a

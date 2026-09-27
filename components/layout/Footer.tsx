@@ -89,7 +89,7 @@ export function Footer() {
                 return (
                   <li key={name}>
                     {area ? (
-                      <Link href={`/areas/${area.slug}`} className="transition hover:text-ink">
+                      <Link href={`/areas/${area.slug}`} className="text-ink/80 underline decoration-white/20 underline-offset-4 transition hover:text-ink hover:decoration-gold">
                         {name}
                       </Link>
                     ) : (

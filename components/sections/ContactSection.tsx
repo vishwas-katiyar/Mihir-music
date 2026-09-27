@@ -20,8 +20,7 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
           <div className="space-y-6">
             <Reveal>
               <GlassCard>
-                <div className="eyebrow text-gold">Direct line</div>
-                <h3 className="display-tight mt-4 text-3xl uppercase text-ink">{site.legalOwner}</h3>
+                <h3 className="display-tight text-3xl uppercase text-ink">{site.legalOwner}</h3>
                 <address className="mt-3 flex items-start gap-2 text-sm not-italic text-muted">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}
@@ -51,8 +50,8 @@ export function ContactSection({ as = "h2" }: { as?: "h1" | "h2" }) {
 
             <Reveal delay={0.08}>
               <GlassCard>
-                <div className="eyebrow text-gold">Venue intel</div>
-                <dl className="mt-5 divide-y divide-white/10 text-sm">
+                <h3 className="font-display text-lg font-semibold tracking-[-0.02em] text-ink">Venue intel</h3>
+                <dl className="mt-4 divide-y divide-white/10 text-sm">
                   {[
                     ["Venue type", "Indoor / Outdoor / Open ground"],
                     ["Formats", "Wedding / Concert / Corporate / Club"],
