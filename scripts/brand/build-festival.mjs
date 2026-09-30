@@ -26,10 +26,16 @@ const THEME_COPY = {
   ganpati: {
     line: "GANPATI STHAPNA | AAGMAN | VISARJAN",
     campaign: "Ganpati",
+    kicker: "FESTIVAL BOOKINGS OPEN",
+    headline: "GANPATI SPECIAL SHOWS",
+    cta: "BOOK NOW",
   },
   navratri: {
     line: "GARBA NIGHTS | DANDIYA RAAS | MATA KI CHOWKI",
     campaign: "Navratri",
+    kicker: "LIMITED NAVRATRI DATES",
+    headline: "NAVRATRI LIVE EVENTS",
+    cta: "BOOK NOW",
   },
 };
 
@@ -365,6 +371,25 @@ function bookNow({ cx, y, size, ruleWidth, fill }) {
   return { body: parts.join("\n"), top: t.top, bottom: t.bottom };
 }
 
+/** Prominent rounded CTA button with centred text. */
+function ctaButton({
+  cx, y, text = "BOOK NOW", size, padX, padY, fill, textFill = "#050505", stroke = COLORS.goldLight,
+}) {
+  const t = capsLine("cinzelBold", text, { cx, y, size, letterSpacing: 0.24, fill: textFill });
+  const top = t.top - padY;
+  const h = t.bottom - t.top + padY * 2;
+  const w = t.width + padX * 2;
+  const x = cx - w / 2;
+  const r = Math.max(8, h * 0.32);
+  return {
+    body: `<rect x="${f2(x)}" y="${f2(top)}" width="${f2(w)}" height="${f2(h)}" rx="${f2(r)}" fill="${fill}"/>
+<rect x="${f2(x + 4)}" y="${f2(top + 4)}" width="${f2(w - 8)}" height="${f2(h - 8)}" rx="${f2(Math.max(6, r - 4))}" fill="none" stroke="${stroke}" stroke-width="2" opacity="0.66"/>
+${t.body}`,
+    top,
+    bottom: top + h,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Compositions. Return { defs, body } in canvas coordinates 0..W x 0..H.
 // `id` prefixes gradient ids so several compositions can share one SVG (the board).
@@ -420,39 +445,128 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
     const rightLeft = motifX + motifBox.width + W * 0.02;
     const rightW = W * 0.96 - rightLeft;
     const rightCx = rightLeft + rightW / 2;
-    const lockW = Math.min(W * 0.48, rightW * 0.92);
-    const lockPlaced = place({ ...lock, body: lockBody }, { width: lockW, x: rightCx - lockW / 2, y: H * 0.2 });
-    parts.push(lockPlaced.body);
+    if (theme === "navratri") {
+      const panelX = rightLeft + rightW * 0.02;
+      const panelY = H * 0.12;
+      const panelW = rightW * 0.96;
+      const panelH = H * 0.66;
+      parts.push(`<rect x="${f2(panelX)}" y="${f2(panelY)}" width="${f2(panelW)}" height="${f2(panelH)}" rx="${f2(H * 0.024)}" fill="#070707" opacity="0.78"/>`);
+      parts.push(`<rect x="${f2(panelX + 7)}" y="${f2(panelY + 7)}" width="${f2(panelW - 14)}" height="${f2(panelH - 14)}" rx="${f2(H * 0.02)}" fill="none" stroke="${paint}" stroke-width="2.6" opacity="0.62"/>`);
 
-    const lineY = H * 0.2 + lockPlaced.height + H * 0.085;
-    const line = capsLine("cinzelBold", copy.line, {
-      cx: rightCx, y: lineY, size: H * 0.034, letterSpacing: 0.2, fill: lineFill, maxWidth: rightW * 0.94,
-    });
-    parts.push(line.body);
+      let y = panelY + H * 0.08;
+      const kicker = capsLine("cinzel", copy.kicker, { cx: rightCx, y, size: H * 0.024, letterSpacing: 0.28, fill: COLORS.goldLight, maxWidth: panelW * 0.86 });
+      parts.push(kicker.body);
 
-    const bn = bookNow({ cx: rightCx, y: line.bottom + H * 0.085, size: H * 0.03, ruleWidth: W * 0.08, fill: bookFill });
-    parts.push(bn.body);
+      y = kicker.bottom + H * 0.07;
+      const lockW = Math.min(W * 0.43, panelW * 0.82);
+      const lockPlaced = place({ ...lock, body: lockBody }, { width: lockW, x: rightCx - lockW / 2, y });
+      parts.push(lockPlaced.body);
+
+      y += lockPlaced.height + H * 0.065;
+      const headline = capsLine("cinzelBold", copy.headline, {
+        cx: rightCx, y, size: H * 0.041, letterSpacing: 0.2, fill: lineFill, maxWidth: panelW * 0.88,
+      });
+      parts.push(headline.body);
+
+      y = headline.bottom + H * 0.06;
+      const line = capsLine("cinzelBold", copy.line, {
+        cx: rightCx, y, size: H * 0.028, letterSpacing: 0.2, fill: lineFill, maxWidth: panelW * 0.9,
+      });
+      parts.push(line.body);
+
+      const cta = ctaButton({
+        cx: rightCx,
+        y: line.bottom + H * 0.1,
+        text: copy.cta,
+        size: H * 0.034,
+        padX: W * 0.03,
+        padY: H * 0.018,
+        fill: COLORS.goldLight,
+        textFill: "#161102",
+        stroke: paint,
+      });
+      parts.push(cta.body);
+    } else {
+      const lockW = Math.min(W * 0.48, rightW * 0.92);
+      const lockPlaced = place({ ...lock, body: lockBody }, { width: lockW, x: rightCx - lockW / 2, y: H * 0.2 });
+      parts.push(lockPlaced.body);
+
+      const lineY = H * 0.2 + lockPlaced.height + H * 0.085;
+      const line = capsLine("cinzelBold", copy.line, {
+        cx: rightCx, y: lineY, size: H * 0.034, letterSpacing: 0.2, fill: lineFill, maxWidth: rightW * 0.94,
+      });
+      parts.push(line.body);
+
+      const bn = bookNow({ cx: rightCx, y: line.bottom + H * 0.085, size: H * 0.03, ruleWidth: W * 0.08, fill: bookFill });
+      parts.push(bn.body);
+    }
   } else {
     // Stacked: motif, wordmark, festival line, book now.
-    const motifH = isStory ? H * 0.31 : H * 0.44;
-    const topPad = isStory ? H * 0.14 : H * 0.05;
-    const motifBox = place(motif, { x: (W - motifH) / 2, y: topPad, height: motifH });
-    parts.push(motifBox.body);
+    if (theme === "navratri") {
+      const motifH = isStory ? H * 0.28 : H * 0.35;
+      const topPad = isStory ? H * 0.09 : H * 0.06;
+      const motifBox = place(motif, { x: (W - motifH) / 2, y: topPad, height: motifH });
+      parts.push(motifBox.body);
 
-    const word = lockups.wordmark({ fill: "gold" });
-    const wordBody = word.body.replaceAll("url(#mihirGold)", paint);
-    const wordW = W * (isStory ? 0.66 : 0.6);
-    let y = topPad + motifH + (isStory ? H * 0.045 : H * 0.03);
-    const wordPlaced = place({ ...word, body: wordBody }, { width: wordW, x: (W - wordW) / 2, y });
-    parts.push(wordPlaced.body);
-    y += wordPlaced.height + (isStory ? H * 0.04 : H * 0.04);
+      const panelY = topPad + motifH - (isStory ? H * 0.02 : H * 0.01);
+      const panelX = W * (isStory ? 0.1 : 0.08);
+      const panelW = W * (isStory ? 0.8 : 0.84);
+      const panelH = H * (isStory ? 0.53 : 0.47);
+      parts.push(`<rect x="${f2(panelX)}" y="${f2(panelY)}" width="${f2(panelW)}" height="${f2(panelH)}" rx="${f2(H * 0.02)}" fill="#070707" opacity="0.8"/>`);
+      parts.push(`<rect x="${f2(panelX + 6)}" y="${f2(panelY + 6)}" width="${f2(panelW - 12)}" height="${f2(panelH - 12)}" rx="${f2(H * 0.017)}" fill="none" stroke="${paint}" stroke-width="2.4" opacity="0.65"/>`);
 
-    const lineSize = W * (isStory ? 0.034 : 0.033);
-    const line = capsLine("cinzelBold", copy.line, { cx: W / 2, y, size: lineSize, letterSpacing: 0.2, fill: lineFill, maxWidth: W * 0.86 });
-    parts.push(line.body);
+      const word = lockups.wordmark({ fill: "gold" });
+      const wordBody = word.body.replaceAll("url(#mihirGold)", paint);
+      const wordW = W * (isStory ? 0.58 : 0.54);
+      let y = panelY + panelH * 0.18;
+      const wordPlaced = place({ ...word, body: wordBody }, { width: wordW, x: (W - wordW) / 2, y });
+      parts.push(wordPlaced.body);
 
-    const bn = bookNow({ cx: W / 2, y: line.bottom + (isStory ? H * 0.05 : H * 0.075), size: W * 0.03, ruleWidth: W * 0.13, fill: bookFill });
-    parts.push(bn.body);
+      y = wordPlaced.height + y + panelH * 0.1;
+      const headline = capsLine("cinzelBold", copy.headline, {
+        cx: W / 2, y, size: W * (isStory ? 0.034 : 0.04), letterSpacing: 0.22, fill: lineFill, maxWidth: panelW * 0.84,
+      });
+      parts.push(headline.body);
+
+      y = headline.bottom + panelH * 0.12;
+      const line = capsLine("cinzelBold", copy.line, {
+        cx: W / 2, y, size: W * (isStory ? 0.026 : 0.03), letterSpacing: 0.2, fill: lineFill, maxWidth: panelW * 0.86,
+      });
+      parts.push(line.body);
+
+      const cta = ctaButton({
+        cx: W / 2,
+        y: line.bottom + panelH * 0.14,
+        text: copy.cta,
+        size: W * (isStory ? 0.03 : 0.036),
+        padX: W * (isStory ? 0.045 : 0.06),
+        padY: H * (isStory ? 0.012 : 0.01),
+        fill: COLORS.goldLight,
+        textFill: "#161102",
+        stroke: paint,
+      });
+      parts.push(cta.body);
+    } else {
+      const motifH = isStory ? H * 0.31 : H * 0.44;
+      const topPad = isStory ? H * 0.14 : H * 0.05;
+      const motifBox = place(motif, { x: (W - motifH) / 2, y: topPad, height: motifH });
+      parts.push(motifBox.body);
+
+      const word = lockups.wordmark({ fill: "gold" });
+      const wordBody = word.body.replaceAll("url(#mihirGold)", paint);
+      const wordW = W * (isStory ? 0.66 : 0.6);
+      let y = topPad + motifH + (isStory ? H * 0.045 : H * 0.03);
+      const wordPlaced = place({ ...word, body: wordBody }, { width: wordW, x: (W - wordW) / 2, y });
+      parts.push(wordPlaced.body);
+      y += wordPlaced.height + (isStory ? H * 0.04 : H * 0.04);
+
+      const lineSize = W * (isStory ? 0.034 : 0.033);
+      const line = capsLine("cinzelBold", copy.line, { cx: W / 2, y, size: lineSize, letterSpacing: 0.2, fill: lineFill, maxWidth: W * 0.86 });
+      parts.push(line.body);
+
+      const bn = bookNow({ cx: W / 2, y: line.bottom + (isStory ? H * 0.05 : H * 0.075), size: W * 0.03, ruleWidth: W * 0.13, fill: bookFill });
+      parts.push(bn.body);
+    }
   }
 
   parts.push(`<rect width="${W}" height="${H}" fill="url(#${vignId})"/>`);
