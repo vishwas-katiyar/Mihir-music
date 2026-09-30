@@ -1,4 +1,4 @@
-// Festival / event variation: Ganpati campaign creatives (16:9 banner, 1:1 square, 9:16 story).
+// Festival / event variations: Ganpati + Navratri campaign creatives (16:9 banner, 1:1 square, 9:16 story).
 // Composed entirely from core.mjs pieces plus the calligraphic Ganesha motif defined here.
 //
 //   node scripts/brand/build-festival.mjs
@@ -22,7 +22,16 @@ import {
 } from "./core.mjs";
 
 const TILAK = "#E8452C";
-const FESTIVAL_LINE = "GANPATI STHAPNA | AAGMAN | VISARJAN";
+const THEME_COPY = {
+  ganpati: {
+    line: "GANPATI STHAPNA | AAGMAN | VISARJAN",
+    campaign: "Ganpati",
+  },
+  navratri: {
+    line: "GARBA NIGHTS | DANDIYA RAAS | MATA KI CHOWKI",
+    campaign: "Navratri",
+  },
+};
 
 // ---------------------------------------------------------------------------
 // Deterministic pseudo-random (mulberry32) so every build is identical.
@@ -149,6 +158,82 @@ export function ganeshaMotif({ paint, tilak = TILAK, halo = true } = {}) {
   <circle cx="521" cy="412" r="6" fill="${tilak}"/>
 </g>`;
   return { body, width: 1000, height: 1000 };
+}
+
+// ---------------------------------------------------------------------------
+// Navratri motif: crossed dandiya sticks, radiant diya and circular garba rings.
+// ---------------------------------------------------------------------------
+export function navratriMotif({ paint, halo = true } = {}) {
+  const sticks = [];
+  sticks.push(
+    ribbon([[[242, 800], [390, 652], [640, 416], [780, 262]]], taper(17, { minHalfWidth: 5, power: 0.72 })),
+  );
+  sticks.push(
+    ribbon([[[252, 284], [406, 434], [656, 668], [772, 784]]], taper(17, { minHalfWidth: 5, power: 0.72 })),
+  );
+  const ringA = ribbon(
+    [
+      [[522, 208], [662, 208], [772, 318], [772, 456]],
+      [[772, 456], [772, 612], [648, 744], [500, 744]],
+      [[500, 744], [352, 744], [236, 628], [236, 486]],
+      [[236, 486], [236, 336], [352, 216], [502, 216]],
+    ],
+    taper(6, { minHalfWidth: 1.1, power: 0.8 }),
+  );
+  const ringB = ribbon(
+    [
+      [[522, 284], [620, 284], [698, 364], [698, 456]],
+      [[698, 456], [698, 564], [608, 656], [500, 656]],
+      [[500, 656], [392, 656], [300, 564], [300, 456]],
+      [[300, 456], [300, 358], [384, 284], [502, 284]],
+    ],
+    taper(4.8, { minHalfWidth: 1, power: 0.85 }),
+  );
+
+  const diyaBase = ribbon(
+    [
+      [[404, 650], [452, 694], [560, 694], [612, 650]],
+      [[612, 650], [648, 618], [664, 570], [664, 526]],
+      [[664, 526], [664, 500], [650, 474], [626, 460]],
+      [[626, 460], [590, 438], [544, 436], [508, 438]],
+      [[508, 438], [466, 440], [418, 452], [384, 482]],
+      [[384, 482], [352, 510], [338, 548], [338, 584]],
+      [[338, 584], [338, 618], [360, 644], [404, 650]],
+    ],
+    taper(11, { minHalfWidth: 2, power: 0.65 }),
+  );
+
+  const flameOuter = ribbon([[[502, 490], [544, 446], [560, 382], [524, 320]]], taper(14, { minHalfWidth: 0.9, power: 0.8 }));
+  const flameInner = ribbon([[[508, 470], [532, 440], [540, 398], [522, 362]]], taper(8, { minHalfWidth: 0.8, power: 0.85 }));
+
+  const dots = [
+    [520, 232, 8], [674, 336, 7], [738, 506, 7], [654, 682, 7], [482, 718, 8], [312, 652, 7], [242, 488, 7], [308, 318, 7],
+  ]
+    .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`)
+    .join("");
+
+  const haloRing = halo
+    ? `<circle cx="510" cy="486" r="360" fill="none" stroke="${paint}" stroke-width="2.2" opacity="0.34" stroke-dasharray="6 16"/>
+  <circle cx="510" cy="486" r="336" fill="none" stroke="${paint}" stroke-width="1.4" opacity="0.24"/>`
+    : "";
+
+  return {
+    body: `<g>
+  ${haloRing}
+  <g fill="${paint}">
+    <path d="${sticks[0]}"/>
+    <path d="${sticks[1]}"/>
+    <path d="${ringA}"/>
+    <path d="${ringB}"/>
+    <path d="${diyaBase}"/>
+    ${dots}
+  </g>
+  <path fill="${COLORS.goldLight}" d="${flameOuter}" opacity="0.94"/>
+  <path fill="${paint}" d="${flameInner}" opacity="0.9"/>
+</g>`,
+    width: 1000,
+    height: 1000,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -284,7 +369,7 @@ function bookNow({ cx, y, size, ruleWidth, fill }) {
 // Compositions. Return { defs, body } in canvas coordinates 0..W x 0..H.
 // `id` prefixes gradient ids so several compositions can share one SVG (the board).
 // ---------------------------------------------------------------------------
-export function festivalArt({ width: W, height: H, variant = "banner", id = "fest" }) {
+export function festivalArt({ width: W, height: H, variant = "banner", id = "fest", theme = "ganpati" }) {
   const gold = paintFor("gold", `${id}Gold`);
   const paint = gold.paint;
   const glowId = `${id}Glow`;
@@ -307,6 +392,8 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
 
   const isBanner = variant === "banner";
   const isStory = variant === "story";
+  const copy = THEME_COPY[theme] || THEME_COPY.ganpati;
+  const motif = theme === "navratri" ? navratriMotif({ paint }) : ganeshaMotif({ paint });
 
   // Atmosphere
   const templeH = isBanner ? H * 0.42 : isStory ? H * 0.2 : H * 0.22;
@@ -317,7 +404,6 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
   parts.push(crowdBand(W, H, { top: crowdTop }));
 
   // Foreground content
-  const motif = ganeshaMotif({ paint });
   const lineFill = paint;
   const bookFill = COLORS.goldLight;
 
@@ -339,7 +425,7 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
     parts.push(lockPlaced.body);
 
     const lineY = H * 0.2 + lockPlaced.height + H * 0.085;
-    const line = capsLine("cinzelBold", FESTIVAL_LINE, {
+    const line = capsLine("cinzelBold", copy.line, {
       cx: rightCx, y: lineY, size: H * 0.034, letterSpacing: 0.2, fill: lineFill, maxWidth: rightW * 0.94,
     });
     parts.push(line.body);
@@ -362,7 +448,7 @@ export function festivalArt({ width: W, height: H, variant = "banner", id = "fes
     y += wordPlaced.height + (isStory ? H * 0.04 : H * 0.04);
 
     const lineSize = W * (isStory ? 0.034 : 0.033);
-    const line = capsLine("cinzelBold", FESTIVAL_LINE, { cx: W / 2, y, size: lineSize, letterSpacing: 0.2, fill: lineFill, maxWidth: W * 0.86 });
+    const line = capsLine("cinzelBold", copy.line, { cx: W / 2, y, size: lineSize, letterSpacing: 0.2, fill: lineFill, maxWidth: W * 0.86 });
     parts.push(line.body);
 
     const bn = bookNow({ cx: W / 2, y: line.bottom + (isStory ? H * 0.05 : H * 0.075), size: W * 0.03, ruleWidth: W * 0.13, fill: bookFill });
@@ -384,15 +470,19 @@ ${body}
 }
 
 export const FESTIVAL_FILES = [
-  { name: "festival-ganpati-banner-16x9", width: 4000, height: 2250, variant: "banner" },
-  { name: "festival-ganpati-square", width: 2160, height: 2160, variant: "square" },
-  { name: "festival-ganpati-story", width: 2160, height: 3840, variant: "story" },
+  { name: "festival-ganpati-banner-16x9", width: 4000, height: 2250, variant: "banner", theme: "ganpati" },
+  { name: "festival-ganpati-square", width: 2160, height: 2160, variant: "square", theme: "ganpati" },
+  { name: "festival-ganpati-story", width: 2160, height: 3840, variant: "story", theme: "ganpati" },
+  { name: "festival-navratri-banner-16x9", width: 4000, height: 2250, variant: "banner", theme: "navratri" },
+  { name: "festival-navratri-square", width: 2160, height: 2160, variant: "square", theme: "navratri" },
+  { name: "festival-navratri-story", width: 2160, height: 3840, variant: "story", theme: "navratri" },
 ];
 
 export async function build({ outDir = path.join(OUT, "11-festival-variation"), log = console.log } = {}) {
   for (const f of FESTIVAL_FILES) {
-    const art = festivalArt({ width: f.width, height: f.height, variant: f.variant });
-    const svg = document({ ...f, ...art, title: "MIHIR - Ganpati festival campaign" });
+    const art = festivalArt({ width: f.width, height: f.height, variant: f.variant, theme: f.theme });
+    const copy = THEME_COPY[f.theme] || THEME_COPY.ganpati;
+    const svg = document({ ...f, ...art, title: `MIHIR - ${copy.campaign} festival campaign` });
     writeSVG(svg, path.join(outDir, `${f.name}.svg`));
     await renderPNG(svg, path.join(outDir, `${f.name}.png`), { width: f.width });
     log(`wrote ${f.name} ${f.width}x${f.height}`);

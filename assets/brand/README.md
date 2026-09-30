@@ -21,7 +21,7 @@ Tagline (always this exact text): **SOUND & LIGHT | EVENT | PRODUCTION**
 | `08-social-media-avatar/` | Square and circular profile images with the monogram in a ring |
 | `09-badge-emblem/` | Circular emblem (monogram, wordmark, tagline inside two rings) - seals, stickers, crew wear |
 | `10-responsive-logo/` | The size ladder: full logo, horizontal, wordmark, icon - which version to use at which size |
-| `11-festival-variation/` | Ganpati campaign creatives (16:9 banner, 1:1 post, 9:16 story) with the gold Ganesha motif |
+| `11-festival-variation/` | Ganpati + Navratri campaign creatives (16:9 banner, 1:1 post, 9:16 story) with gold festival motifs |
 | `12-colour-variations/` | Logo on every approved background: gold on black, black on white, white on black, black on gold, gold on navy, white on grey |
 | `13-brand-colours-typography/` | Colour and type specimen card, `colours.json`, `colours.css`, and the `fonts/` bundle with licence |
 | `14-social-media-templates/` | Ready-to-post templates: `feed-square/` (1080x1080), `feed-portrait/` (1080x1350), `story/` (1080x1920), `covers/` (Facebook, LinkedIn, YouTube, link post), transparent `-overlay.png` frames for your own photos, and a contact sheet. See its own README |
@@ -33,7 +33,7 @@ Tagline (always this exact text): **SOUND & LIGHT | EVENT | PRODUCTION**
 `<asset>-<colour>-<on-background | transparent>.<svg | png>`
 
 Examples: `primary-logo-gold-on-black.png`, `icon-mark-white-transparent.svg`,
-`festival-ganpati-banner-16x9.png`. Always prefer the SVG for print and web; PNGs are supplied
+`festival-ganpati-banner-16x9.png`, `festival-navratri-banner-16x9.png`. Always prefer the SVG for print and web; PNGs are supplied
 at 4K (4000 px on the long edge) for slides, video and social tools that cannot use SVG.
 
 ## Which lockup to use
