@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { PassThrough } from "node:stream";
 import { Readable } from "node:stream";
-import archiver from "archiver";
+import { ZipArchive } from "archiver";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/invoices/auth";
 import { BRAND_KIT_DIR, resolveBrandKitFolder } from "@/lib/assets/brandKit";
@@ -43,7 +43,7 @@ export async function GET(req: Request) {
     filename = folder ? `mihir-brand-kit-${folder}-png.zip` : "mihir-brand-kit-png.zip";
   }
 
-  const archive = archiver("zip", { zlib: { level: 6 } });
+  const archive = new ZipArchive({ zlib: { level: 6 } });
   const passthrough = new PassThrough();
   archive.on("error", (err: Error) => passthrough.destroy(err));
   archive.pipe(passthrough);
