@@ -47,12 +47,20 @@ export default async function BrandAssetFolderPage({ params }: Props) {
             {files.length} {files.length === 1 ? "file" : "files"}
           </p>
         </div>
-        <a
-          href={`/api/assets/download?folder=${encodeURIComponent(folder)}`}
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 sm:w-auto"
-        >
-          <Download className="h-4 w-4" /> Download this folder (ZIP)
-        </a>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+          <a
+            href={`/api/assets/download?folder=${encodeURIComponent(folder)}&type=png`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-ink/85 transition hover:border-gold/60 hover:text-ink"
+          >
+            <Download className="h-4 w-4" /> Download PNGs
+          </a>
+          <a
+            href={`/api/assets/download?folder=${encodeURIComponent(folder)}`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105"
+          >
+            <Download className="h-4 w-4" /> Download this folder (ZIP)
+          </a>
+        </div>
       </div>
 
       {images.length > 0 && (

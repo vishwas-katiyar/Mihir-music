@@ -25,12 +25,20 @@ export default async function BrandAssetsPage() {
           <h1 className="font-display text-2xl font-bold tracking-[-0.03em] sm:text-3xl">Brand assets</h1>
           <p className="mt-1 text-sm text-muted">Logos, social templates and print collateral, generated from the MIHIR brand kit. Admin only. Open a folder to preview its files.</p>
         </div>
-        <a
-          href="/api/assets/download"
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105 sm:w-auto"
-        >
-          <Download className="h-4 w-4" /> Download everything ({formatBytes(total.sizeBytes)})
-        </a>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+          <a
+            href="/api/assets/download?type=png"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-ink/85 transition hover:border-gold/60 hover:text-ink"
+          >
+            <Download className="h-4 w-4" /> Download all PNGs
+          </a>
+          <a
+            href="/api/assets/download"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-charcoal transition hover:brightness-105"
+          >
+            <Download className="h-4 w-4" /> Download everything ({formatBytes(total.sizeBytes)})
+          </a>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
